@@ -3,12 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'providers/router_provider.dart';
 import 'providers/app_providers.dart';
+import 'services/notification_service.dart';
 
 const Color kPrimaryGreen = Color(0xFF2E6B57);
 const Color kBackground = Color(0xFFF7FBF7);
 
-void main() {
-  runApp(const ProviderScope(child: MyApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService.initialize();
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
