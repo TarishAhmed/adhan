@@ -34,8 +34,8 @@ final locationProvider =
       if (permission == LocationPermission.deniedForever) {
         throw Exception('Location permissions are permanently denied.');
       }
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
+      final position = await Geolocator.getCurrentPosition( 
+        desiredAccuracy: LocationAccuracy.lowest,
       );
 
       String? city;

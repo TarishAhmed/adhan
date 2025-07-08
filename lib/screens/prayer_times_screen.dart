@@ -1,6 +1,7 @@
 import 'package:adhan/providers/prayer_timing_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import '../providers/app_providers.dart';
 import '../services/notification_service.dart';
 import '../providers/notification_provider.dart';
@@ -12,7 +13,7 @@ class PrayerTimesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final locationAsync = ref.watch(locationProvider);
-    final prayerTimesAsync = ref.watch(prayerTimingProvider());
+    final prayerTimesAsync = ref.watch(prayerTimeMonthNotifierProvider());
 
     return Scaffold(
       appBar: PreferredSize(
@@ -30,10 +31,12 @@ class PrayerTimesScreen extends ConsumerWidget {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (e, _) => Center(child: Text('Prayer times error: $e')),
           data: (prayerTimes) {
-            if (prayerTimes.data?.timings == null) {
+            final now = DateTime.now();
+            final todaysPrayers = prayerTimes.data![now.day - 1];
+            if (todaysPrayers.timings == null) {
               return const Center(child: Text('No prayer times found'));
             }
-            final timings = prayerTimes.data!.timings!;
+            final timings = todaysPrayers.timings!;
             final currentRelevantPrayer = ref.watch(
               currentRelevantPrayerProvider,
             );
@@ -48,7 +51,7 @@ class PrayerTimesScreen extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(4),
                           child: Text(
-                            relevantPrayer.prayer.name.displayName,
+                            relevantPrayer?.prayer.name.displayName ?? 'No Data',
                             style: theme.textTheme.displaySmall?.copyWith(
                               color: theme.colorScheme.primary,
                             ),
@@ -60,10 +63,11 @@ class PrayerTimesScreen extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(4),
                           child: Text(
+                            relevantPrayer?.offset != null?
                             formatPrayerOffset(
-                              relevantPrayer.offset,
+                              relevantPrayer!.offset,
                               isUpcoming: true,
-                            ),
+                            ): 'Unable to fetch data',
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.secondary,
                             ),
@@ -168,7 +172,7 @@ class PrayerTimeListItem extends ConsumerWidget {
   });
 
   final PrayerTimeName prayer;
-  final TimeOfDay time;
+  final DateTime time;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -195,7 +199,7 @@ class PrayerTimeListItem extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    time.format(context),
+                    DateFormat.jm().format(time),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.secondary,
                     ),

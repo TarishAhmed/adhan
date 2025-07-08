@@ -6,63 +6,46 @@ part of 'prayer_timing_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-@ProviderFor(prayerTiming)
-const prayerTimingProvider = PrayerTimingFamily._();
+@ProviderFor(PrayerTimeMonthNotifier)
+@JsonPersist()
+const prayerTimeMonthNotifierProvider = PrayerTimeMonthNotifierFamily._();
 
-final class PrayerTimingProvider
+final class PrayerTimeMonthNotifierProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<PrayerTimeResponseModel>,
-          PrayerTimeResponseModel,
-          FutureOr<PrayerTimeResponseModel>
-        >
-    with
-        $FutureModifier<PrayerTimeResponseModel>,
-        $FutureProvider<PrayerTimeResponseModel> {
-  const PrayerTimingProvider._({
-    required PrayerTimingFamily super.from,
+        $AsyncNotifierProvider<
+          PrayerTimeMonthNotifier,
+          PrayerTimingMonthResponseModel
+        > {
+  const PrayerTimeMonthNotifierProvider._({
+    required PrayerTimeMonthNotifierFamily super.from,
     required ({int method, int school, int latitudeAdjustmentMethod})
     super.argument,
   }) : super(
          retry: null,
-         name: r'prayerTimingProvider',
-         isAutoDispose: false,
+         name: r'prayerTimeMonthNotifierProvider',
+         isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$prayerTimingHash();
+  String debugGetCreateSourceHash() => _$prayerTimeMonthNotifierHash();
 
   @override
   String toString() {
-    return r'prayerTimingProvider'
+    return r'prayerTimeMonthNotifierProvider'
         ''
         '$argument';
   }
 
   @$internal
   @override
-  $FutureProviderElement<PrayerTimeResponseModel> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<PrayerTimeResponseModel> create(Ref ref) {
-    final argument =
-        this.argument
-            as ({int method, int school, int latitudeAdjustmentMethod});
-    return prayerTiming(
-      ref,
-      method: argument.method,
-      school: argument.school,
-      latitudeAdjustmentMethod: argument.latitudeAdjustmentMethod,
-    );
-  }
+  PrayerTimeMonthNotifier create() => PrayerTimeMonthNotifier();
 
   @override
   bool operator ==(Object other) {
-    return other is PrayerTimingProvider && other.argument == argument;
+    return other is PrayerTimeMonthNotifierProvider &&
+        other.argument == argument;
   }
 
   @override
@@ -71,127 +54,32 @@ final class PrayerTimingProvider
   }
 }
 
-String _$prayerTimingHash() => r'09d77f00638f3616cee82a0290709bd9d173a813';
+String _$prayerTimeMonthNotifierHash() =>
+    r'7f01c98f986cdd17fe00ee2af4d90359c08760d7';
 
-final class PrayerTimingFamily extends $Family
+final class PrayerTimeMonthNotifierFamily extends $Family
     with
-        $FunctionalFamilyOverride<
-          FutureOr<PrayerTimeResponseModel>,
-          ({int method, int school, int latitudeAdjustmentMethod})
-        > {
-  const PrayerTimingFamily._()
-    : super(
-        retry: null,
-        name: r'prayerTimingProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: false,
-      );
-
-  PrayerTimingProvider call({
-    int method = 1,
-    int school = 0,
-    int latitudeAdjustmentMethod = 0,
-  }) => PrayerTimingProvider._(
-    argument: (
-      method: method,
-      school: school,
-      latitudeAdjustmentMethod: latitudeAdjustmentMethod,
-    ),
-    from: this,
-  );
-
-  @override
-  String toString() => r'prayerTimingProvider';
-}
-
-@ProviderFor(prayerTimingMonth)
-const prayerTimingMonthProvider = PrayerTimingMonthFamily._();
-
-final class PrayerTimingMonthProvider
-    extends
-        $FunctionalProvider<
+        $ClassFamilyOverride<
+          PrayerTimeMonthNotifier,
           AsyncValue<PrayerTimingMonthResponseModel>,
           PrayerTimingMonthResponseModel,
-          FutureOr<PrayerTimingMonthResponseModel>
-        >
-    with
-        $FutureModifier<PrayerTimingMonthResponseModel>,
-        $FutureProvider<PrayerTimingMonthResponseModel> {
-  const PrayerTimingMonthProvider._({
-    required PrayerTimingMonthFamily super.from,
-    required ({int method, int school, int latitudeAdjustmentMethod})
-    super.argument,
-  }) : super(
-         retry: null,
-         name: r'prayerTimingMonthProvider',
-         isAutoDispose: false,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$prayerTimingMonthHash();
-
-  @override
-  String toString() {
-    return r'prayerTimingMonthProvider'
-        ''
-        '$argument';
-  }
-
-  @$internal
-  @override
-  $FutureProviderElement<PrayerTimingMonthResponseModel> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<PrayerTimingMonthResponseModel> create(Ref ref) {
-    final argument =
-        this.argument
-            as ({int method, int school, int latitudeAdjustmentMethod});
-    return prayerTimingMonth(
-      ref,
-      method: argument.method,
-      school: argument.school,
-      latitudeAdjustmentMethod: argument.latitudeAdjustmentMethod,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is PrayerTimingMonthProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$prayerTimingMonthHash() => r'26cac8aad66f220095a88164ec5b1fcf26a22acb';
-
-final class PrayerTimingMonthFamily extends $Family
-    with
-        $FunctionalFamilyOverride<
           FutureOr<PrayerTimingMonthResponseModel>,
           ({int method, int school, int latitudeAdjustmentMethod})
         > {
-  const PrayerTimingMonthFamily._()
+  const PrayerTimeMonthNotifierFamily._()
     : super(
         retry: null,
-        name: r'prayerTimingMonthProvider',
+        name: r'prayerTimeMonthNotifierProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
-        isAutoDispose: false,
+        isAutoDispose: true,
       );
 
-  PrayerTimingMonthProvider call({
+  PrayerTimeMonthNotifierProvider call({
     int method = 1,
     int school = 0,
     int latitudeAdjustmentMethod = 0,
-  }) => PrayerTimingMonthProvider._(
+  }) => PrayerTimeMonthNotifierProvider._(
     argument: (
       method: method,
       school: school,
@@ -201,7 +89,49 @@ final class PrayerTimingMonthFamily extends $Family
   );
 
   @override
-  String toString() => r'prayerTimingMonthProvider';
+  String toString() => r'prayerTimeMonthNotifierProvider';
+}
+
+abstract class _$PrayerTimeMonthNotifierBase
+    extends $AsyncNotifier<PrayerTimingMonthResponseModel> {
+  late final _$args =
+      ref.$arg as ({int method, int school, int latitudeAdjustmentMethod});
+  int get method => _$args.method;
+  int get school => _$args.school;
+  int get latitudeAdjustmentMethod => _$args.latitudeAdjustmentMethod;
+
+  FutureOr<PrayerTimingMonthResponseModel> build({
+    int method = 1,
+    int school = 0,
+    int latitudeAdjustmentMethod = 0,
+  });
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(
+      method: _$args.method,
+      school: _$args.school,
+      latitudeAdjustmentMethod: _$args.latitudeAdjustmentMethod,
+    );
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<PrayerTimingMonthResponseModel>,
+              PrayerTimingMonthResponseModel
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<PrayerTimingMonthResponseModel>,
+                PrayerTimingMonthResponseModel
+              >,
+              AsyncValue<PrayerTimingMonthResponseModel>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
 }
 
 @ProviderFor(currentRelevantPrayer)
@@ -210,13 +140,13 @@ const currentRelevantPrayerProvider = CurrentRelevantPrayerProvider._();
 final class CurrentRelevantPrayerProvider
     extends
         $FunctionalProvider<
-          AsyncValue<PrayerTimeWithOffset>,
-          PrayerTimeWithOffset,
-          Stream<PrayerTimeWithOffset>
+          AsyncValue<PrayerTimeWithOffset?>,
+          PrayerTimeWithOffset?,
+          Stream<PrayerTimeWithOffset?>
         >
     with
-        $FutureModifier<PrayerTimeWithOffset>,
-        $StreamProvider<PrayerTimeWithOffset> {
+        $FutureModifier<PrayerTimeWithOffset?>,
+        $StreamProvider<PrayerTimeWithOffset?> {
   const CurrentRelevantPrayerProvider._()
     : super(
         from: null,
@@ -233,18 +163,61 @@ final class CurrentRelevantPrayerProvider
 
   @$internal
   @override
-  $StreamProviderElement<PrayerTimeWithOffset> $createElement(
+  $StreamProviderElement<PrayerTimeWithOffset?> $createElement(
     $ProviderPointer pointer,
   ) => $StreamProviderElement(pointer);
 
   @override
-  Stream<PrayerTimeWithOffset> create(Ref ref) {
+  Stream<PrayerTimeWithOffset?> create(Ref ref) {
     return currentRelevantPrayer(ref);
   }
 }
 
 String _$currentRelevantPrayerHash() =>
-    r'22db8937a1a82e8902b1eaf9c059236461cdf8f2';
+    r'09ce532d5dc320695eddf43ad2cd86a970de002e';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+
+// **************************************************************************
+// JsonGenerator
+// **************************************************************************
+
+abstract class _$PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifierBase {
+  /// The default key used by [persist].
+  String get key {
+    late final args = (
+      method: method,
+      school: school,
+      latitudeAdjustmentMethod: latitudeAdjustmentMethod,
+    );
+    late final resolvedKey = 'PrayerTimeMonthNotifier($args)';
+
+    return resolvedKey;
+  }
+
+  /// A variant of [persist], for JSON-specific encoding.
+  ///
+  /// You can override [key] to customize the key used for storage.
+  FutureOr<void> persist(
+    FutureOr<Storage<String, String>> storage, {
+    String Function(PrayerTimingMonthResponseModel state)? encode,
+    PrayerTimingMonthResponseModel Function(String encoded)? decode,
+    StorageOptions options = const StorageOptions(),
+  }) {
+    return NotifierPersistX(this).persist<String, String>(
+      storage,
+      key: key,
+      encode: encode ?? $jsonCodex.encode,
+      decode:
+          decode ??
+          (encoded) {
+            final e = $jsonCodex.decode(encoded);
+            return PrayerTimingMonthResponseModel.fromJson(
+              e as Map<String, Object?>,
+            );
+          },
+      options: options,
+    );
+  }
+}

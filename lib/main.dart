@@ -11,7 +11,9 @@ const Color kBackground = Color(0xFFF7FBF7);
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.initialize();
-  runApp(ProviderScope(child: const MyApp()));
+  runApp(ProviderScope(
+    
+    child: const MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
