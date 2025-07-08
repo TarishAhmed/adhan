@@ -102,7 +102,7 @@ class SettingsScreen extends ConsumerWidget {
                 value: ThemeMode.system,
                 groupValue: ref.watch(themeProvider),
                 onChanged: (value) {
-                  ref.read(themeProvider.notifier).state = value!;
+                  ref.read(themeProvider.notifier).setTheme(value!);
                   Navigator.pop(context);
                 },
               ),
@@ -113,7 +113,7 @@ class SettingsScreen extends ConsumerWidget {
                 value: ThemeMode.light,
                 groupValue: ref.watch(themeProvider),
                 onChanged: (value) {
-                  ref.read(themeProvider.notifier).state = value!;
+                  ref.read(themeProvider.notifier).setTheme(value!);
                   Navigator.pop(context);
                 },
               ),
@@ -124,7 +124,7 @@ class SettingsScreen extends ConsumerWidget {
                 value: ThemeMode.dark,
                 groupValue: ref.watch(themeProvider),
                 onChanged: (value) {
-                  ref.read(themeProvider.notifier).state = value!;
+                  ref.read(themeProvider.notifier).setTheme(value!);
                   Navigator.pop(context);
                 },
               ),

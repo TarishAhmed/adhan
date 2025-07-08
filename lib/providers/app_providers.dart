@@ -9,14 +9,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'app_providers.g.dart';
 
 // App theme provider
-final themeProvider = StateProvider<ThemeMode>((ref) => ThemeMode.system);
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
 
 // App settings provider
-final settingsProvider = StateNotifierProvider<SettingsNotifier, AppSettings>((
-  ref,
-) {
-  return SettingsNotifier();
-});
+final settingsProvider =
+    NotifierProvider<SettingsNotifier, AppSettings>(SettingsNotifier.new);
 
 // Location provider (handles permissions and gets current position)
 final locationProvider =
@@ -90,8 +87,7 @@ class AppSettings {
 }
 
 // Settings notifier
-class SettingsNotifier extends StateNotifier<AppSettings> {
-  SettingsNotifier() : super(const AppSettings());
+class SettingsNotifier extends Notifier<AppSettings> {
 
   void toggleNotifications() {
     state = state.copyWith(notificationsEnabled: !state.notificationsEnabled);
@@ -108,8 +104,21 @@ class SettingsNotifier extends StateNotifier<AppSettings> {
   void toggleAutoLocation() {
     state = state.copyWith(autoLocation: !state.autoLocation);
   }
+  
+  @override
+  AppSettings build() {
+    return AppSettings();
+  }
 }
 
 @riverpod
 FutureOr<String> getTimezone(Ref ref) async =>
     await FlutterTimezone.getLocalTimezone();
+
+
+class ThemeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() => ThemeMode.system;
+
+  void setTheme(ThemeMode mode) => state = mode;
+}

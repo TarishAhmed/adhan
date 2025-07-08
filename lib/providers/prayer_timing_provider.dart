@@ -1,5 +1,6 @@
 import 'package:adhan/api/api_helper.dart';
 import 'package:adhan/model/prayer_time_response_model.dart';
+import 'package:adhan/model/prayer_timing_month_response_model.dart';
 import 'package:adhan/providers/app_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,6 +35,36 @@ FutureOr<PrayerTimeResponseModel> prayerTiming(
     return PrayerTimeResponseModel.fromJson(response.data);
   } else {
     throw Exception('Failed to fetch prayer times');
+  }
+}
+
+@Riverpod(keepAlive: true)
+FutureOr<PrayerTimingMonthResponseModel> prayerTimingMonth(
+  Ref ref, {
+  int method = 1,
+  int school = 0,
+  int latitudeAdjustmentMethod = 0,
+}) async {
+  final timezone = await ref.watch(getTimezoneProvider.future);
+  final location = await ref.watch(locationProvider.future);
+  final date = DateTime.now();
+  final url = 'https://api.aladhan.com/v1/calendar/${date.year}/${date.month}';
+  final response = await ApiHelper.dio.get(
+    url,
+    queryParameters: {
+      'latitude': location.lat,
+      'longitude': location.lng,
+      'method': method,
+      'school': school,
+      'latitudeAdjustmentMethod': latitudeAdjustmentMethod,
+      'timezonestring': timezone,
+      'iso8601': true,
+    },
+  );
+  if (response.statusCode == 200 && response.data['code'] == 200) {
+    return PrayerTimingMonthResponseModel.fromJson(response.data);
+  } else {
+    throw Exception('Failed to fetch prayer times month');
   }
 }
 

@@ -14,8 +14,8 @@ dependencies:
 
   cupertino_icons: ^1.0.8
   go_router: ^14.6.2
-  flutter_riverpod: ^2.5.1
-  riverpod_annotation: ^2.3.5
+  flutter_riverpod: ^3.0.0-dev.16
+  riverpod_annotation: ^3.0.0-dev.16
   material_symbols_icons: ^4.2815.1
   dio: ^5.4.3
   geolocator: ^11.0.0
@@ -31,9 +31,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.14.4
 
   flutter_lints: ^5.0.0
-  riverpod_generator: ^2.4.0
+  riverpod_generator: ^3.0.0-dev.16
   build_runner: ^2.5.4
   json_serializable: ^6.9.5
   freezed: ^3.1.0
@@ -53,6 +54,8 @@ flutter:
     - sound/mishary_rashid_alafasy.mp3
     - sound/mishary_rashid_alafasy_2.mp3
     - sound/mansour_al_zahrani.mp3
+    - assets/icon/logo.svg
+    - assets/pngs/logo_background.png
 
   fonts:
     - family: Inter

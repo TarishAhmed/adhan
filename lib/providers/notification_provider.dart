@@ -2,10 +2,8 @@ import 'package:adhan/providers/prayer_timing_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class PrayerNotificationState extends StateNotifier<Map<PrayerTimeName, bool>> {
-  PrayerNotificationState() : super({}) {
-    _loadPrefs();
-  }
+class PrayerNotificationState extends Notifier<Map<PrayerTimeName, bool>> {
+
 
   Future<void> _loadPrefs() async {
     final prefs = await SharedPreferences.getInstance();
@@ -21,8 +19,14 @@ class PrayerNotificationState extends StateNotifier<Map<PrayerTimeName, bool>> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('notify_${prayer.name}', value);
   }
+  
+  @override
+  Map<PrayerTimeName, bool> build() {
+    _loadPrefs();
+    return {};
+  }
 }
 
 final prayerNotificationProvider =
-    StateNotifierProvider<PrayerNotificationState, Map<PrayerTimeName, bool>>(
-        (ref) => PrayerNotificationState()); 
+    NotifierProvider<PrayerNotificationState, Map<PrayerTimeName, bool>>(
+        PrayerNotificationState.new); 

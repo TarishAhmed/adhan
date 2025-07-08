@@ -225,8 +225,8 @@ class PrayerTimeListItem extends ConsumerWidget {
                 if (value) {
                   await NotificationService.schedulePrayerNotification(
                     id: prayer.hashCode,
-                    title: '$prayer Prayer',
-                    body: 'It\'s time for $prayer prayer.',
+                    title: '${prayer.displayName} Prayer',
+                    body: 'It\'s time for ${prayer.displayName} prayer.',
                     scheduledTime: scheduledTime,
                     sound: AdhanSound.defaultRingtone,
                   );
