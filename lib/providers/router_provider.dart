@@ -84,6 +84,7 @@ class _ScaffoldWithBottomNavigationState
     return Scaffold(
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
+        useLegacyColorScheme: false,
         currentIndex: _currentIndex,
         showSelectedLabels: true,
         showUnselectedLabels: true,
