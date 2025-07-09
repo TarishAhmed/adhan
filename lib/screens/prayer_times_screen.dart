@@ -1,7 +1,14 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:adhan/main.dart';
 import 'package:adhan/providers/prayer_timing_provider.dart';
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:workmanager/workmanager.dart';
 import '../providers/app_providers.dart';
 import '../services/notification_service.dart';
 import '../providers/notification_provider.dart';
@@ -25,18 +32,43 @@ class PrayerTimesScreen extends ConsumerWidget {
         ),
       ),
       body: locationAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 16,
+            children: [
+              Text('Fetching Location...'),
+              CircularProgressIndicator(),
+            ],
+          ),
+        ),
         error: (e, st) => Center(child: Text('Location error: $e')),
         data: (location) => prayerTimesAsync.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('Prayer times error: $e')),
+          loading: () => const Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 16,
+              children: [
+                Text('Fetching Prayer Times...'),
+                CircularProgressIndicator(),
+              ],
+            ),
+          ),
+          error: (e, st) {
+            print('Prayer times error: $e ${st.toString()}');
+            return Center(child: Text('Prayer times error: $e'));
+          },
           data: (prayerTimes) {
             final now = DateTime.now();
+
             final todaysPrayers = prayerTimes.data![now.day - 1];
             if (todaysPrayers.timings == null) {
               return const Center(child: Text('No prayer times found'));
             }
             final timings = todaysPrayers.timings!;
+
+            log('PrayerTimesScreen: ${prayerTimes.data}');
+
             final currentRelevantPrayer = ref.watch(
               currentRelevantPrayerProvider,
             );
@@ -51,7 +83,8 @@ class PrayerTimesScreen extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(4),
                           child: Text(
-                            relevantPrayer?.prayer.name.displayName ?? 'No Data',
+                            relevantPrayer?.prayer.name.displayName ??
+                                'No Data',
                             style: theme.textTheme.displaySmall?.copyWith(
                               color: theme.colorScheme.primary,
                             ),
@@ -63,11 +96,12 @@ class PrayerTimesScreen extends ConsumerWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(4),
                           child: Text(
-                            relevantPrayer?.offset != null?
-                            formatPrayerOffset(
-                              relevantPrayer!.offset,
-                              isUpcoming: true,
-                            ): 'Unable to fetch data',
+                            relevantPrayer?.offset != null
+                                ? formatPrayerOffset(
+                                    relevantPrayer!.offset,
+                                    isUpcoming: true,
+                                  )
+                                : 'Unable to fetch data',
                             style: theme.textTheme.bodyLarge?.copyWith(
                               color: theme.colorScheme.secondary,
                             ),
@@ -77,9 +111,20 @@ class PrayerTimesScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (e, _) => Center(child: Text('Error: $e')),
+                  loading: () => const Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      spacing: 16,
+                      children: [
+                        Text('Fetching Upcoming Prayer...'),
+                        CircularProgressIndicator(),
+                      ],
+                    ),
+                  ),
+                  error: (e, st) {
+                    print('Error: $e ${st.toString()} ');
+                    return Center(child: Text('Error: $e'));
+                  },
                 ),
                 const SizedBox(height: 32),
 
@@ -91,28 +136,38 @@ class PrayerTimesScreen extends ConsumerWidget {
                         [
                               if (timings.fajr != null)
                                 PrayerTimeListItem(
-                                  prayer: PrayerTimeName.fajr,
-                                  time: timings.fajr!,
+                                  PrayerTime(
+                                    time: timings.fajr!,
+                                    name: PrayerTimeName.fajr,
+                                  ),
                                 ),
                               if (timings.dhuhr != null)
                                 PrayerTimeListItem(
-                                  prayer: PrayerTimeName.dhuhr,
-                                  time: timings.dhuhr!,
+                                  PrayerTime(
+                                    time: timings.dhuhr!,
+                                    name: PrayerTimeName.dhuhr,
+                                  ),
                                 ),
                               if (timings.asr != null)
                                 PrayerTimeListItem(
-                                  prayer: PrayerTimeName.asr,
-                                  time: timings.asr!,
+                                  PrayerTime(
+                                    time: timings.asr!,
+                                    name: PrayerTimeName.asr,
+                                  ),
                                 ),
                               if (timings.maghrib != null)
                                 PrayerTimeListItem(
-                                  prayer: PrayerTimeName.maghrib,
-                                  time: timings.maghrib!,
+                                  PrayerTime(
+                                    time: timings.maghrib!,
+                                    name: PrayerTimeName.maghrib,
+                                  ),
                                 ),
                               if (timings.isha != null)
                                 PrayerTimeListItem(
-                                  prayer: PrayerTimeName.isha,
-                                  time: timings.isha!,
+                                  PrayerTime(
+                                    time: timings.isha!,
+                                    name: PrayerTimeName.isha,
+                                  ),
                                 ),
                             ]
                             .expand(
@@ -132,14 +187,28 @@ class PrayerTimesScreen extends ConsumerWidget {
         child: ElevatedButton(
           onPressed: () async {
             final now = DateTime.now();
+
             final testTime = now.add(const Duration(seconds: 5));
-            await NotificationService.schedulePrayerNotification(
-              id: 99999,
-              title: '${PrayerTimeName.dhuhr.displayName} Prayer',
-              body: 'It\'s time for ${PrayerTimeName.dhuhr.displayName} prayer.',
-              scheduledTime: testTime,
-              sound: AdhanSound.misharyRashidAlafasy,
-            );
+            final id = UniqueKey().hashCode;
+            if (!kIsWeb) {
+              if (Platform.isAndroid) {
+                print('---------------Android----------');
+                await AndroidAlarmManager.oneShot(
+                  const Duration(seconds: 2),
+                  id,
+                  testAlarmManager,
+                );
+              } else if (Platform.isIOS) {
+                Workmanager().registerOneOffTask(
+                  id.toString(),
+                  "test-task",
+                  inputData: PrayerTime(
+                    time: testTime,
+                    name: PrayerTimeName.dhuhr,
+                  ).toJson(),
+                );
+              }
+            }
           },
           child: const Text('Test Notification'),
         ),
@@ -165,19 +234,16 @@ String formatPrayerOffset(Duration offset, {required bool isUpcoming}) {
 }
 
 class PrayerTimeListItem extends ConsumerWidget {
-  const PrayerTimeListItem({
-    super.key,
-    required this.prayer,
-    required this.time,
-  });
+  const PrayerTimeListItem(this.prayerTime, {super.key});
 
-  final PrayerTimeName prayer;
-  final DateTime time;
+  final PrayerTime prayerTime;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final theme = Theme.of(context);
-    final isNotified = ref.watch(prayerNotificationProvider)[prayer] ?? false;
+    final isNotified =
+        ref.watch(prayerNotificationProvider)[prayerTime.name] ?? false;
 
     return DecoratedBox(
       decoration: BoxDecoration(
@@ -193,13 +259,13 @@ class PrayerTimeListItem extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    prayer.displayName,
+                    prayerTime.name.displayName,
                     style: theme.textTheme.titleMedium?.copyWith(
                       color: theme.colorScheme.primary,
                     ),
                   ),
                   Text(
-                    DateFormat.jm().format(time),
+                    DateFormat.jm().format(prayerTime.time),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.secondary,
                     ),
@@ -211,31 +277,34 @@ class PrayerTimeListItem extends ConsumerWidget {
               value: isNotified,
               onChanged: (value) async {
                 if (value) {
-                  final granted = await NotificationService.requestPermission(context: context);
+                  final granted = await NotificationService.requestPermission(
+                    context: context,
+                  );
                   if (!granted) {
                     // Permission denied, revert toggle
-                    ref.read(prayerNotificationProvider.notifier).toggle(prayer, false);
+                    ref
+                        .read(prayerNotificationProvider.notifier)
+                        .toggle(prayerTime.name, false);
                     return;
                   }
                 }
-                ref.read(prayerNotificationProvider.notifier).toggle(prayer, value);
-                final now = DateTime.now();
-                final scheduledTime = DateTime(
-                  now.year,
-                  now.month,
-                  time.hour,
-                  time.minute,
-                );
+                ref
+                    .read(prayerNotificationProvider.notifier)
+                    .toggle(prayerTime.name, value);
+
                 if (value) {
                   await NotificationService.schedulePrayerNotification(
-                    id: prayer.hashCode,
-                    title: '${prayer.displayName} Prayer',
-                    body: 'It\'s time for ${prayer.displayName} prayer.',
-                    scheduledTime: scheduledTime,
+                    id: prayerTime.hashCode,
+                    title: '${prayerTime.name.displayName} Prayer',
+                    body:
+                        'It\'s time for ${prayerTime.name.displayName} prayer.',
+                    scheduledTime: prayerTime.time,
                     sound: AdhanSound.defaultRingtone,
                   );
                 } else {
-                  await NotificationService.cancelPrayerNotification(prayer.hashCode);
+                  await NotificationService.cancelPrayerNotification(
+                    prayerTime.hashCode,
+                  );
                 }
               },
             ),

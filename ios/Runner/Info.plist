@@ -45,5 +45,15 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>processing</string>
+		<string>fetch</string>
+	</array>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>task-identifier</string>
+		<string>dev.fluttercommunity.workmanagerExample.iOSBackgroundAppRefresh</string>
+	</array>
 </dict>
 </plist>

@@ -7,7 +7,6 @@ part of 'prayer_timing_provider.dart';
 // **************************************************************************
 
 @ProviderFor(PrayerTimeMonthNotifier)
-@JsonPersist()
 const prayerTimeMonthNotifierProvider = PrayerTimeMonthNotifierFamily._();
 
 final class PrayerTimeMonthNotifierProvider
@@ -55,7 +54,7 @@ final class PrayerTimeMonthNotifierProvider
 }
 
 String _$prayerTimeMonthNotifierHash() =>
-    r'7f01c98f986cdd17fe00ee2af4d90359c08760d7';
+    r'd6332a1da04cd418853fd4a44dbcb53e6a448395';
 
 final class PrayerTimeMonthNotifierFamily extends $Family
     with
@@ -92,7 +91,7 @@ final class PrayerTimeMonthNotifierFamily extends $Family
   String toString() => r'prayerTimeMonthNotifierProvider';
 }
 
-abstract class _$PrayerTimeMonthNotifierBase
+abstract class _$PrayerTimeMonthNotifier
     extends $AsyncNotifier<PrayerTimingMonthResponseModel> {
   late final _$args =
       ref.$arg as ({int method, int school, int latitudeAdjustmentMethod});
@@ -174,50 +173,7 @@ final class CurrentRelevantPrayerProvider
 }
 
 String _$currentRelevantPrayerHash() =>
-    r'09ce532d5dc320695eddf43ad2cd86a970de002e';
+    r'efa0f2e1dbfcf1fed0881bf49a566ece07a633e2';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
-
-// **************************************************************************
-// JsonGenerator
-// **************************************************************************
-
-abstract class _$PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifierBase {
-  /// The default key used by [persist].
-  String get key {
-    late final args = (
-      method: method,
-      school: school,
-      latitudeAdjustmentMethod: latitudeAdjustmentMethod,
-    );
-    late final resolvedKey = 'PrayerTimeMonthNotifier($args)';
-
-    return resolvedKey;
-  }
-
-  /// A variant of [persist], for JSON-specific encoding.
-  ///
-  /// You can override [key] to customize the key used for storage.
-  FutureOr<void> persist(
-    FutureOr<Storage<String, String>> storage, {
-    String Function(PrayerTimingMonthResponseModel state)? encode,
-    PrayerTimingMonthResponseModel Function(String encoded)? decode,
-    StorageOptions options = const StorageOptions(),
-  }) {
-    return NotifierPersistX(this).persist<String, String>(
-      storage,
-      key: key,
-      encode: encode ?? $jsonCodex.encode,
-      decode:
-          decode ??
-          (encoded) {
-            final e = $jsonCodex.decode(encoded);
-            return PrayerTimingMonthResponseModel.fromJson(
-              e as Map<String, Object?>,
-            );
-          },
-      options: options,
-    );
-  }
-}

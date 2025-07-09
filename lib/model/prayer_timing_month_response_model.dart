@@ -15,11 +15,8 @@ String prayerTimingMonthResponseModelToJson(PrayerTimingMonthResponseModel data)
 @freezed
 abstract class PrayerTimingMonthResponseModel with _$PrayerTimingMonthResponseModel {
     const factory PrayerTimingMonthResponseModel({
-        @JsonKey(name: "code")
         int? code,
-        @JsonKey(name: "status")
         String? status,
-        @JsonKey(name: "data")
         List<Datum>? data,
     }) = _PrayerTimingMonthResponseModel;
 
@@ -29,12 +26,8 @@ abstract class PrayerTimingMonthResponseModel with _$PrayerTimingMonthResponseMo
 @freezed
 abstract class Datum with _$Datum {
     const factory Datum({
-        @JsonKey(name: "timings")
         Timings? timings,
-        @JsonKey(name: "date")
         Date? date,
-        @JsonKey(name: "meta")
-        Meta? meta,
     }) = _Datum;
 
     factory Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
@@ -43,13 +36,9 @@ abstract class Datum with _$Datum {
 @freezed
 abstract class Date with _$Date {
     const factory Date({
-        @JsonKey(name: "readable")
         String? readable,
-        @JsonKey(name: "timestamp")
         String? timestamp,
-        @JsonKey(name: "gregorian")
         Gregorian? gregorian,
-        @JsonKey(name: "hijri")
         Hijri? hijri,
     }) = _Date;
 
@@ -59,21 +48,13 @@ abstract class Date with _$Date {
 @freezed
 abstract class Gregorian with _$Gregorian {
     const factory Gregorian({
-        @JsonKey(name: "date")
         String? date,
-        @JsonKey(name: "format")
         Format? format,
-        @JsonKey(name: "day")
         String? day,
-        @JsonKey(name: "weekday")
         GregorianWeekday? weekday,
-        @JsonKey(name: "month")
         GregorianMonth? month,
-        @JsonKey(name: "year")
         String? year,
-        @JsonKey(name: "designation")
         Designation? designation,
-        @JsonKey(name: "lunarSighting")
         bool? lunarSighting,
     }) = _Gregorian;
 
@@ -83,9 +64,7 @@ abstract class Gregorian with _$Gregorian {
 @freezed
 abstract class Designation with _$Designation {
     const factory Designation({
-        @JsonKey(name: "abbreviated")
         Abbreviated? abbreviated,
-        @JsonKey(name: "expanded")
         Expanded? expanded,
     }) = _Designation;
 
@@ -128,9 +107,7 @@ final formatValues = EnumValues({
 @freezed
 abstract class GregorianMonth with _$GregorianMonth {
     const factory GregorianMonth({
-        @JsonKey(name: "number")
         int? number,
-        @JsonKey(name: "en")
         PurpleEn? en,
     }) = _GregorianMonth;
 
@@ -149,7 +126,6 @@ final purpleEnValues = EnumValues({
 @freezed
 abstract class GregorianWeekday with _$GregorianWeekday {
     const factory GregorianWeekday({
-        @JsonKey(name: "en")
         String? en,
     }) = _GregorianWeekday;
 
@@ -159,25 +135,15 @@ abstract class GregorianWeekday with _$GregorianWeekday {
 @freezed
 abstract class Hijri with _$Hijri {
     const factory Hijri({
-        @JsonKey(name: "date")
         String? date,
-        @JsonKey(name: "format")
         Format? format,
-        @JsonKey(name: "day")
         String? day,
-        @JsonKey(name: "weekday")
         HijriWeekday? weekday,
-        @JsonKey(name: "month")
         HijriMonth? month,
-        @JsonKey(name: "year")
         String? year,
-        @JsonKey(name: "designation")
         Designation? designation,
-        @JsonKey(name: "holidays")
         List<String>? holidays,
-        @JsonKey(name: "adjustedHolidays")
         List<dynamic>? adjustedHolidays,
-        @JsonKey(name: "method")
         MethodEnum? method,
     }) = _Hijri;
 
@@ -196,13 +162,9 @@ final methodEnumValues = EnumValues({
 @freezed
 abstract class HijriMonth with _$HijriMonth {
     const factory HijriMonth({
-        @JsonKey(name: "number")
         int? number,
-        @JsonKey(name: "en")
         FluffyEn? en,
-        @JsonKey(name: "ar")
         Ar? ar,
-        @JsonKey(name: "days")
         int? days,
     }) = _HijriMonth;
 
@@ -236,9 +198,7 @@ final fluffyEnValues = EnumValues({
 @freezed
 abstract class HijriWeekday with _$HijriWeekday {
     const factory HijriWeekday({
-        @JsonKey(name: "en")
         String? en,
-        @JsonKey(name: "ar")
         String? ar,
     }) = _HijriWeekday;
 
@@ -248,21 +208,13 @@ abstract class HijriWeekday with _$HijriWeekday {
 @freezed
 abstract class Meta with _$Meta {
     const factory Meta({
-        @JsonKey(name: "latitude")
         double? latitude,
-        @JsonKey(name: "longitude")
         double? longitude,
-        @JsonKey(name: "timezone")
         Timezone? timezone,
-        @JsonKey(name: "method")
         MethodClass? method,
-        @JsonKey(name: "latitudeAdjustmentMethod")
         LatitudeAdjustmentMethod? latitudeAdjustmentMethod,
-        @JsonKey(name: "midnightMode")
         MidnightMode? midnightMode,
-        @JsonKey(name: "school")
         MidnightMode? school,
-        @JsonKey(name: "offset")
         Map<String, int>? offset,
     }) = _Meta;
 
@@ -281,13 +233,9 @@ final latitudeAdjustmentMethodValues = EnumValues({
 @freezed
 abstract class MethodClass with _$MethodClass {
     const factory MethodClass({
-        @JsonKey(name: "id")
         int? id,
-        @JsonKey(name: "name")
         Name? name,
-        @JsonKey(name: "params")
         Params? params,
-        @JsonKey(name: "location")
         Location? location,
     }) = _MethodClass;
 
@@ -297,9 +245,7 @@ abstract class MethodClass with _$MethodClass {
 @freezed
 abstract class Location with _$Location {
     const factory Location({
-        @JsonKey(name: "latitude")
         double? latitude,
-        @JsonKey(name: "longitude")
         double? longitude,
     }) = _Location;
 
@@ -318,9 +264,7 @@ final nameValues = EnumValues({
 @freezed
 abstract class Params with _$Params {
     const factory Params({
-        @JsonKey(name: "Fajr")
         int? fajr,
-        @JsonKey(name: "Isha")
         int? isha,
     }) = _Params;
 

@@ -1,6 +1,6 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'dart:io';
 import 'package:flutter/material.dart';
 
@@ -45,7 +45,7 @@ class NotificationService {
           channelDescription: 'Notifications for prayer times',
           importance: Importance.max,
         priority: Priority.high,
-          playSound: true,
+          playSound: false,
           sound: sound == AdhanSound.defaultRingtone ? UriAndroidNotificationSound('content://settings/system/ringtone') : RawResourceAndroidNotificationSound(sound.path.replaceAllMapped(RegExp(r'^sound/|\.mp3$'), (match) => '')),
         ),
       ),

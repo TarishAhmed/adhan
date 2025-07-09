@@ -3,6 +3,7 @@ import 'package:adhan/model/prayer_time_response_model.dart';
 import 'package:adhan/model/prayer_timing_month_response_model.dart';
 import 'package:adhan/providers/app_providers.dart';
 import 'package:adhan/providers/storage_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/experimental/persist.dart';
@@ -57,7 +58,8 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
       now.month + 1,
     ).subtract(Duration(seconds: 1)).difference(now);
 
-    persist(
+    if(!kIsWeb) {
+      persist(
       // We pass our JsonSqFliteStorage instance. No need to "await" the Future.
       // Riverpod will take care of that.
       ref.watch(storageProvider.future),
@@ -67,6 +69,7 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
       decode: prayerTimingMonthResponseModelFromJson,
       encode: prayerTimingMonthResponseModelToJson,
     );
+    }
 
     final timezone = await ref.watch(getTimezoneProvider.future);
     final location = await ref.watch(locationProvider.future);
@@ -108,9 +111,13 @@ PrayerTimeWithOffset? getCurrentRelevantPrayerWithOffset(
 ) {
   final now = DateTime.now();
 
+  
+
   PrayerTime? upcomingPrayer = prayers.firstWhereOrNull(
     (prayer) => prayer.time.isAfter(now),
   );
+
+  
 
   upcomingPrayer ??= (tomorrowsPrayers != null
       ? PrayerTime(
@@ -134,8 +141,14 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
 
   final now = DateTime.now();
 
+  
+
   if (prayerTimes.data == null) throw Exception('Error Fetching Prayer Data');
   final todaysPrayers = prayerTimes.data![now.day - 1];
+
+  print('Prayer times 1: ${todaysPrayers}');
+
+  
 
   final tomorrowsPrayers = prayerTimes.data!.length != now.day
       ? prayerTimes.data![now.day]
@@ -145,7 +158,12 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
     throw Exception('Error Fetching Prayer Data');
   }
 
+  
+  
+
   final timing = todaysPrayers.timings!;
+
+  
 
   final timings = [
     PrayerTime(time: timing.fajr!, name: PrayerTimeName.fajr),
@@ -156,6 +174,7 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
   ];
 
   while (true) {
+    
     final relevant = getCurrentRelevantPrayerWithOffset(
       timings,
       tomorrowsPrayers,
@@ -181,6 +200,20 @@ class PrayerTime {
   final DateTime time;
   final PrayerTimeName name;
   PrayerTime({required this.time, required this.name});
+
+  factory PrayerTime.fromJson(Map<String, dynamic> json) {
+    return PrayerTime(
+      time: DateTime.parse(json['time']),
+      name: PrayerTimeName.values.byName(json['name']),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'time': time.toIso8601String(),
+      'name': name.name,
+    };
+  }
 }
 
 enum PrayerTimeName {

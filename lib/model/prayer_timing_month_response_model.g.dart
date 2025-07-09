@@ -31,15 +31,11 @@ _Datum _$DatumFromJson(Map<String, dynamic> json) => _Datum(
   date: json['date'] == null
       ? null
       : Date.fromJson(json['date'] as Map<String, dynamic>),
-  meta: json['meta'] == null
-      ? null
-      : Meta.fromJson(json['meta'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$DatumToJson(_Datum instance) => <String, dynamic>{
   'timings': instance.timings,
   'date': instance.date,
-  'meta': instance.meta,
 };
 
 _Date _$DateFromJson(Map<String, dynamic> json) => _Date(
@@ -269,13 +265,13 @@ Map<String, dynamic> _$LocationToJson(_Location instance) => <String, dynamic>{
 };
 
 _Params _$ParamsFromJson(Map<String, dynamic> json) => _Params(
-  fajr: (json['Fajr'] as num?)?.toInt(),
-  isha: (json['Isha'] as num?)?.toInt(),
+  fajr: (json['fajr'] as num?)?.toInt(),
+  isha: (json['isha'] as num?)?.toInt(),
 );
 
 Map<String, dynamic> _$ParamsToJson(_Params instance) => <String, dynamic>{
-  'Fajr': instance.fajr,
-  'Isha': instance.isha,
+  'fajr': instance.fajr,
+  'isha': instance.isha,
 };
 
 _Timings _$TimingsFromJson(Map<String, dynamic> json) => _Timings(

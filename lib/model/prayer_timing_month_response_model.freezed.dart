@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PrayerTimingMonthResponseModel {
 
-@JsonKey(name: "code") int? get code;@JsonKey(name: "status") String? get status;@JsonKey(name: "data") List<Datum>? get data;
+ int? get code; String? get status; List<Datum>? get data;
 /// Create a copy of PrayerTimingMonthResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $PrayerTimingMonthResponseModelCopyWith<$Res>  {
   factory $PrayerTimingMonthResponseModelCopyWith(PrayerTimingMonthResponseModel value, $Res Function(PrayerTimingMonthResponseModel) _then) = _$PrayerTimingMonthResponseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "code") int? code,@JsonKey(name: "status") String? status,@JsonKey(name: "data") List<Datum>? data
+ int? code, String? status, List<Datum>? data
 });
 
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "code")  int? code, @JsonKey(name: "status")  String? status, @JsonKey(name: "data")  List<Datum>? data)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? code,  String? status,  List<Datum>? data)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PrayerTimingMonthResponseModel() when $default != null:
 return $default(_that.code,_that.status,_that.data);case _:
@@ -176,7 +176,7 @@ return $default(_that.code,_that.status,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "code")  int? code, @JsonKey(name: "status")  String? status, @JsonKey(name: "data")  List<Datum>? data)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? code,  String? status,  List<Datum>? data)  $default,) {final _that = this;
 switch (_that) {
 case _PrayerTimingMonthResponseModel():
 return $default(_that.code,_that.status,_that.data);case _:
@@ -196,7 +196,7 @@ return $default(_that.code,_that.status,_that.data);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "code")  int? code, @JsonKey(name: "status")  String? status, @JsonKey(name: "data")  List<Datum>? data)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? code,  String? status,  List<Datum>? data)?  $default,) {final _that = this;
 switch (_that) {
 case _PrayerTimingMonthResponseModel() when $default != null:
 return $default(_that.code,_that.status,_that.data);case _:
@@ -211,13 +211,13 @@ return $default(_that.code,_that.status,_that.data);case _:
 @JsonSerializable()
 
 class _PrayerTimingMonthResponseModel implements PrayerTimingMonthResponseModel {
-  const _PrayerTimingMonthResponseModel({@JsonKey(name: "code") this.code, @JsonKey(name: "status") this.status, @JsonKey(name: "data") final  List<Datum>? data}): _data = data;
+  const _PrayerTimingMonthResponseModel({this.code, this.status, final  List<Datum>? data}): _data = data;
   factory _PrayerTimingMonthResponseModel.fromJson(Map<String, dynamic> json) => _$PrayerTimingMonthResponseModelFromJson(json);
 
-@override@JsonKey(name: "code") final  int? code;
-@override@JsonKey(name: "status") final  String? status;
+@override final  int? code;
+@override final  String? status;
  final  List<Datum>? _data;
-@override@JsonKey(name: "data") List<Datum>? get data {
+@override List<Datum>? get data {
   final value = _data;
   if (value == null) return null;
   if (_data is EqualUnmodifiableListView) return _data;
@@ -259,7 +259,7 @@ abstract mixin class _$PrayerTimingMonthResponseModelCopyWith<$Res> implements $
   factory _$PrayerTimingMonthResponseModelCopyWith(_PrayerTimingMonthResponseModel value, $Res Function(_PrayerTimingMonthResponseModel) _then) = __$PrayerTimingMonthResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "code") int? code,@JsonKey(name: "status") String? status,@JsonKey(name: "data") List<Datum>? data
+ int? code, String? status, List<Datum>? data
 });
 
 
@@ -292,7 +292,7 @@ as List<Datum>?,
 /// @nodoc
 mixin _$Datum {
 
-@JsonKey(name: "timings") Timings? get timings;@JsonKey(name: "date") Date? get date;@JsonKey(name: "meta") Meta? get meta;
+ Timings? get timings; Date? get date;
 /// Create a copy of Datum
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -305,16 +305,16 @@ $DatumCopyWith<Datum> get copyWith => _$DatumCopyWithImpl<Datum>(this as Datum, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Datum&&(identical(other.timings, timings) || other.timings == timings)&&(identical(other.date, date) || other.date == date)&&(identical(other.meta, meta) || other.meta == meta));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Datum&&(identical(other.timings, timings) || other.timings == timings)&&(identical(other.date, date) || other.date == date));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,timings,date,meta);
+int get hashCode => Object.hash(runtimeType,timings,date);
 
 @override
 String toString() {
-  return 'Datum(timings: $timings, date: $date, meta: $meta)';
+  return 'Datum(timings: $timings, date: $date)';
 }
 
 
@@ -325,11 +325,11 @@ abstract mixin class $DatumCopyWith<$Res>  {
   factory $DatumCopyWith(Datum value, $Res Function(Datum) _then) = _$DatumCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "timings") Timings? timings,@JsonKey(name: "date") Date? date,@JsonKey(name: "meta") Meta? meta
+ Timings? timings, Date? date
 });
 
 
-$TimingsCopyWith<$Res>? get timings;$DateCopyWith<$Res>? get date;$MetaCopyWith<$Res>? get meta;
+$TimingsCopyWith<$Res>? get timings;$DateCopyWith<$Res>? get date;
 
 }
 /// @nodoc
@@ -342,12 +342,11 @@ class _$DatumCopyWithImpl<$Res>
 
 /// Create a copy of Datum
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? timings = freezed,Object? date = freezed,Object? meta = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? timings = freezed,Object? date = freezed,}) {
   return _then(_self.copyWith(
 timings: freezed == timings ? _self.timings : timings // ignore: cast_nullable_to_non_nullable
 as Timings?,date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as Date?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
-as Meta?,
+as Date?,
   ));
 }
 /// Create a copy of Datum
@@ -373,18 +372,6 @@ $DateCopyWith<$Res>? get date {
 
   return $DateCopyWith<$Res>(_self.date!, (value) {
     return _then(_self.copyWith(date: value));
-  });
-}/// Create a copy of Datum
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MetaCopyWith<$Res>? get meta {
-    if (_self.meta == null) {
-    return null;
-  }
-
-  return $MetaCopyWith<$Res>(_self.meta!, (value) {
-    return _then(_self.copyWith(meta: value));
   });
 }
 }
@@ -468,10 +455,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "timings")  Timings? timings, @JsonKey(name: "date")  Date? date, @JsonKey(name: "meta")  Meta? meta)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Timings? timings,  Date? date)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Datum() when $default != null:
-return $default(_that.timings,_that.date,_that.meta);case _:
+return $default(_that.timings,_that.date);case _:
   return orElse();
 
 }
@@ -489,10 +476,10 @@ return $default(_that.timings,_that.date,_that.meta);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "timings")  Timings? timings, @JsonKey(name: "date")  Date? date, @JsonKey(name: "meta")  Meta? meta)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Timings? timings,  Date? date)  $default,) {final _that = this;
 switch (_that) {
 case _Datum():
-return $default(_that.timings,_that.date,_that.meta);case _:
+return $default(_that.timings,_that.date);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -509,10 +496,10 @@ return $default(_that.timings,_that.date,_that.meta);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "timings")  Timings? timings, @JsonKey(name: "date")  Date? date, @JsonKey(name: "meta")  Meta? meta)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Timings? timings,  Date? date)?  $default,) {final _that = this;
 switch (_that) {
 case _Datum() when $default != null:
-return $default(_that.timings,_that.date,_that.meta);case _:
+return $default(_that.timings,_that.date);case _:
   return null;
 
 }
@@ -524,12 +511,11 @@ return $default(_that.timings,_that.date,_that.meta);case _:
 @JsonSerializable()
 
 class _Datum implements Datum {
-  const _Datum({@JsonKey(name: "timings") this.timings, @JsonKey(name: "date") this.date, @JsonKey(name: "meta") this.meta});
+  const _Datum({this.timings, this.date});
   factory _Datum.fromJson(Map<String, dynamic> json) => _$DatumFromJson(json);
 
-@override@JsonKey(name: "timings") final  Timings? timings;
-@override@JsonKey(name: "date") final  Date? date;
-@override@JsonKey(name: "meta") final  Meta? meta;
+@override final  Timings? timings;
+@override final  Date? date;
 
 /// Create a copy of Datum
 /// with the given fields replaced by the non-null parameter values.
@@ -544,16 +530,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Datum&&(identical(other.timings, timings) || other.timings == timings)&&(identical(other.date, date) || other.date == date)&&(identical(other.meta, meta) || other.meta == meta));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Datum&&(identical(other.timings, timings) || other.timings == timings)&&(identical(other.date, date) || other.date == date));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,timings,date,meta);
+int get hashCode => Object.hash(runtimeType,timings,date);
 
 @override
 String toString() {
-  return 'Datum(timings: $timings, date: $date, meta: $meta)';
+  return 'Datum(timings: $timings, date: $date)';
 }
 
 
@@ -564,11 +550,11 @@ abstract mixin class _$DatumCopyWith<$Res> implements $DatumCopyWith<$Res> {
   factory _$DatumCopyWith(_Datum value, $Res Function(_Datum) _then) = __$DatumCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "timings") Timings? timings,@JsonKey(name: "date") Date? date,@JsonKey(name: "meta") Meta? meta
+ Timings? timings, Date? date
 });
 
 
-@override $TimingsCopyWith<$Res>? get timings;@override $DateCopyWith<$Res>? get date;@override $MetaCopyWith<$Res>? get meta;
+@override $TimingsCopyWith<$Res>? get timings;@override $DateCopyWith<$Res>? get date;
 
 }
 /// @nodoc
@@ -581,12 +567,11 @@ class __$DatumCopyWithImpl<$Res>
 
 /// Create a copy of Datum
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? timings = freezed,Object? date = freezed,Object? meta = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? timings = freezed,Object? date = freezed,}) {
   return _then(_Datum(
 timings: freezed == timings ? _self.timings : timings // ignore: cast_nullable_to_non_nullable
 as Timings?,date: freezed == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as Date?,meta: freezed == meta ? _self.meta : meta // ignore: cast_nullable_to_non_nullable
-as Meta?,
+as Date?,
   ));
 }
 
@@ -614,18 +599,6 @@ $DateCopyWith<$Res>? get date {
   return $DateCopyWith<$Res>(_self.date!, (value) {
     return _then(_self.copyWith(date: value));
   });
-}/// Create a copy of Datum
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$MetaCopyWith<$Res>? get meta {
-    if (_self.meta == null) {
-    return null;
-  }
-
-  return $MetaCopyWith<$Res>(_self.meta!, (value) {
-    return _then(_self.copyWith(meta: value));
-  });
 }
 }
 
@@ -633,7 +606,7 @@ $MetaCopyWith<$Res>? get meta {
 /// @nodoc
 mixin _$Date {
 
-@JsonKey(name: "readable") String? get readable;@JsonKey(name: "timestamp") String? get timestamp;@JsonKey(name: "gregorian") Gregorian? get gregorian;@JsonKey(name: "hijri") Hijri? get hijri;
+ String? get readable; String? get timestamp; Gregorian? get gregorian; Hijri? get hijri;
 /// Create a copy of Date
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -666,7 +639,7 @@ abstract mixin class $DateCopyWith<$Res>  {
   factory $DateCopyWith(Date value, $Res Function(Date) _then) = _$DateCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "readable") String? readable,@JsonKey(name: "timestamp") String? timestamp,@JsonKey(name: "gregorian") Gregorian? gregorian,@JsonKey(name: "hijri") Hijri? hijri
+ String? readable, String? timestamp, Gregorian? gregorian, Hijri? hijri
 });
 
 
@@ -798,7 +771,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "readable")  String? readable, @JsonKey(name: "timestamp")  String? timestamp, @JsonKey(name: "gregorian")  Gregorian? gregorian, @JsonKey(name: "hijri")  Hijri? hijri)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? readable,  String? timestamp,  Gregorian? gregorian,  Hijri? hijri)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Date() when $default != null:
 return $default(_that.readable,_that.timestamp,_that.gregorian,_that.hijri);case _:
@@ -819,7 +792,7 @@ return $default(_that.readable,_that.timestamp,_that.gregorian,_that.hijri);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "readable")  String? readable, @JsonKey(name: "timestamp")  String? timestamp, @JsonKey(name: "gregorian")  Gregorian? gregorian, @JsonKey(name: "hijri")  Hijri? hijri)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? readable,  String? timestamp,  Gregorian? gregorian,  Hijri? hijri)  $default,) {final _that = this;
 switch (_that) {
 case _Date():
 return $default(_that.readable,_that.timestamp,_that.gregorian,_that.hijri);case _:
@@ -839,7 +812,7 @@ return $default(_that.readable,_that.timestamp,_that.gregorian,_that.hijri);case
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "readable")  String? readable, @JsonKey(name: "timestamp")  String? timestamp, @JsonKey(name: "gregorian")  Gregorian? gregorian, @JsonKey(name: "hijri")  Hijri? hijri)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? readable,  String? timestamp,  Gregorian? gregorian,  Hijri? hijri)?  $default,) {final _that = this;
 switch (_that) {
 case _Date() when $default != null:
 return $default(_that.readable,_that.timestamp,_that.gregorian,_that.hijri);case _:
@@ -854,13 +827,13 @@ return $default(_that.readable,_that.timestamp,_that.gregorian,_that.hijri);case
 @JsonSerializable()
 
 class _Date implements Date {
-  const _Date({@JsonKey(name: "readable") this.readable, @JsonKey(name: "timestamp") this.timestamp, @JsonKey(name: "gregorian") this.gregorian, @JsonKey(name: "hijri") this.hijri});
+  const _Date({this.readable, this.timestamp, this.gregorian, this.hijri});
   factory _Date.fromJson(Map<String, dynamic> json) => _$DateFromJson(json);
 
-@override@JsonKey(name: "readable") final  String? readable;
-@override@JsonKey(name: "timestamp") final  String? timestamp;
-@override@JsonKey(name: "gregorian") final  Gregorian? gregorian;
-@override@JsonKey(name: "hijri") final  Hijri? hijri;
+@override final  String? readable;
+@override final  String? timestamp;
+@override final  Gregorian? gregorian;
+@override final  Hijri? hijri;
 
 /// Create a copy of Date
 /// with the given fields replaced by the non-null parameter values.
@@ -895,7 +868,7 @@ abstract mixin class _$DateCopyWith<$Res> implements $DateCopyWith<$Res> {
   factory _$DateCopyWith(_Date value, $Res Function(_Date) _then) = __$DateCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "readable") String? readable,@JsonKey(name: "timestamp") String? timestamp,@JsonKey(name: "gregorian") Gregorian? gregorian,@JsonKey(name: "hijri") Hijri? hijri
+ String? readable, String? timestamp, Gregorian? gregorian, Hijri? hijri
 });
 
 
@@ -953,7 +926,7 @@ $HijriCopyWith<$Res>? get hijri {
 /// @nodoc
 mixin _$Gregorian {
 
-@JsonKey(name: "date") String? get date;@JsonKey(name: "format") Format? get format;@JsonKey(name: "day") String? get day;@JsonKey(name: "weekday") GregorianWeekday? get weekday;@JsonKey(name: "month") GregorianMonth? get month;@JsonKey(name: "year") String? get year;@JsonKey(name: "designation") Designation? get designation;@JsonKey(name: "lunarSighting") bool? get lunarSighting;
+ String? get date; Format? get format; String? get day; GregorianWeekday? get weekday; GregorianMonth? get month; String? get year; Designation? get designation; bool? get lunarSighting;
 /// Create a copy of Gregorian
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -986,7 +959,7 @@ abstract mixin class $GregorianCopyWith<$Res>  {
   factory $GregorianCopyWith(Gregorian value, $Res Function(Gregorian) _then) = _$GregorianCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "date") String? date,@JsonKey(name: "format") Format? format,@JsonKey(name: "day") String? day,@JsonKey(name: "weekday") GregorianWeekday? weekday,@JsonKey(name: "month") GregorianMonth? month,@JsonKey(name: "year") String? year,@JsonKey(name: "designation") Designation? designation,@JsonKey(name: "lunarSighting") bool? lunarSighting
+ String? date, Format? format, String? day, GregorianWeekday? weekday, GregorianMonth? month, String? year, Designation? designation, bool? lunarSighting
 });
 
 
@@ -1134,7 +1107,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "date")  String? date, @JsonKey(name: "format")  Format? format, @JsonKey(name: "day")  String? day, @JsonKey(name: "weekday")  GregorianWeekday? weekday, @JsonKey(name: "month")  GregorianMonth? month, @JsonKey(name: "year")  String? year, @JsonKey(name: "designation")  Designation? designation, @JsonKey(name: "lunarSighting")  bool? lunarSighting)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? date,  Format? format,  String? day,  GregorianWeekday? weekday,  GregorianMonth? month,  String? year,  Designation? designation,  bool? lunarSighting)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Gregorian() when $default != null:
 return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_that.year,_that.designation,_that.lunarSighting);case _:
@@ -1155,7 +1128,7 @@ return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "date")  String? date, @JsonKey(name: "format")  Format? format, @JsonKey(name: "day")  String? day, @JsonKey(name: "weekday")  GregorianWeekday? weekday, @JsonKey(name: "month")  GregorianMonth? month, @JsonKey(name: "year")  String? year, @JsonKey(name: "designation")  Designation? designation, @JsonKey(name: "lunarSighting")  bool? lunarSighting)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? date,  Format? format,  String? day,  GregorianWeekday? weekday,  GregorianMonth? month,  String? year,  Designation? designation,  bool? lunarSighting)  $default,) {final _that = this;
 switch (_that) {
 case _Gregorian():
 return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_that.year,_that.designation,_that.lunarSighting);case _:
@@ -1175,7 +1148,7 @@ return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "date")  String? date, @JsonKey(name: "format")  Format? format, @JsonKey(name: "day")  String? day, @JsonKey(name: "weekday")  GregorianWeekday? weekday, @JsonKey(name: "month")  GregorianMonth? month, @JsonKey(name: "year")  String? year, @JsonKey(name: "designation")  Designation? designation, @JsonKey(name: "lunarSighting")  bool? lunarSighting)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? date,  Format? format,  String? day,  GregorianWeekday? weekday,  GregorianMonth? month,  String? year,  Designation? designation,  bool? lunarSighting)?  $default,) {final _that = this;
 switch (_that) {
 case _Gregorian() when $default != null:
 return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_that.year,_that.designation,_that.lunarSighting);case _:
@@ -1190,17 +1163,17 @@ return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_tha
 @JsonSerializable()
 
 class _Gregorian implements Gregorian {
-  const _Gregorian({@JsonKey(name: "date") this.date, @JsonKey(name: "format") this.format, @JsonKey(name: "day") this.day, @JsonKey(name: "weekday") this.weekday, @JsonKey(name: "month") this.month, @JsonKey(name: "year") this.year, @JsonKey(name: "designation") this.designation, @JsonKey(name: "lunarSighting") this.lunarSighting});
+  const _Gregorian({this.date, this.format, this.day, this.weekday, this.month, this.year, this.designation, this.lunarSighting});
   factory _Gregorian.fromJson(Map<String, dynamic> json) => _$GregorianFromJson(json);
 
-@override@JsonKey(name: "date") final  String? date;
-@override@JsonKey(name: "format") final  Format? format;
-@override@JsonKey(name: "day") final  String? day;
-@override@JsonKey(name: "weekday") final  GregorianWeekday? weekday;
-@override@JsonKey(name: "month") final  GregorianMonth? month;
-@override@JsonKey(name: "year") final  String? year;
-@override@JsonKey(name: "designation") final  Designation? designation;
-@override@JsonKey(name: "lunarSighting") final  bool? lunarSighting;
+@override final  String? date;
+@override final  Format? format;
+@override final  String? day;
+@override final  GregorianWeekday? weekday;
+@override final  GregorianMonth? month;
+@override final  String? year;
+@override final  Designation? designation;
+@override final  bool? lunarSighting;
 
 /// Create a copy of Gregorian
 /// with the given fields replaced by the non-null parameter values.
@@ -1235,7 +1208,7 @@ abstract mixin class _$GregorianCopyWith<$Res> implements $GregorianCopyWith<$Re
   factory _$GregorianCopyWith(_Gregorian value, $Res Function(_Gregorian) _then) = __$GregorianCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "date") String? date,@JsonKey(name: "format") Format? format,@JsonKey(name: "day") String? day,@JsonKey(name: "weekday") GregorianWeekday? weekday,@JsonKey(name: "month") GregorianMonth? month,@JsonKey(name: "year") String? year,@JsonKey(name: "designation") Designation? designation,@JsonKey(name: "lunarSighting") bool? lunarSighting
+ String? date, Format? format, String? day, GregorianWeekday? weekday, GregorianMonth? month, String? year, Designation? designation, bool? lunarSighting
 });
 
 
@@ -1309,7 +1282,7 @@ $DesignationCopyWith<$Res>? get designation {
 /// @nodoc
 mixin _$Designation {
 
-@JsonKey(name: "abbreviated") Abbreviated? get abbreviated;@JsonKey(name: "expanded") Expanded? get expanded;
+ Abbreviated? get abbreviated; Expanded? get expanded;
 /// Create a copy of Designation
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1342,7 +1315,7 @@ abstract mixin class $DesignationCopyWith<$Res>  {
   factory $DesignationCopyWith(Designation value, $Res Function(Designation) _then) = _$DesignationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "abbreviated") Abbreviated? abbreviated,@JsonKey(name: "expanded") Expanded? expanded
+ Abbreviated? abbreviated, Expanded? expanded
 });
 
 
@@ -1448,7 +1421,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "abbreviated")  Abbreviated? abbreviated, @JsonKey(name: "expanded")  Expanded? expanded)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Abbreviated? abbreviated,  Expanded? expanded)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Designation() when $default != null:
 return $default(_that.abbreviated,_that.expanded);case _:
@@ -1469,7 +1442,7 @@ return $default(_that.abbreviated,_that.expanded);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "abbreviated")  Abbreviated? abbreviated, @JsonKey(name: "expanded")  Expanded? expanded)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Abbreviated? abbreviated,  Expanded? expanded)  $default,) {final _that = this;
 switch (_that) {
 case _Designation():
 return $default(_that.abbreviated,_that.expanded);case _:
@@ -1489,7 +1462,7 @@ return $default(_that.abbreviated,_that.expanded);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "abbreviated")  Abbreviated? abbreviated, @JsonKey(name: "expanded")  Expanded? expanded)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Abbreviated? abbreviated,  Expanded? expanded)?  $default,) {final _that = this;
 switch (_that) {
 case _Designation() when $default != null:
 return $default(_that.abbreviated,_that.expanded);case _:
@@ -1504,11 +1477,11 @@ return $default(_that.abbreviated,_that.expanded);case _:
 @JsonSerializable()
 
 class _Designation implements Designation {
-  const _Designation({@JsonKey(name: "abbreviated") this.abbreviated, @JsonKey(name: "expanded") this.expanded});
+  const _Designation({this.abbreviated, this.expanded});
   factory _Designation.fromJson(Map<String, dynamic> json) => _$DesignationFromJson(json);
 
-@override@JsonKey(name: "abbreviated") final  Abbreviated? abbreviated;
-@override@JsonKey(name: "expanded") final  Expanded? expanded;
+@override final  Abbreviated? abbreviated;
+@override final  Expanded? expanded;
 
 /// Create a copy of Designation
 /// with the given fields replaced by the non-null parameter values.
@@ -1543,7 +1516,7 @@ abstract mixin class _$DesignationCopyWith<$Res> implements $DesignationCopyWith
   factory _$DesignationCopyWith(_Designation value, $Res Function(_Designation) _then) = __$DesignationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "abbreviated") Abbreviated? abbreviated,@JsonKey(name: "expanded") Expanded? expanded
+ Abbreviated? abbreviated, Expanded? expanded
 });
 
 
@@ -1575,7 +1548,7 @@ as Expanded?,
 /// @nodoc
 mixin _$GregorianMonth {
 
-@JsonKey(name: "number") int? get number;@JsonKey(name: "en") PurpleEn? get en;
+ int? get number; PurpleEn? get en;
 /// Create a copy of GregorianMonth
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1608,7 +1581,7 @@ abstract mixin class $GregorianMonthCopyWith<$Res>  {
   factory $GregorianMonthCopyWith(GregorianMonth value, $Res Function(GregorianMonth) _then) = _$GregorianMonthCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "number") int? number,@JsonKey(name: "en") PurpleEn? en
+ int? number, PurpleEn? en
 });
 
 
@@ -1714,7 +1687,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "number")  int? number, @JsonKey(name: "en")  PurpleEn? en)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? number,  PurpleEn? en)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GregorianMonth() when $default != null:
 return $default(_that.number,_that.en);case _:
@@ -1735,7 +1708,7 @@ return $default(_that.number,_that.en);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "number")  int? number, @JsonKey(name: "en")  PurpleEn? en)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? number,  PurpleEn? en)  $default,) {final _that = this;
 switch (_that) {
 case _GregorianMonth():
 return $default(_that.number,_that.en);case _:
@@ -1755,7 +1728,7 @@ return $default(_that.number,_that.en);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "number")  int? number, @JsonKey(name: "en")  PurpleEn? en)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? number,  PurpleEn? en)?  $default,) {final _that = this;
 switch (_that) {
 case _GregorianMonth() when $default != null:
 return $default(_that.number,_that.en);case _:
@@ -1770,11 +1743,11 @@ return $default(_that.number,_that.en);case _:
 @JsonSerializable()
 
 class _GregorianMonth implements GregorianMonth {
-  const _GregorianMonth({@JsonKey(name: "number") this.number, @JsonKey(name: "en") this.en});
+  const _GregorianMonth({this.number, this.en});
   factory _GregorianMonth.fromJson(Map<String, dynamic> json) => _$GregorianMonthFromJson(json);
 
-@override@JsonKey(name: "number") final  int? number;
-@override@JsonKey(name: "en") final  PurpleEn? en;
+@override final  int? number;
+@override final  PurpleEn? en;
 
 /// Create a copy of GregorianMonth
 /// with the given fields replaced by the non-null parameter values.
@@ -1809,7 +1782,7 @@ abstract mixin class _$GregorianMonthCopyWith<$Res> implements $GregorianMonthCo
   factory _$GregorianMonthCopyWith(_GregorianMonth value, $Res Function(_GregorianMonth) _then) = __$GregorianMonthCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "number") int? number,@JsonKey(name: "en") PurpleEn? en
+ int? number, PurpleEn? en
 });
 
 
@@ -1841,7 +1814,7 @@ as PurpleEn?,
 /// @nodoc
 mixin _$GregorianWeekday {
 
-@JsonKey(name: "en") String? get en;
+ String? get en;
 /// Create a copy of GregorianWeekday
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1874,7 +1847,7 @@ abstract mixin class $GregorianWeekdayCopyWith<$Res>  {
   factory $GregorianWeekdayCopyWith(GregorianWeekday value, $Res Function(GregorianWeekday) _then) = _$GregorianWeekdayCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "en") String? en
+ String? en
 });
 
 
@@ -1979,7 +1952,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "en")  String? en)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? en)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _GregorianWeekday() when $default != null:
 return $default(_that.en);case _:
@@ -2000,7 +1973,7 @@ return $default(_that.en);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "en")  String? en)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? en)  $default,) {final _that = this;
 switch (_that) {
 case _GregorianWeekday():
 return $default(_that.en);case _:
@@ -2020,7 +1993,7 @@ return $default(_that.en);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "en")  String? en)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? en)?  $default,) {final _that = this;
 switch (_that) {
 case _GregorianWeekday() when $default != null:
 return $default(_that.en);case _:
@@ -2035,10 +2008,10 @@ return $default(_that.en);case _:
 @JsonSerializable()
 
 class _GregorianWeekday implements GregorianWeekday {
-  const _GregorianWeekday({@JsonKey(name: "en") this.en});
+  const _GregorianWeekday({this.en});
   factory _GregorianWeekday.fromJson(Map<String, dynamic> json) => _$GregorianWeekdayFromJson(json);
 
-@override@JsonKey(name: "en") final  String? en;
+@override final  String? en;
 
 /// Create a copy of GregorianWeekday
 /// with the given fields replaced by the non-null parameter values.
@@ -2073,7 +2046,7 @@ abstract mixin class _$GregorianWeekdayCopyWith<$Res> implements $GregorianWeekd
   factory _$GregorianWeekdayCopyWith(_GregorianWeekday value, $Res Function(_GregorianWeekday) _then) = __$GregorianWeekdayCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "en") String? en
+ String? en
 });
 
 
@@ -2104,7 +2077,7 @@ as String?,
 /// @nodoc
 mixin _$Hijri {
 
-@JsonKey(name: "date") String? get date;@JsonKey(name: "format") Format? get format;@JsonKey(name: "day") String? get day;@JsonKey(name: "weekday") HijriWeekday? get weekday;@JsonKey(name: "month") HijriMonth? get month;@JsonKey(name: "year") String? get year;@JsonKey(name: "designation") Designation? get designation;@JsonKey(name: "holidays") List<String>? get holidays;@JsonKey(name: "adjustedHolidays") List<dynamic>? get adjustedHolidays;@JsonKey(name: "method") MethodEnum? get method;
+ String? get date; Format? get format; String? get day; HijriWeekday? get weekday; HijriMonth? get month; String? get year; Designation? get designation; List<String>? get holidays; List<dynamic>? get adjustedHolidays; MethodEnum? get method;
 /// Create a copy of Hijri
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2137,7 +2110,7 @@ abstract mixin class $HijriCopyWith<$Res>  {
   factory $HijriCopyWith(Hijri value, $Res Function(Hijri) _then) = _$HijriCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "date") String? date,@JsonKey(name: "format") Format? format,@JsonKey(name: "day") String? day,@JsonKey(name: "weekday") HijriWeekday? weekday,@JsonKey(name: "month") HijriMonth? month,@JsonKey(name: "year") String? year,@JsonKey(name: "designation") Designation? designation,@JsonKey(name: "holidays") List<String>? holidays,@JsonKey(name: "adjustedHolidays") List<dynamic>? adjustedHolidays,@JsonKey(name: "method") MethodEnum? method
+ String? date, Format? format, String? day, HijriWeekday? weekday, HijriMonth? month, String? year, Designation? designation, List<String>? holidays, List<dynamic>? adjustedHolidays, MethodEnum? method
 });
 
 
@@ -2287,7 +2260,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "date")  String? date, @JsonKey(name: "format")  Format? format, @JsonKey(name: "day")  String? day, @JsonKey(name: "weekday")  HijriWeekday? weekday, @JsonKey(name: "month")  HijriMonth? month, @JsonKey(name: "year")  String? year, @JsonKey(name: "designation")  Designation? designation, @JsonKey(name: "holidays")  List<String>? holidays, @JsonKey(name: "adjustedHolidays")  List<dynamic>? adjustedHolidays, @JsonKey(name: "method")  MethodEnum? method)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? date,  Format? format,  String? day,  HijriWeekday? weekday,  HijriMonth? month,  String? year,  Designation? designation,  List<String>? holidays,  List<dynamic>? adjustedHolidays,  MethodEnum? method)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Hijri() when $default != null:
 return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_that.year,_that.designation,_that.holidays,_that.adjustedHolidays,_that.method);case _:
@@ -2308,7 +2281,7 @@ return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "date")  String? date, @JsonKey(name: "format")  Format? format, @JsonKey(name: "day")  String? day, @JsonKey(name: "weekday")  HijriWeekday? weekday, @JsonKey(name: "month")  HijriMonth? month, @JsonKey(name: "year")  String? year, @JsonKey(name: "designation")  Designation? designation, @JsonKey(name: "holidays")  List<String>? holidays, @JsonKey(name: "adjustedHolidays")  List<dynamic>? adjustedHolidays, @JsonKey(name: "method")  MethodEnum? method)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? date,  Format? format,  String? day,  HijriWeekday? weekday,  HijriMonth? month,  String? year,  Designation? designation,  List<String>? holidays,  List<dynamic>? adjustedHolidays,  MethodEnum? method)  $default,) {final _that = this;
 switch (_that) {
 case _Hijri():
 return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_that.year,_that.designation,_that.holidays,_that.adjustedHolidays,_that.method);case _:
@@ -2328,7 +2301,7 @@ return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "date")  String? date, @JsonKey(name: "format")  Format? format, @JsonKey(name: "day")  String? day, @JsonKey(name: "weekday")  HijriWeekday? weekday, @JsonKey(name: "month")  HijriMonth? month, @JsonKey(name: "year")  String? year, @JsonKey(name: "designation")  Designation? designation, @JsonKey(name: "holidays")  List<String>? holidays, @JsonKey(name: "adjustedHolidays")  List<dynamic>? adjustedHolidays, @JsonKey(name: "method")  MethodEnum? method)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? date,  Format? format,  String? day,  HijriWeekday? weekday,  HijriMonth? month,  String? year,  Designation? designation,  List<String>? holidays,  List<dynamic>? adjustedHolidays,  MethodEnum? method)?  $default,) {final _that = this;
 switch (_that) {
 case _Hijri() when $default != null:
 return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_that.year,_that.designation,_that.holidays,_that.adjustedHolidays,_that.method);case _:
@@ -2343,18 +2316,18 @@ return $default(_that.date,_that.format,_that.day,_that.weekday,_that.month,_tha
 @JsonSerializable()
 
 class _Hijri implements Hijri {
-  const _Hijri({@JsonKey(name: "date") this.date, @JsonKey(name: "format") this.format, @JsonKey(name: "day") this.day, @JsonKey(name: "weekday") this.weekday, @JsonKey(name: "month") this.month, @JsonKey(name: "year") this.year, @JsonKey(name: "designation") this.designation, @JsonKey(name: "holidays") final  List<String>? holidays, @JsonKey(name: "adjustedHolidays") final  List<dynamic>? adjustedHolidays, @JsonKey(name: "method") this.method}): _holidays = holidays,_adjustedHolidays = adjustedHolidays;
+  const _Hijri({this.date, this.format, this.day, this.weekday, this.month, this.year, this.designation, final  List<String>? holidays, final  List<dynamic>? adjustedHolidays, this.method}): _holidays = holidays,_adjustedHolidays = adjustedHolidays;
   factory _Hijri.fromJson(Map<String, dynamic> json) => _$HijriFromJson(json);
 
-@override@JsonKey(name: "date") final  String? date;
-@override@JsonKey(name: "format") final  Format? format;
-@override@JsonKey(name: "day") final  String? day;
-@override@JsonKey(name: "weekday") final  HijriWeekday? weekday;
-@override@JsonKey(name: "month") final  HijriMonth? month;
-@override@JsonKey(name: "year") final  String? year;
-@override@JsonKey(name: "designation") final  Designation? designation;
+@override final  String? date;
+@override final  Format? format;
+@override final  String? day;
+@override final  HijriWeekday? weekday;
+@override final  HijriMonth? month;
+@override final  String? year;
+@override final  Designation? designation;
  final  List<String>? _holidays;
-@override@JsonKey(name: "holidays") List<String>? get holidays {
+@override List<String>? get holidays {
   final value = _holidays;
   if (value == null) return null;
   if (_holidays is EqualUnmodifiableListView) return _holidays;
@@ -2363,7 +2336,7 @@ class _Hijri implements Hijri {
 }
 
  final  List<dynamic>? _adjustedHolidays;
-@override@JsonKey(name: "adjustedHolidays") List<dynamic>? get adjustedHolidays {
+@override List<dynamic>? get adjustedHolidays {
   final value = _adjustedHolidays;
   if (value == null) return null;
   if (_adjustedHolidays is EqualUnmodifiableListView) return _adjustedHolidays;
@@ -2371,7 +2344,7 @@ class _Hijri implements Hijri {
   return EqualUnmodifiableListView(value);
 }
 
-@override@JsonKey(name: "method") final  MethodEnum? method;
+@override final  MethodEnum? method;
 
 /// Create a copy of Hijri
 /// with the given fields replaced by the non-null parameter values.
@@ -2406,7 +2379,7 @@ abstract mixin class _$HijriCopyWith<$Res> implements $HijriCopyWith<$Res> {
   factory _$HijriCopyWith(_Hijri value, $Res Function(_Hijri) _then) = __$HijriCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "date") String? date,@JsonKey(name: "format") Format? format,@JsonKey(name: "day") String? day,@JsonKey(name: "weekday") HijriWeekday? weekday,@JsonKey(name: "month") HijriMonth? month,@JsonKey(name: "year") String? year,@JsonKey(name: "designation") Designation? designation,@JsonKey(name: "holidays") List<String>? holidays,@JsonKey(name: "adjustedHolidays") List<dynamic>? adjustedHolidays,@JsonKey(name: "method") MethodEnum? method
+ String? date, Format? format, String? day, HijriWeekday? weekday, HijriMonth? month, String? year, Designation? designation, List<String>? holidays, List<dynamic>? adjustedHolidays, MethodEnum? method
 });
 
 
@@ -2482,7 +2455,7 @@ $DesignationCopyWith<$Res>? get designation {
 /// @nodoc
 mixin _$HijriMonth {
 
-@JsonKey(name: "number") int? get number;@JsonKey(name: "en") FluffyEn? get en;@JsonKey(name: "ar") Ar? get ar;@JsonKey(name: "days") int? get days;
+ int? get number; FluffyEn? get en; Ar? get ar; int? get days;
 /// Create a copy of HijriMonth
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2515,7 +2488,7 @@ abstract mixin class $HijriMonthCopyWith<$Res>  {
   factory $HijriMonthCopyWith(HijriMonth value, $Res Function(HijriMonth) _then) = _$HijriMonthCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "number") int? number,@JsonKey(name: "en") FluffyEn? en,@JsonKey(name: "ar") Ar? ar,@JsonKey(name: "days") int? days
+ int? number, FluffyEn? en, Ar? ar, int? days
 });
 
 
@@ -2623,7 +2596,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "number")  int? number, @JsonKey(name: "en")  FluffyEn? en, @JsonKey(name: "ar")  Ar? ar, @JsonKey(name: "days")  int? days)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? number,  FluffyEn? en,  Ar? ar,  int? days)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HijriMonth() when $default != null:
 return $default(_that.number,_that.en,_that.ar,_that.days);case _:
@@ -2644,7 +2617,7 @@ return $default(_that.number,_that.en,_that.ar,_that.days);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "number")  int? number, @JsonKey(name: "en")  FluffyEn? en, @JsonKey(name: "ar")  Ar? ar, @JsonKey(name: "days")  int? days)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? number,  FluffyEn? en,  Ar? ar,  int? days)  $default,) {final _that = this;
 switch (_that) {
 case _HijriMonth():
 return $default(_that.number,_that.en,_that.ar,_that.days);case _:
@@ -2664,7 +2637,7 @@ return $default(_that.number,_that.en,_that.ar,_that.days);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "number")  int? number, @JsonKey(name: "en")  FluffyEn? en, @JsonKey(name: "ar")  Ar? ar, @JsonKey(name: "days")  int? days)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? number,  FluffyEn? en,  Ar? ar,  int? days)?  $default,) {final _that = this;
 switch (_that) {
 case _HijriMonth() when $default != null:
 return $default(_that.number,_that.en,_that.ar,_that.days);case _:
@@ -2679,13 +2652,13 @@ return $default(_that.number,_that.en,_that.ar,_that.days);case _:
 @JsonSerializable()
 
 class _HijriMonth implements HijriMonth {
-  const _HijriMonth({@JsonKey(name: "number") this.number, @JsonKey(name: "en") this.en, @JsonKey(name: "ar") this.ar, @JsonKey(name: "days") this.days});
+  const _HijriMonth({this.number, this.en, this.ar, this.days});
   factory _HijriMonth.fromJson(Map<String, dynamic> json) => _$HijriMonthFromJson(json);
 
-@override@JsonKey(name: "number") final  int? number;
-@override@JsonKey(name: "en") final  FluffyEn? en;
-@override@JsonKey(name: "ar") final  Ar? ar;
-@override@JsonKey(name: "days") final  int? days;
+@override final  int? number;
+@override final  FluffyEn? en;
+@override final  Ar? ar;
+@override final  int? days;
 
 /// Create a copy of HijriMonth
 /// with the given fields replaced by the non-null parameter values.
@@ -2720,7 +2693,7 @@ abstract mixin class _$HijriMonthCopyWith<$Res> implements $HijriMonthCopyWith<$
   factory _$HijriMonthCopyWith(_HijriMonth value, $Res Function(_HijriMonth) _then) = __$HijriMonthCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "number") int? number,@JsonKey(name: "en") FluffyEn? en,@JsonKey(name: "ar") Ar? ar,@JsonKey(name: "days") int? days
+ int? number, FluffyEn? en, Ar? ar, int? days
 });
 
 
@@ -2754,7 +2727,7 @@ as int?,
 /// @nodoc
 mixin _$HijriWeekday {
 
-@JsonKey(name: "en") String? get en;@JsonKey(name: "ar") String? get ar;
+ String? get en; String? get ar;
 /// Create a copy of HijriWeekday
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2787,7 +2760,7 @@ abstract mixin class $HijriWeekdayCopyWith<$Res>  {
   factory $HijriWeekdayCopyWith(HijriWeekday value, $Res Function(HijriWeekday) _then) = _$HijriWeekdayCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "en") String? en,@JsonKey(name: "ar") String? ar
+ String? en, String? ar
 });
 
 
@@ -2893,7 +2866,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "en")  String? en, @JsonKey(name: "ar")  String? ar)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? en,  String? ar)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HijriWeekday() when $default != null:
 return $default(_that.en,_that.ar);case _:
@@ -2914,7 +2887,7 @@ return $default(_that.en,_that.ar);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "en")  String? en, @JsonKey(name: "ar")  String? ar)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? en,  String? ar)  $default,) {final _that = this;
 switch (_that) {
 case _HijriWeekday():
 return $default(_that.en,_that.ar);case _:
@@ -2934,7 +2907,7 @@ return $default(_that.en,_that.ar);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "en")  String? en, @JsonKey(name: "ar")  String? ar)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? en,  String? ar)?  $default,) {final _that = this;
 switch (_that) {
 case _HijriWeekday() when $default != null:
 return $default(_that.en,_that.ar);case _:
@@ -2949,11 +2922,11 @@ return $default(_that.en,_that.ar);case _:
 @JsonSerializable()
 
 class _HijriWeekday implements HijriWeekday {
-  const _HijriWeekday({@JsonKey(name: "en") this.en, @JsonKey(name: "ar") this.ar});
+  const _HijriWeekday({this.en, this.ar});
   factory _HijriWeekday.fromJson(Map<String, dynamic> json) => _$HijriWeekdayFromJson(json);
 
-@override@JsonKey(name: "en") final  String? en;
-@override@JsonKey(name: "ar") final  String? ar;
+@override final  String? en;
+@override final  String? ar;
 
 /// Create a copy of HijriWeekday
 /// with the given fields replaced by the non-null parameter values.
@@ -2988,7 +2961,7 @@ abstract mixin class _$HijriWeekdayCopyWith<$Res> implements $HijriWeekdayCopyWi
   factory _$HijriWeekdayCopyWith(_HijriWeekday value, $Res Function(_HijriWeekday) _then) = __$HijriWeekdayCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "en") String? en,@JsonKey(name: "ar") String? ar
+ String? en, String? ar
 });
 
 
@@ -3020,7 +2993,7 @@ as String?,
 /// @nodoc
 mixin _$Meta {
 
-@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;@JsonKey(name: "timezone") Timezone? get timezone;@JsonKey(name: "method") MethodClass? get method;@JsonKey(name: "latitudeAdjustmentMethod") LatitudeAdjustmentMethod? get latitudeAdjustmentMethod;@JsonKey(name: "midnightMode") MidnightMode? get midnightMode;@JsonKey(name: "school") MidnightMode? get school;@JsonKey(name: "offset") Map<String, int>? get offset;
+ double? get latitude; double? get longitude; Timezone? get timezone; MethodClass? get method; LatitudeAdjustmentMethod? get latitudeAdjustmentMethod; MidnightMode? get midnightMode; MidnightMode? get school; Map<String, int>? get offset;
 /// Create a copy of Meta
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3053,7 +3026,7 @@ abstract mixin class $MetaCopyWith<$Res>  {
   factory $MetaCopyWith(Meta value, $Res Function(Meta) _then) = _$MetaCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "timezone") Timezone? timezone,@JsonKey(name: "method") MethodClass? method,@JsonKey(name: "latitudeAdjustmentMethod") LatitudeAdjustmentMethod? latitudeAdjustmentMethod,@JsonKey(name: "midnightMode") MidnightMode? midnightMode,@JsonKey(name: "school") MidnightMode? school,@JsonKey(name: "offset") Map<String, int>? offset
+ double? latitude, double? longitude, Timezone? timezone, MethodClass? method, LatitudeAdjustmentMethod? latitudeAdjustmentMethod, MidnightMode? midnightMode, MidnightMode? school, Map<String, int>? offset
 });
 
 
@@ -3177,7 +3150,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "timezone")  Timezone? timezone, @JsonKey(name: "method")  MethodClass? method, @JsonKey(name: "latitudeAdjustmentMethod")  LatitudeAdjustmentMethod? latitudeAdjustmentMethod, @JsonKey(name: "midnightMode")  MidnightMode? midnightMode, @JsonKey(name: "school")  MidnightMode? school, @JsonKey(name: "offset")  Map<String, int>? offset)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? latitude,  double? longitude,  Timezone? timezone,  MethodClass? method,  LatitudeAdjustmentMethod? latitudeAdjustmentMethod,  MidnightMode? midnightMode,  MidnightMode? school,  Map<String, int>? offset)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Meta() when $default != null:
 return $default(_that.latitude,_that.longitude,_that.timezone,_that.method,_that.latitudeAdjustmentMethod,_that.midnightMode,_that.school,_that.offset);case _:
@@ -3198,7 +3171,7 @@ return $default(_that.latitude,_that.longitude,_that.timezone,_that.method,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "timezone")  Timezone? timezone, @JsonKey(name: "method")  MethodClass? method, @JsonKey(name: "latitudeAdjustmentMethod")  LatitudeAdjustmentMethod? latitudeAdjustmentMethod, @JsonKey(name: "midnightMode")  MidnightMode? midnightMode, @JsonKey(name: "school")  MidnightMode? school, @JsonKey(name: "offset")  Map<String, int>? offset)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? latitude,  double? longitude,  Timezone? timezone,  MethodClass? method,  LatitudeAdjustmentMethod? latitudeAdjustmentMethod,  MidnightMode? midnightMode,  MidnightMode? school,  Map<String, int>? offset)  $default,) {final _that = this;
 switch (_that) {
 case _Meta():
 return $default(_that.latitude,_that.longitude,_that.timezone,_that.method,_that.latitudeAdjustmentMethod,_that.midnightMode,_that.school,_that.offset);case _:
@@ -3218,7 +3191,7 @@ return $default(_that.latitude,_that.longitude,_that.timezone,_that.method,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude, @JsonKey(name: "timezone")  Timezone? timezone, @JsonKey(name: "method")  MethodClass? method, @JsonKey(name: "latitudeAdjustmentMethod")  LatitudeAdjustmentMethod? latitudeAdjustmentMethod, @JsonKey(name: "midnightMode")  MidnightMode? midnightMode, @JsonKey(name: "school")  MidnightMode? school, @JsonKey(name: "offset")  Map<String, int>? offset)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? latitude,  double? longitude,  Timezone? timezone,  MethodClass? method,  LatitudeAdjustmentMethod? latitudeAdjustmentMethod,  MidnightMode? midnightMode,  MidnightMode? school,  Map<String, int>? offset)?  $default,) {final _that = this;
 switch (_that) {
 case _Meta() when $default != null:
 return $default(_that.latitude,_that.longitude,_that.timezone,_that.method,_that.latitudeAdjustmentMethod,_that.midnightMode,_that.school,_that.offset);case _:
@@ -3233,18 +3206,18 @@ return $default(_that.latitude,_that.longitude,_that.timezone,_that.method,_that
 @JsonSerializable()
 
 class _Meta implements Meta {
-  const _Meta({@JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude, @JsonKey(name: "timezone") this.timezone, @JsonKey(name: "method") this.method, @JsonKey(name: "latitudeAdjustmentMethod") this.latitudeAdjustmentMethod, @JsonKey(name: "midnightMode") this.midnightMode, @JsonKey(name: "school") this.school, @JsonKey(name: "offset") final  Map<String, int>? offset}): _offset = offset;
+  const _Meta({this.latitude, this.longitude, this.timezone, this.method, this.latitudeAdjustmentMethod, this.midnightMode, this.school, final  Map<String, int>? offset}): _offset = offset;
   factory _Meta.fromJson(Map<String, dynamic> json) => _$MetaFromJson(json);
 
-@override@JsonKey(name: "latitude") final  double? latitude;
-@override@JsonKey(name: "longitude") final  double? longitude;
-@override@JsonKey(name: "timezone") final  Timezone? timezone;
-@override@JsonKey(name: "method") final  MethodClass? method;
-@override@JsonKey(name: "latitudeAdjustmentMethod") final  LatitudeAdjustmentMethod? latitudeAdjustmentMethod;
-@override@JsonKey(name: "midnightMode") final  MidnightMode? midnightMode;
-@override@JsonKey(name: "school") final  MidnightMode? school;
+@override final  double? latitude;
+@override final  double? longitude;
+@override final  Timezone? timezone;
+@override final  MethodClass? method;
+@override final  LatitudeAdjustmentMethod? latitudeAdjustmentMethod;
+@override final  MidnightMode? midnightMode;
+@override final  MidnightMode? school;
  final  Map<String, int>? _offset;
-@override@JsonKey(name: "offset") Map<String, int>? get offset {
+@override Map<String, int>? get offset {
   final value = _offset;
   if (value == null) return null;
   if (_offset is EqualUnmodifiableMapView) return _offset;
@@ -3286,7 +3259,7 @@ abstract mixin class _$MetaCopyWith<$Res> implements $MetaCopyWith<$Res> {
   factory _$MetaCopyWith(_Meta value, $Res Function(_Meta) _then) = __$MetaCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude,@JsonKey(name: "timezone") Timezone? timezone,@JsonKey(name: "method") MethodClass? method,@JsonKey(name: "latitudeAdjustmentMethod") LatitudeAdjustmentMethod? latitudeAdjustmentMethod,@JsonKey(name: "midnightMode") MidnightMode? midnightMode,@JsonKey(name: "school") MidnightMode? school,@JsonKey(name: "offset") Map<String, int>? offset
+ double? latitude, double? longitude, Timezone? timezone, MethodClass? method, LatitudeAdjustmentMethod? latitudeAdjustmentMethod, MidnightMode? midnightMode, MidnightMode? school, Map<String, int>? offset
 });
 
 
@@ -3336,7 +3309,7 @@ $MethodClassCopyWith<$Res>? get method {
 /// @nodoc
 mixin _$MethodClass {
 
-@JsonKey(name: "id") int? get id;@JsonKey(name: "name") Name? get name;@JsonKey(name: "params") Params? get params;@JsonKey(name: "location") Location? get location;
+ int? get id; Name? get name; Params? get params; Location? get location;
 /// Create a copy of MethodClass
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3369,7 +3342,7 @@ abstract mixin class $MethodClassCopyWith<$Res>  {
   factory $MethodClassCopyWith(MethodClass value, $Res Function(MethodClass) _then) = _$MethodClassCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "id") int? id,@JsonKey(name: "name") Name? name,@JsonKey(name: "params") Params? params,@JsonKey(name: "location") Location? location
+ int? id, Name? name, Params? params, Location? location
 });
 
 
@@ -3501,7 +3474,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "name")  Name? name, @JsonKey(name: "params")  Params? params, @JsonKey(name: "location")  Location? location)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? id,  Name? name,  Params? params,  Location? location)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MethodClass() when $default != null:
 return $default(_that.id,_that.name,_that.params,_that.location);case _:
@@ -3522,7 +3495,7 @@ return $default(_that.id,_that.name,_that.params,_that.location);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "name")  Name? name, @JsonKey(name: "params")  Params? params, @JsonKey(name: "location")  Location? location)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? id,  Name? name,  Params? params,  Location? location)  $default,) {final _that = this;
 switch (_that) {
 case _MethodClass():
 return $default(_that.id,_that.name,_that.params,_that.location);case _:
@@ -3542,7 +3515,7 @@ return $default(_that.id,_that.name,_that.params,_that.location);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "id")  int? id, @JsonKey(name: "name")  Name? name, @JsonKey(name: "params")  Params? params, @JsonKey(name: "location")  Location? location)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? id,  Name? name,  Params? params,  Location? location)?  $default,) {final _that = this;
 switch (_that) {
 case _MethodClass() when $default != null:
 return $default(_that.id,_that.name,_that.params,_that.location);case _:
@@ -3557,13 +3530,13 @@ return $default(_that.id,_that.name,_that.params,_that.location);case _:
 @JsonSerializable()
 
 class _MethodClass implements MethodClass {
-  const _MethodClass({@JsonKey(name: "id") this.id, @JsonKey(name: "name") this.name, @JsonKey(name: "params") this.params, @JsonKey(name: "location") this.location});
+  const _MethodClass({this.id, this.name, this.params, this.location});
   factory _MethodClass.fromJson(Map<String, dynamic> json) => _$MethodClassFromJson(json);
 
-@override@JsonKey(name: "id") final  int? id;
-@override@JsonKey(name: "name") final  Name? name;
-@override@JsonKey(name: "params") final  Params? params;
-@override@JsonKey(name: "location") final  Location? location;
+@override final  int? id;
+@override final  Name? name;
+@override final  Params? params;
+@override final  Location? location;
 
 /// Create a copy of MethodClass
 /// with the given fields replaced by the non-null parameter values.
@@ -3598,7 +3571,7 @@ abstract mixin class _$MethodClassCopyWith<$Res> implements $MethodClassCopyWith
   factory _$MethodClassCopyWith(_MethodClass value, $Res Function(_MethodClass) _then) = __$MethodClassCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "id") int? id,@JsonKey(name: "name") Name? name,@JsonKey(name: "params") Params? params,@JsonKey(name: "location") Location? location
+ int? id, Name? name, Params? params, Location? location
 });
 
 
@@ -3656,7 +3629,7 @@ $LocationCopyWith<$Res>? get location {
 /// @nodoc
 mixin _$Location {
 
-@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;
+ double? get latitude; double? get longitude;
 /// Create a copy of Location
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3689,7 +3662,7 @@ abstract mixin class $LocationCopyWith<$Res>  {
   factory $LocationCopyWith(Location value, $Res Function(Location) _then) = _$LocationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude
+ double? latitude, double? longitude
 });
 
 
@@ -3795,7 +3768,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? latitude,  double? longitude)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Location() when $default != null:
 return $default(_that.latitude,_that.longitude);case _:
@@ -3816,7 +3789,7 @@ return $default(_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? latitude,  double? longitude)  $default,) {final _that = this;
 switch (_that) {
 case _Location():
 return $default(_that.latitude,_that.longitude);case _:
@@ -3836,7 +3809,7 @@ return $default(_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? latitude,  double? longitude)?  $default,) {final _that = this;
 switch (_that) {
 case _Location() when $default != null:
 return $default(_that.latitude,_that.longitude);case _:
@@ -3851,11 +3824,11 @@ return $default(_that.latitude,_that.longitude);case _:
 @JsonSerializable()
 
 class _Location implements Location {
-  const _Location({@JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude});
+  const _Location({this.latitude, this.longitude});
   factory _Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
 
-@override@JsonKey(name: "latitude") final  double? latitude;
-@override@JsonKey(name: "longitude") final  double? longitude;
+@override final  double? latitude;
+@override final  double? longitude;
 
 /// Create a copy of Location
 /// with the given fields replaced by the non-null parameter values.
@@ -3890,7 +3863,7 @@ abstract mixin class _$LocationCopyWith<$Res> implements $LocationCopyWith<$Res>
   factory _$LocationCopyWith(_Location value, $Res Function(_Location) _then) = __$LocationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude
+ double? latitude, double? longitude
 });
 
 
@@ -3922,7 +3895,7 @@ as double?,
 /// @nodoc
 mixin _$Params {
 
-@JsonKey(name: "Fajr") int? get fajr;@JsonKey(name: "Isha") int? get isha;
+ int? get fajr; int? get isha;
 /// Create a copy of Params
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -3955,7 +3928,7 @@ abstract mixin class $ParamsCopyWith<$Res>  {
   factory $ParamsCopyWith(Params value, $Res Function(Params) _then) = _$ParamsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "Fajr") int? fajr,@JsonKey(name: "Isha") int? isha
+ int? fajr, int? isha
 });
 
 
@@ -4061,7 +4034,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr")  int? fajr, @JsonKey(name: "Isha")  int? isha)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? fajr,  int? isha)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Params() when $default != null:
 return $default(_that.fajr,_that.isha);case _:
@@ -4082,7 +4055,7 @@ return $default(_that.fajr,_that.isha);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr")  int? fajr, @JsonKey(name: "Isha")  int? isha)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? fajr,  int? isha)  $default,) {final _that = this;
 switch (_that) {
 case _Params():
 return $default(_that.fajr,_that.isha);case _:
@@ -4102,7 +4075,7 @@ return $default(_that.fajr,_that.isha);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "Fajr")  int? fajr, @JsonKey(name: "Isha")  int? isha)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? fajr,  int? isha)?  $default,) {final _that = this;
 switch (_that) {
 case _Params() when $default != null:
 return $default(_that.fajr,_that.isha);case _:
@@ -4117,11 +4090,11 @@ return $default(_that.fajr,_that.isha);case _:
 @JsonSerializable()
 
 class _Params implements Params {
-  const _Params({@JsonKey(name: "Fajr") this.fajr, @JsonKey(name: "Isha") this.isha});
+  const _Params({this.fajr, this.isha});
   factory _Params.fromJson(Map<String, dynamic> json) => _$ParamsFromJson(json);
 
-@override@JsonKey(name: "Fajr") final  int? fajr;
-@override@JsonKey(name: "Isha") final  int? isha;
+@override final  int? fajr;
+@override final  int? isha;
 
 /// Create a copy of Params
 /// with the given fields replaced by the non-null parameter values.
@@ -4156,7 +4129,7 @@ abstract mixin class _$ParamsCopyWith<$Res> implements $ParamsCopyWith<$Res> {
   factory _$ParamsCopyWith(_Params value, $Res Function(_Params) _then) = __$ParamsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "Fajr") int? fajr,@JsonKey(name: "Isha") int? isha
+ int? fajr, int? isha
 });
 
 
