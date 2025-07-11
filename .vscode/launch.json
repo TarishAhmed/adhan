@@ -11,7 +11,7 @@
             "flutterMode": "debug",
             "args": [
                 // "--wasm",
-                "--web-experimental-hot-reload",
+                // "--web-experimental-hot-reload",
             ]
         },
     ]

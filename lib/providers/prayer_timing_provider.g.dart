@@ -7,6 +7,7 @@ part of 'prayer_timing_provider.dart';
 // **************************************************************************
 
 @ProviderFor(PrayerTimeMonthNotifier)
+@JsonPersist()
 const prayerTimeMonthNotifierProvider = PrayerTimeMonthNotifierFamily._();
 
 final class PrayerTimeMonthNotifierProvider
@@ -54,7 +55,7 @@ final class PrayerTimeMonthNotifierProvider
 }
 
 String _$prayerTimeMonthNotifierHash() =>
-    r'd6332a1da04cd418853fd4a44dbcb53e6a448395';
+    r'ba004a1155b680219dc0bf2a185a27d089f07657';
 
 final class PrayerTimeMonthNotifierFamily extends $Family
     with
@@ -91,7 +92,7 @@ final class PrayerTimeMonthNotifierFamily extends $Family
   String toString() => r'prayerTimeMonthNotifierProvider';
 }
 
-abstract class _$PrayerTimeMonthNotifier
+abstract class _$PrayerTimeMonthNotifierBase
     extends $AsyncNotifier<PrayerTimingMonthResponseModel> {
   late final _$args =
       ref.$arg as ({int method, int school, int latitudeAdjustmentMethod});
@@ -177,3 +178,46 @@ String _$currentRelevantPrayerHash() =>
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+
+// **************************************************************************
+// JsonGenerator
+// **************************************************************************
+
+abstract class _$PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifierBase {
+  /// The default key used by [persist].
+  String get key {
+    late final args = (
+      method: method,
+      school: school,
+      latitudeAdjustmentMethod: latitudeAdjustmentMethod,
+    );
+    late final resolvedKey = 'PrayerTimeMonthNotifier($args)';
+
+    return resolvedKey;
+  }
+
+  /// A variant of [persist], for JSON-specific encoding.
+  ///
+  /// You can override [key] to customize the key used for storage.
+  FutureOr<void> persist(
+    FutureOr<Storage<String, String>> storage, {
+    String Function(PrayerTimingMonthResponseModel state)? encode,
+    PrayerTimingMonthResponseModel Function(String encoded)? decode,
+    StorageOptions options = const StorageOptions(),
+  }) {
+    return NotifierPersistX(this).persist<String, String>(
+      storage,
+      key: key,
+      encode: encode ?? $jsonCodex.encode,
+      decode:
+          decode ??
+          (encoded) {
+            final e = $jsonCodex.decode(encoded);
+            return PrayerTimingMonthResponseModel.fromJson(
+              e as Map<String, Object?>,
+            );
+          },
+      options: options,
+    );
+  }
+}

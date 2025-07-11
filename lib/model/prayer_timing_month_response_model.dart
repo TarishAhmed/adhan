@@ -5,8 +5,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'dart:convert';
 
+import 'package:timezone/timezone.dart' as tz;
+
 part 'prayer_timing_month_response_model.freezed.dart';
 part 'prayer_timing_month_response_model.g.dart';
+
+
 
 PrayerTimingMonthResponseModel prayerTimingMonthResponseModelFromJson(String str) => PrayerTimingMonthResponseModel.fromJson(json.decode(str));
 
@@ -292,31 +296,40 @@ final timezoneValues = EnumValues({
 @freezed
 abstract class Timings with _$Timings {
     const factory Timings({
-        @JsonKey(name: "Fajr")
+        @JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? fajr,
-        @JsonKey(name: "Sunrise")
+        @JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? sunrise,
-        @JsonKey(name: "Dhuhr")
+        @JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? dhuhr,
-        @JsonKey(name: "Asr")
+        @JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? asr,
-        @JsonKey(name: "Sunset")
+        @JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? sunset,
-        @JsonKey(name: "Maghrib")
+        @JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? maghrib,
-        @JsonKey(name: "Isha")
+        @JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? isha,
-        @JsonKey(name: "Imsak")
+        @JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? imsak,
-        @JsonKey(name: "Midnight")
+        @JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? midnight,
-        @JsonKey(name: "Firstthird")
+        @JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? firstthird,
-        @JsonKey(name: "Lastthird")
+        @JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime)
         DateTime? lastthird,
     }) = _Timings;
 
     factory Timings.fromJson(Map<String, dynamic> json) => _$TimingsFromJson(json);
+}
+
+DateTime? _parseDateTime(String value) {
+  if (value.isEmpty) return null;
+  return DateTime.parse(value.split('+').first);
+}
+String? _serializeDateTime(DateTime? value) {
+  if (value == null) return null;
+  return value.toIso8601String();
 }
 
 class EnumValues<T> {

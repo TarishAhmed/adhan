@@ -4161,7 +4161,7 @@ as int?,
 /// @nodoc
 mixin _$Timings {
 
-@JsonKey(name: "Fajr") DateTime? get fajr;@JsonKey(name: "Sunrise") DateTime? get sunrise;@JsonKey(name: "Dhuhr") DateTime? get dhuhr;@JsonKey(name: "Asr") DateTime? get asr;@JsonKey(name: "Sunset") DateTime? get sunset;@JsonKey(name: "Maghrib") DateTime? get maghrib;@JsonKey(name: "Isha") DateTime? get isha;@JsonKey(name: "Imsak") DateTime? get imsak;@JsonKey(name: "Midnight") DateTime? get midnight;@JsonKey(name: "Firstthird") DateTime? get firstthird;@JsonKey(name: "Lastthird") DateTime? get lastthird;
+@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get fajr;@JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get sunrise;@JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get dhuhr;@JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get asr;@JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get sunset;@JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get maghrib;@JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get isha;@JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get imsak;@JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get midnight;@JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get firstthird;@JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? get lastthird;
 /// Create a copy of Timings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -4194,7 +4194,7 @@ abstract mixin class $TimingsCopyWith<$Res>  {
   factory $TimingsCopyWith(Timings value, $Res Function(Timings) _then) = _$TimingsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "Fajr") DateTime? fajr,@JsonKey(name: "Sunrise") DateTime? sunrise,@JsonKey(name: "Dhuhr") DateTime? dhuhr,@JsonKey(name: "Asr") DateTime? asr,@JsonKey(name: "Sunset") DateTime? sunset,@JsonKey(name: "Maghrib") DateTime? maghrib,@JsonKey(name: "Isha") DateTime? isha,@JsonKey(name: "Imsak") DateTime? imsak,@JsonKey(name: "Midnight") DateTime? midnight,@JsonKey(name: "Firstthird") DateTime? firstthird,@JsonKey(name: "Lastthird") DateTime? lastthird
+@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? fajr,@JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? sunrise,@JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? dhuhr,@JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? asr,@JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? sunset,@JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? maghrib,@JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? isha,@JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? imsak,@JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? midnight,@JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? firstthird,@JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? lastthird
 });
 
 
@@ -4309,7 +4309,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr")  DateTime? fajr, @JsonKey(name: "Sunrise")  DateTime? sunrise, @JsonKey(name: "Dhuhr")  DateTime? dhuhr, @JsonKey(name: "Asr")  DateTime? asr, @JsonKey(name: "Sunset")  DateTime? sunset, @JsonKey(name: "Maghrib")  DateTime? maghrib, @JsonKey(name: "Isha")  DateTime? isha, @JsonKey(name: "Imsak")  DateTime? imsak, @JsonKey(name: "Midnight")  DateTime? midnight, @JsonKey(name: "Firstthird")  DateTime? firstthird, @JsonKey(name: "Lastthird")  DateTime? lastthird)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? fajr, @JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? sunrise, @JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? dhuhr, @JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? asr, @JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? sunset, @JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? maghrib, @JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? isha, @JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? imsak, @JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? midnight, @JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? firstthird, @JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? lastthird)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Timings() when $default != null:
 return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
@@ -4330,7 +4330,7 @@ return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr")  DateTime? fajr, @JsonKey(name: "Sunrise")  DateTime? sunrise, @JsonKey(name: "Dhuhr")  DateTime? dhuhr, @JsonKey(name: "Asr")  DateTime? asr, @JsonKey(name: "Sunset")  DateTime? sunset, @JsonKey(name: "Maghrib")  DateTime? maghrib, @JsonKey(name: "Isha")  DateTime? isha, @JsonKey(name: "Imsak")  DateTime? imsak, @JsonKey(name: "Midnight")  DateTime? midnight, @JsonKey(name: "Firstthird")  DateTime? firstthird, @JsonKey(name: "Lastthird")  DateTime? lastthird)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? fajr, @JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? sunrise, @JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? dhuhr, @JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? asr, @JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? sunset, @JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? maghrib, @JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? isha, @JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? imsak, @JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? midnight, @JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? firstthird, @JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? lastthird)  $default,) {final _that = this;
 switch (_that) {
 case _Timings():
 return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
@@ -4350,7 +4350,7 @@ return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "Fajr")  DateTime? fajr, @JsonKey(name: "Sunrise")  DateTime? sunrise, @JsonKey(name: "Dhuhr")  DateTime? dhuhr, @JsonKey(name: "Asr")  DateTime? asr, @JsonKey(name: "Sunset")  DateTime? sunset, @JsonKey(name: "Maghrib")  DateTime? maghrib, @JsonKey(name: "Isha")  DateTime? isha, @JsonKey(name: "Imsak")  DateTime? imsak, @JsonKey(name: "Midnight")  DateTime? midnight, @JsonKey(name: "Firstthird")  DateTime? firstthird, @JsonKey(name: "Lastthird")  DateTime? lastthird)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? fajr, @JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? sunrise, @JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? dhuhr, @JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? asr, @JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? sunset, @JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? maghrib, @JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? isha, @JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? imsak, @JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? midnight, @JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? firstthird, @JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime)  DateTime? lastthird)?  $default,) {final _that = this;
 switch (_that) {
 case _Timings() when $default != null:
 return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
@@ -4365,20 +4365,20 @@ return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_tha
 @JsonSerializable()
 
 class _Timings implements Timings {
-  const _Timings({@JsonKey(name: "Fajr") this.fajr, @JsonKey(name: "Sunrise") this.sunrise, @JsonKey(name: "Dhuhr") this.dhuhr, @JsonKey(name: "Asr") this.asr, @JsonKey(name: "Sunset") this.sunset, @JsonKey(name: "Maghrib") this.maghrib, @JsonKey(name: "Isha") this.isha, @JsonKey(name: "Imsak") this.imsak, @JsonKey(name: "Midnight") this.midnight, @JsonKey(name: "Firstthird") this.firstthird, @JsonKey(name: "Lastthird") this.lastthird});
+  const _Timings({@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime) this.fajr, @JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime) this.sunrise, @JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime) this.dhuhr, @JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime) this.asr, @JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime) this.sunset, @JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime) this.maghrib, @JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime) this.isha, @JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime) this.imsak, @JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime) this.midnight, @JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime) this.firstthird, @JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime) this.lastthird});
   factory _Timings.fromJson(Map<String, dynamic> json) => _$TimingsFromJson(json);
 
-@override@JsonKey(name: "Fajr") final  DateTime? fajr;
-@override@JsonKey(name: "Sunrise") final  DateTime? sunrise;
-@override@JsonKey(name: "Dhuhr") final  DateTime? dhuhr;
-@override@JsonKey(name: "Asr") final  DateTime? asr;
-@override@JsonKey(name: "Sunset") final  DateTime? sunset;
-@override@JsonKey(name: "Maghrib") final  DateTime? maghrib;
-@override@JsonKey(name: "Isha") final  DateTime? isha;
-@override@JsonKey(name: "Imsak") final  DateTime? imsak;
-@override@JsonKey(name: "Midnight") final  DateTime? midnight;
-@override@JsonKey(name: "Firstthird") final  DateTime? firstthird;
-@override@JsonKey(name: "Lastthird") final  DateTime? lastthird;
+@override@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? fajr;
+@override@JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? sunrise;
+@override@JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? dhuhr;
+@override@JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? asr;
+@override@JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? sunset;
+@override@JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? maghrib;
+@override@JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? isha;
+@override@JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? imsak;
+@override@JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? midnight;
+@override@JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? firstthird;
+@override@JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime) final  DateTime? lastthird;
 
 /// Create a copy of Timings
 /// with the given fields replaced by the non-null parameter values.
@@ -4413,7 +4413,7 @@ abstract mixin class _$TimingsCopyWith<$Res> implements $TimingsCopyWith<$Res> {
   factory _$TimingsCopyWith(_Timings value, $Res Function(_Timings) _then) = __$TimingsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "Fajr") DateTime? fajr,@JsonKey(name: "Sunrise") DateTime? sunrise,@JsonKey(name: "Dhuhr") DateTime? dhuhr,@JsonKey(name: "Asr") DateTime? asr,@JsonKey(name: "Sunset") DateTime? sunset,@JsonKey(name: "Maghrib") DateTime? maghrib,@JsonKey(name: "Isha") DateTime? isha,@JsonKey(name: "Imsak") DateTime? imsak,@JsonKey(name: "Midnight") DateTime? midnight,@JsonKey(name: "Firstthird") DateTime? firstthird,@JsonKey(name: "Lastthird") DateTime? lastthird
+@JsonKey(name: "Fajr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? fajr,@JsonKey(name: "Sunrise", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? sunrise,@JsonKey(name: "Dhuhr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? dhuhr,@JsonKey(name: "Asr", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? asr,@JsonKey(name: "Sunset", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? sunset,@JsonKey(name: "Maghrib", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? maghrib,@JsonKey(name: "Isha", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? isha,@JsonKey(name: "Imsak", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? imsak,@JsonKey(name: "Midnight", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? midnight,@JsonKey(name: "Firstthird", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? firstthird,@JsonKey(name: "Lastthird", fromJson: _parseDateTime, toJson: _serializeDateTime) DateTime? lastthird
 });
 
 

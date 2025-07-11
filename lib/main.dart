@@ -4,6 +4,7 @@ import 'dart:isolate';
 import 'package:adhan/providers/prayer_timing_provider.dart';
 import 'package:adhan/theme/theme.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workmanager/workmanager.dart';
@@ -18,7 +19,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await NotificationService.initialize();
 
-  
+  if(!kIsWeb) {
   await Workmanager().initialize(
     callbackDispatcher, // The top level function, aka callbackDispatcher
     isInDebugMode:
@@ -26,6 +27,7 @@ void main() async {
   );
 
   await AndroidAlarmManager.initialize();
+  }
 
   runApp(ProviderScope(child: const MyApp()));
 }

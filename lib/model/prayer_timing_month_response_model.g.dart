@@ -275,41 +275,29 @@ Map<String, dynamic> _$ParamsToJson(_Params instance) => <String, dynamic>{
 };
 
 _Timings _$TimingsFromJson(Map<String, dynamic> json) => _Timings(
-  fajr: json['Fajr'] == null ? null : DateTime.parse(json['Fajr'] as String),
-  sunrise: json['Sunrise'] == null
-      ? null
-      : DateTime.parse(json['Sunrise'] as String),
-  dhuhr: json['Dhuhr'] == null ? null : DateTime.parse(json['Dhuhr'] as String),
-  asr: json['Asr'] == null ? null : DateTime.parse(json['Asr'] as String),
-  sunset: json['Sunset'] == null
-      ? null
-      : DateTime.parse(json['Sunset'] as String),
-  maghrib: json['Maghrib'] == null
-      ? null
-      : DateTime.parse(json['Maghrib'] as String),
-  isha: json['Isha'] == null ? null : DateTime.parse(json['Isha'] as String),
-  imsak: json['Imsak'] == null ? null : DateTime.parse(json['Imsak'] as String),
-  midnight: json['Midnight'] == null
-      ? null
-      : DateTime.parse(json['Midnight'] as String),
-  firstthird: json['Firstthird'] == null
-      ? null
-      : DateTime.parse(json['Firstthird'] as String),
-  lastthird: json['Lastthird'] == null
-      ? null
-      : DateTime.parse(json['Lastthird'] as String),
+  fajr: _parseDateTime(json['Fajr'] as String),
+  sunrise: _parseDateTime(json['Sunrise'] as String),
+  dhuhr: _parseDateTime(json['Dhuhr'] as String),
+  asr: _parseDateTime(json['Asr'] as String),
+  sunset: _parseDateTime(json['Sunset'] as String),
+  maghrib: _parseDateTime(json['Maghrib'] as String),
+  isha: _parseDateTime(json['Isha'] as String),
+  imsak: _parseDateTime(json['Imsak'] as String),
+  midnight: _parseDateTime(json['Midnight'] as String),
+  firstthird: _parseDateTime(json['Firstthird'] as String),
+  lastthird: _parseDateTime(json['Lastthird'] as String),
 );
 
 Map<String, dynamic> _$TimingsToJson(_Timings instance) => <String, dynamic>{
-  'Fajr': instance.fajr?.toIso8601String(),
-  'Sunrise': instance.sunrise?.toIso8601String(),
-  'Dhuhr': instance.dhuhr?.toIso8601String(),
-  'Asr': instance.asr?.toIso8601String(),
-  'Sunset': instance.sunset?.toIso8601String(),
-  'Maghrib': instance.maghrib?.toIso8601String(),
-  'Isha': instance.isha?.toIso8601String(),
-  'Imsak': instance.imsak?.toIso8601String(),
-  'Midnight': instance.midnight?.toIso8601String(),
-  'Firstthird': instance.firstthird?.toIso8601String(),
-  'Lastthird': instance.lastthird?.toIso8601String(),
+  'Fajr': _serializeDateTime(instance.fajr),
+  'Sunrise': _serializeDateTime(instance.sunrise),
+  'Dhuhr': _serializeDateTime(instance.dhuhr),
+  'Asr': _serializeDateTime(instance.asr),
+  'Sunset': _serializeDateTime(instance.sunset),
+  'Maghrib': _serializeDateTime(instance.maghrib),
+  'Isha': _serializeDateTime(instance.isha),
+  'Imsak': _serializeDateTime(instance.imsak),
+  'Midnight': _serializeDateTime(instance.midnight),
+  'Firstthird': _serializeDateTime(instance.firstthird),
+  'Lastthird': _serializeDateTime(instance.lastthird),
 };
