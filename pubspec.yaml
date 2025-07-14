@@ -1,4 +1,4 @@
-name: adhan
+name: adhan_app
 description: "A new Flutter project."
 
 publish_to: "none"
@@ -33,6 +33,7 @@ dependencies:
   hooks_riverpod: ^3.0.0-dev.16
   workmanager: ^0.8.0
   android_alarm_manager_plus: ^4.0.7
+  adhan: ^2.0.0+1
 
 dev_dependencies:
   flutter_test:

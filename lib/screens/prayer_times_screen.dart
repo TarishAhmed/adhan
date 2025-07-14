@@ -1,8 +1,9 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:adhan/main.dart';
-import 'package:adhan/providers/prayer_timing_provider.dart';
+import 'package:adhan/adhan.dart';
+import 'package:adhan_app/main.dart';
+import 'package:adhan_app/providers/prayer_timing_provider.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -184,33 +185,65 @@ class PrayerTimesScreen extends ConsumerWidget {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16),
-        child: ElevatedButton(
-          onPressed: () async {
-            final now = DateTime.now();
+        child: locationAsync.when(
+          data: (location) => ElevatedButton(
+            onPressed: () async {
+              print('My Prayer Times');
 
-            final testTime = now.add(const Duration(seconds: 5));
-            final id = UniqueKey().hashCode;
-            if (!kIsWeb) {
-              if (Platform.isAndroid) {
-                print('---------------Android----------');
-                await AndroidAlarmManager.oneShot(
-                  const Duration(seconds: 2),
-                  id,
-                  testAlarmManager,
-                );
-              } else if (Platform.isIOS) {
-                Workmanager().registerOneOffTask(
-                  id.toString(),
-                  "test-task",
-                  inputData: PrayerTime(
-                    time: testTime,
-                    name: PrayerTimeName.dhuhr,
-                  ).toJson(),
-                );
-              }
-            }
-          },
-          child: const Text('Test Notification'),
+              final myCoordinates = Coordinates(
+                location.lat,
+                location.lng,
+              ); // Replace with your own location lat, lng.
+              final params = CalculationMethod.other.getParameters();
+
+              params.madhab = Madhab.shafi;
+              params.fajrAngle = 19.5;
+              params.ishaAngle = 16.5;
+
+              final prayerTimes = PrayerTimes.utcOffset(
+                myCoordinates,
+                DateComponents(2025, 7, 31),
+                params,
+                Duration(hours: 5, minutes: 30),
+              );
+
+              print(
+                "---Today's Prayer Times in Your Local Timezone(${prayerTimes.fajr.timeZoneName})---",
+              );
+              print(DateFormat.jm().format(prayerTimes.fajr));
+              print(DateFormat.jm().format(prayerTimes.dhuhr));
+              print(DateFormat.jm().format(prayerTimes.asr));
+              print(DateFormat.jm().format(prayerTimes.maghrib));
+              print(DateFormat.jm().format(prayerTimes.isha));
+
+              // final now = DateTime.now();
+
+              // final testTime = now.add(const Duration(seconds: 5));
+              // final id = UniqueKey().hashCode;
+              // if (!kIsWeb) {
+              //   if (Platform.isAndroid) {
+              //     print('---------------Android----------');
+              //     await AndroidAlarmManager.oneShot(
+              //       const Duration(seconds: 2),
+              //       id,
+              //       testAlarmManager,
+              //     );
+              //   } else if (Platform.isIOS) {
+              //     Workmanager().registerOneOffTask(
+              //       id.toString(),
+              //       "test-task",
+              //       inputData: PrayerTime(
+              //         time: testTime,
+              //         name: PrayerTimeName.dhuhr,
+              //       ).toJson(),
+              //     );
+              //   }
+              // }
+            },
+            child: const Text('Test Notification'),
+          ),
+          error: (Object error, StackTrace stackTrace) => const Text('Error'),
+          loading: () => const Text('Loading'),
         ),
       ),
     );
@@ -240,7 +273,6 @@ class PrayerTimeListItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final theme = Theme.of(context);
     final isNotified =
         ref.watch(prayerNotificationProvider)[prayerTime.name] ?? false;

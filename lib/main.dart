@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:isolate';
 
-import 'package:adhan/providers/prayer_timing_provider.dart';
-import 'package:adhan/theme/theme.dart';
+import 'package:adhan_app/providers/prayer_timing_provider.dart';
+import 'package:adhan_app/theme/theme.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

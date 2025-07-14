@@ -1,8 +1,8 @@
-import 'package:adhan/api/api_helper.dart';
-import 'package:adhan/model/prayer_time_response_model.dart';
-import 'package:adhan/model/prayer_timing_month_response_model.dart';
-import 'package:adhan/providers/app_providers.dart';
-import 'package:adhan/providers/storage_provider.dart';
+import 'package:adhan_app/api/api_helper.dart';
+import 'package:adhan_app/model/prayer_time_response_model.dart';
+import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
+import 'package:adhan_app/providers/app_providers.dart';
+import 'package:adhan_app/providers/storage_provider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,17 +58,17 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
       now.month + 1,
     ).subtract(Duration(seconds: 1)).difference(now);
 
-    if(!kIsWeb) {
+    if (!kIsWeb) {
       persist(
-      // We pass our JsonSqFliteStorage instance. No need to "await" the Future.
-      // Riverpod will take care of that.
-      ref.watch(storageProvider.future),
-      // By default, state is cached offline only for 2 days.
-      // We can optionally uncomment the following line to change cache duration.
-      options: StorageOptions(cacheTime: StorageCacheTime(remainingDuration)),
-      decode: prayerTimingMonthResponseModelFromJson,
-      encode: prayerTimingMonthResponseModelToJson,
-    );
+        // We pass our JsonSqFliteStorage instance. No need to "await" the Future.
+        // Riverpod will take care of that.
+        ref.watch(storageProvider.future),
+        // By default, state is cached offline only for 2 days.
+        // We can optionally uncomment the following line to change cache duration.
+        options: StorageOptions(cacheTime: StorageCacheTime(remainingDuration)),
+        decode: prayerTimingMonthResponseModelFromJson,
+        encode: prayerTimingMonthResponseModelToJson,
+      );
     }
 
     final timezone = await ref.watch(getTimezoneProvider.future);
@@ -111,13 +111,9 @@ PrayerTimeWithOffset? getCurrentRelevantPrayerWithOffset(
 ) {
   final now = DateTime.now();
 
-  
-
   PrayerTime? upcomingPrayer = prayers.firstWhereOrNull(
     (prayer) => prayer.time.isAfter(now),
   );
-
-  
 
   upcomingPrayer ??= (tomorrowsPrayers != null
       ? PrayerTime(
@@ -141,14 +137,10 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
 
   final now = DateTime.now();
 
-  
-
   if (prayerTimes.data == null) throw Exception('Error Fetching Prayer Data');
   final todaysPrayers = prayerTimes.data![now.day - 1];
 
   print('Prayer times 1: ${todaysPrayers}');
-
-  
 
   final tomorrowsPrayers = prayerTimes.data!.length != now.day
       ? prayerTimes.data![now.day]
@@ -158,12 +150,7 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
     throw Exception('Error Fetching Prayer Data');
   }
 
-  
-  
-
   final timing = todaysPrayers.timings!;
-
-  
 
   final timings = [
     PrayerTime(time: timing.fajr!, name: PrayerTimeName.fajr),
@@ -174,7 +161,6 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
   ];
 
   while (true) {
-    
     final relevant = getCurrentRelevantPrayerWithOffset(
       timings,
       tomorrowsPrayers,
@@ -209,10 +195,7 @@ class PrayerTime {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'time': time.toIso8601String(),
-      'name': name.name,
-    };
+    return {'time': time.toIso8601String(), 'name': name.name};
   }
 }
 
