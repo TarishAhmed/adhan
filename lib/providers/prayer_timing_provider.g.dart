@@ -55,7 +55,7 @@ final class PrayerTimeMonthNotifierProvider
 }
 
 String _$prayerTimeMonthNotifierHash() =>
-    r'ba004a1155b680219dc0bf2a185a27d089f07657';
+    r'c6e2dd7150bc7a16cc0a0ce2cd932357609f55dc';
 
 final class PrayerTimeMonthNotifierFamily extends $Family
     with
@@ -134,6 +134,187 @@ abstract class _$PrayerTimeMonthNotifierBase
   }
 }
 
+@ProviderFor(prayerTimingForDate)
+const prayerTimingForDateProvider = PrayerTimingForDateFamily._();
+
+final class PrayerTimingForDateProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<MultiDayTiming?>,
+          MultiDayTiming?,
+          FutureOr<MultiDayTiming?>
+        >
+    with $FutureModifier<MultiDayTiming?>, $FutureProvider<MultiDayTiming?> {
+  const PrayerTimingForDateProvider._({
+    required PrayerTimingForDateFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'prayerTimingForDateProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$prayerTimingForDateHash();
+
+  @override
+  String toString() {
+    return r'prayerTimingForDateProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<MultiDayTiming?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<MultiDayTiming?> create(Ref ref) {
+    final argument = this.argument as DateTime;
+    return prayerTimingForDate(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is PrayerTimingForDateProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$prayerTimingForDateHash() =>
+    r'82e2138470784b973fe344e67d8b3bca9ab9c662';
+
+final class PrayerTimingForDateFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<MultiDayTiming?>, DateTime> {
+  const PrayerTimingForDateFamily._()
+    : super(
+        retry: null,
+        name: r'prayerTimingForDateProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  PrayerTimingForDateProvider call(DateTime date) =>
+      PrayerTimingForDateProvider._(argument: date, from: this);
+
+  @override
+  String toString() => r'prayerTimingForDateProvider';
+}
+
+@ProviderFor(hasPrayerDataForDate)
+const hasPrayerDataForDateProvider = HasPrayerDataForDateFamily._();
+
+final class HasPrayerDataForDateProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  const HasPrayerDataForDateProvider._({
+    required HasPrayerDataForDateFamily super.from,
+    required DateTime super.argument,
+  }) : super(
+         retry: null,
+         name: r'hasPrayerDataForDateProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasPrayerDataForDateHash();
+
+  @override
+  String toString() {
+    return r'hasPrayerDataForDateProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    final argument = this.argument as DateTime;
+    return hasPrayerDataForDate(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is HasPrayerDataForDateProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$hasPrayerDataForDateHash() =>
+    r'fd374877bdef185298fbc7ea94c11dd033d661e6';
+
+final class HasPrayerDataForDateFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<bool>, DateTime> {
+  const HasPrayerDataForDateFamily._()
+    : super(
+        retry: null,
+        name: r'hasPrayerDataForDateProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  HasPrayerDataForDateProvider call(DateTime date) =>
+      HasPrayerDataForDateProvider._(argument: date, from: this);
+
+  @override
+  String toString() => r'hasPrayerDataForDateProvider';
+}
+
+@ProviderFor(hasPrayerDataForCurrentMonth)
+const hasPrayerDataForCurrentMonthProvider =
+    HasPrayerDataForCurrentMonthProvider._();
+
+final class HasPrayerDataForCurrentMonthProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  const HasPrayerDataForCurrentMonthProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasPrayerDataForCurrentMonthProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasPrayerDataForCurrentMonthHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return hasPrayerDataForCurrentMonth(ref);
+  }
+}
+
+String _$hasPrayerDataForCurrentMonthHash() =>
+    r'90313126bacb32d01d789dc924df8ae97caa4737';
+
 @ProviderFor(currentRelevantPrayer)
 const currentRelevantPrayerProvider = CurrentRelevantPrayerProvider._();
 
@@ -174,7 +355,7 @@ final class CurrentRelevantPrayerProvider
 }
 
 String _$currentRelevantPrayerHash() =>
-    r'efa0f2e1dbfcf1fed0881bf49a566ece07a633e2';
+    r'c3c0cb48f2ba1c20c441694425b78c2d6f82cb8e';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

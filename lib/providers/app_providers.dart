@@ -5,15 +5,19 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:adhan_app/services/location_storage_service.dart';
 
 part 'app_providers.g.dart';
 
 // App theme provider
-final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(ThemeNotifier.new);
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(
+  ThemeNotifier.new,
+);
 
 // App settings provider
-final settingsProvider =
-    NotifierProvider<SettingsNotifier, AppSettings>(SettingsNotifier.new);
+final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(
+  SettingsNotifier.new,
+);
 
 // Location provider (handles permissions and gets current position)
 final locationProvider =
@@ -34,7 +38,7 @@ final locationProvider =
       if (permission == LocationPermission.deniedForever) {
         throw Exception('Location permissions are permanently denied.');
       }
-      final position = await Geolocator.getCurrentPosition( 
+      final position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.reduced,
       );
 
@@ -48,6 +52,14 @@ final locationProvider =
       }
 
       final timezone = await FlutterTimezone.getLocalTimezone();
+
+      // Store location for background service
+      await LocationStorageService.storeLocation(
+        lat: position.latitude,
+        lng: position.longitude,
+        timezone: timezone,
+        city: city,
+      );
 
       return (
         lat: position.latitude,
@@ -88,7 +100,6 @@ class AppSettings {
 
 // Settings notifier
 class SettingsNotifier extends Notifier<AppSettings> {
-
   void toggleNotifications() {
     state = state.copyWith(notificationsEnabled: !state.notificationsEnabled);
   }
@@ -104,7 +115,7 @@ class SettingsNotifier extends Notifier<AppSettings> {
   void toggleAutoLocation() {
     state = state.copyWith(autoLocation: !state.autoLocation);
   }
-  
+
   @override
   AppSettings build() {
     return AppSettings();
@@ -114,7 +125,6 @@ class SettingsNotifier extends Notifier<AppSettings> {
 @riverpod
 FutureOr<String> getTimezone(Ref ref) async =>
     await FlutterTimezone.getLocalTimezone();
-
 
 class ThemeNotifier extends Notifier<ThemeMode> {
   @override

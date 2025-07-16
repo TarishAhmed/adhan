@@ -1,16 +1,11 @@
-import 'package:adhan_app/api/api_helper.dart';
-import 'package:adhan_app/model/prayer_time_response_model.dart';
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:adhan_app/providers/app_providers.dart';
 import 'package:adhan_app/providers/storage_provider.dart';
+import 'package:adhan_app/services/prayer_data_manager.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/experimental/persist.dart';
 import 'package:riverpod_annotation/experimental/json_persist.dart';
-// import 'package:riverpod_annotation/experimental/persist.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-
 import 'package:collection/collection.dart';
 
 part 'prayer_timing_provider.g.dart';
@@ -74,26 +69,53 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
     final timezone = await ref.watch(getTimezoneProvider.future);
     final location = await ref.watch(locationProvider.future);
     final date = DateTime.now();
-    final url =
-        'https://api.aladhan.com/v1/calendar/${date.year}/${date.month}';
-    final response = await ApiHelper.dio.get(
-      url,
-      queryParameters: {
-        'latitude': location.lat,
-        'longitude': location.lng,
-        'method': method,
-        'school': school,
-        'latitudeAdjustmentMethod': latitudeAdjustmentMethod,
-        'timezonestring': timezone,
-        'iso8601': true,
-      },
+
+    // Use the data manager to get prayer timings with caching
+    return await PrayerDataManager.getPrayerTimingsForMonth(
+      year: date.year,
+      month: date.month,
+      lat: location.lat.toString(),
+      lng: location.lng.toString(),
+      timezone: timezone,
     );
-    if (response.statusCode == 200 && response.data['code'] == 200) {
-      return PrayerTimingMonthResponseModel.fromJson(response.data);
-    } else {
-      throw Exception('Failed to fetch prayer times month');
-    }
   }
+}
+
+// Provider to get prayer timing for a specific date
+@riverpod
+Future<MultiDayTiming?> prayerTimingForDate(Ref ref, DateTime date) async {
+  final location = await ref.watch(locationProvider.future);
+
+  // Use the data manager to get prayer timing for specific date
+  return await PrayerDataManager.getPrayerTimingForDate(
+    date: date,
+    lat: location.lat.toString(),
+    lng: location.lng.toString(),
+  );
+}
+
+// Provider to check if data exists for a specific date
+@riverpod
+Future<bool> hasPrayerDataForDate(Ref ref, DateTime date) async {
+  final location = await ref.watch(locationProvider.future);
+  return await PrayerDataManager.hasDataForDate(
+    date: date,
+    lat: location.lat.toString(),
+    lng: location.lng.toString(),
+  );
+}
+
+// Provider to check if data exists for current month
+@riverpod
+Future<bool> hasPrayerDataForCurrentMonth(Ref ref) async {
+  final location = await ref.watch(locationProvider.future);
+  final now = DateTime.now();
+  return await PrayerDataManager.hasDataForMonth(
+    year: now.year,
+    month: now.month,
+    lat: location.lat.toString(),
+    lng: location.lng.toString(),
+  );
 }
 
 // FutureOr<PrayerTimingMonthResponseModel> prayerTimingMonth(
@@ -107,7 +129,7 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
 
 PrayerTimeWithOffset? getCurrentRelevantPrayerWithOffset(
   List<PrayerTime> prayers,
-  Datum? tomorrowsPrayers,
+  MultiDayTiming? tomorrowsPrayers,
 ) {
   final now = DateTime.now();
 
@@ -117,7 +139,7 @@ PrayerTimeWithOffset? getCurrentRelevantPrayerWithOffset(
 
   upcomingPrayer ??= (tomorrowsPrayers != null
       ? PrayerTime(
-          time: tomorrowsPrayers.timings!.fajr!,
+          time: tomorrowsPrayers.prayers![0].time!,
           name: PrayerTimeName.fajr,
         )
       : null);
@@ -137,27 +159,28 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
 
   final now = DateTime.now();
 
-  if (prayerTimes.data == null) throw Exception('Error Fetching Prayer Data');
-  final todaysPrayers = prayerTimes.data![now.day - 1];
+  if (prayerTimes.multiDayTimings == null)
+    throw Exception('Error Fetching Prayer Data');
+  final todaysPrayers = prayerTimes.multiDayTimings![now.day - 1];
 
   print('Prayer times 1: ${todaysPrayers}');
 
-  final tomorrowsPrayers = prayerTimes.data!.length != now.day
-      ? prayerTimes.data![now.day]
+  final tomorrowsPrayers = prayerTimes.multiDayTimings!.length != now.day
+      ? prayerTimes.multiDayTimings![now.day]
       : null;
 
-  if (todaysPrayers.timings == null) {
+  if (todaysPrayers.prayers == null) {
     throw Exception('Error Fetching Prayer Data');
   }
 
-  final timing = todaysPrayers.timings!;
+  final timing = todaysPrayers.prayers!;
 
   final timings = [
-    PrayerTime(time: timing.fajr!, name: PrayerTimeName.fajr),
-    PrayerTime(time: timing.dhuhr!, name: PrayerTimeName.dhuhr),
-    PrayerTime(time: timing.asr!, name: PrayerTimeName.asr),
-    PrayerTime(time: timing.maghrib!, name: PrayerTimeName.maghrib),
-    PrayerTime(time: timing.isha!, name: PrayerTimeName.isha),
+    PrayerTime(time: timing[0].time!, name: PrayerTimeName.fajr),
+    PrayerTime(time: timing[2].time!, name: PrayerTimeName.dhuhr),
+    PrayerTime(time: timing[3].time!, name: PrayerTimeName.asr),
+    PrayerTime(time: timing[5].time!, name: PrayerTimeName.maghrib),
+    PrayerTime(time: timing[6].time!, name: PrayerTimeName.isha),
   ];
 
   while (true) {
