@@ -45,7 +45,7 @@ The notification system provides comprehensive prayer time notification manageme
 
 ### Individual Prayer Preferences
 
-Each prayer time (Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha) has:
+Each prayer time (Fajr, Sunrise, Zuhr, Asr, Maghrib, Isha) has:
 - **Enable/Disable Toggle**: Turn notifications on/off per prayer
 - **Sound Selection**: Choose from 8 different adhan sounds
 - **Advance Time**: Set 0-30 minutes advance notification

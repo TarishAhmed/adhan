@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
 
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+part 'battery_optimization_service.g.dart';
+
+const MethodChannel systemUtilsChannel = MethodChannel('app_system_utils');
 class BatteryOptimizationService {
-  static const MethodChannel _channel = MethodChannel('battery_optimization');
 
   /// Check if battery optimization is enabled for the app
-  static Future<bool> isBatteryOptimizationEnabled() async {
+  static Future<bool> isIgnoringBatteryOptimizations() async {
     try {
       if (Platform.isAndroid) {
-        final bool isOptimized = await _channel.invokeMethod(
-          'isBatteryOptimizationEnabled',
-        );
-        return isOptimized;
+        final bool isIgnoringBatteryOptimizations = await systemUtilsChannel.invokeMethod('isIgnoringBatteryOptimizations');
+        return isIgnoringBatteryOptimizations;
       }
       return false; // iOS doesn't have the same battery optimization concept
     } catch (e) {
@@ -25,9 +28,7 @@ class BatteryOptimizationService {
   static Future<bool> requestDisableBatteryOptimization() async {
     try {
       if (Platform.isAndroid) {
-        final bool success = await _channel.invokeMethod(
-          'requestDisableBatteryOptimization',
-        );
+        final bool success = await systemUtilsChannel.invokeMethod('requestDisableBatteryOptimization');
         return success;
       }
       return true; // iOS doesn't need this
@@ -38,12 +39,10 @@ class BatteryOptimizationService {
   }
 
   /// Show battery optimization dialog
-  static Future<void> showBatteryOptimizationDialog(
-    BuildContext context,
-  ) async {
-    final bool isOptimized = await isBatteryOptimizationEnabled();
+  static Future<void> showBatteryOptimizationDialog(BuildContext context, WidgetRef ref) async {
+    final bool isIgnoringOptimizations = await isIgnoringBatteryOptimizations();
 
-    if (isOptimized && Platform.isAndroid) {
+    if (isIgnoringOptimizations && Platform.isAndroid) {
       if (context.mounted) {
         await showDialog(
           context: context,
@@ -59,10 +58,7 @@ class BatteryOptimizationService {
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 16),
-                Text(
-                  'This will ensure that:',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
+                Text('This will ensure that:', style: TextStyle(fontWeight: FontWeight.bold)),
                 SizedBox(height: 8),
                 Text('• Daily notifications are scheduled at 2 AM'),
                 Text('• Prayer time notifications arrive on time'),
@@ -96,12 +92,7 @@ class BatteryOptimizationService {
                           'Please follow the system prompts to disable battery optimization for this app. '
                           'This is important for reliable prayer time notifications.',
                         ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.of(context).pop(),
-                            child: const Text('OK'),
-                          ),
-                        ],
+                        actions: [TextButton(onPressed: () => Navigator.of(context).pop(), child: const Text('OK'))],
                       ),
                     );
                   }
@@ -116,9 +107,9 @@ class BatteryOptimizationService {
   }
 
   /// Check and show battery optimization dialog if needed
-  static Future<void> checkBatteryOptimization(BuildContext context) async {
+  static Future<void> checkBatteryOptimization(BuildContext context, WidgetRef ref) async {
     try {
-      await showBatteryOptimizationDialog(context);
+      await showBatteryOptimizationDialog(context, ref);
     } catch (e) {
       print('Error checking battery optimization: $e');
     }
@@ -127,19 +118,11 @@ class BatteryOptimizationService {
   /// Get battery optimization status for display
   static Future<Map<String, dynamic>> getBatteryOptimizationStatus() async {
     try {
-      final bool isOptimized = await isBatteryOptimizationEnabled();
-      return {
-        'is_optimized': isOptimized,
-        'platform': Platform.isAndroid ? 'Android' : 'iOS',
-        'needs_attention': isOptimized && Platform.isAndroid,
-      };
+      final bool isIgnoringOptimization = await isIgnoringBatteryOptimizations();
+      return {'is_ignoring_optimization': isIgnoringOptimization};
     } catch (e) {
       print('Error getting battery optimization status: $e');
-      return {
-        'is_optimized': false,
-        'platform': 'Unknown',
-        'needs_attention': false,
-      };
+      return {'is_ignoring_optimization': false};
     }
   }
 
@@ -147,10 +130,25 @@ class BatteryOptimizationService {
   static Future<void> openBatteryOptimizationSettings() async {
     try {
       if (Platform.isAndroid) {
-        await _channel.invokeMethod('openBatteryOptimizationSettings');
+        await systemUtilsChannel.invokeMethod('openBatteryOptimizationSettings');
       }
     } catch (e) {
       print('Error opening battery optimization settings: $e');
     }
   }
+
+  /// Show battery optimization settings in app settings
+  static Future<void> getNotificationChannels() async {
+    try {
+      if (Platform.isAndroid) {
+        await systemUtilsChannel.invokeMethod('getNotificationChannels');
+      }
+    } catch (e) {
+      print('Error getting notification channels: $e');
+    }
+  }
 }
+
+@riverpod
+Future<Map<String, dynamic>> batteryOptimizationStatus(Ref ref) =>
+    BatteryOptimizationService.getBatteryOptimizationStatus();

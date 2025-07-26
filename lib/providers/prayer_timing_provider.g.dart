@@ -355,7 +355,7 @@ final class CurrentRelevantPrayerProvider
 }
 
 String _$currentRelevantPrayerHash() =>
-    r'c3c0cb48f2ba1c20c441694425b78c2d6f82cb8e';
+    r'688745c4534e9a3fafafa62150020a56b13b0665';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

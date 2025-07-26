@@ -16,10 +16,11 @@ dependencies:
   go_router: ^14.6.2
   flutter_riverpod: ^3.0.0-dev.16
   riverpod_annotation: ^3.0.0-dev.16
-  material_symbols_icons: ^4.2815.1
+  # material_symbols_icons: ^4.2815.1
   dio: ^5.4.3
   geolocator: ^11.0.0
   geocoding: ^2.2.0
+  flutter_compass: ^0.8.0
   timezone: ^0.10.1
   flutter_timezone: ^4.1.1
   json_annotation: ^4.9.0
@@ -35,6 +36,8 @@ dependencies:
   android_alarm_manager_plus: ^4.0.7
   adhan: ^2.0.0+1
   sqflite_common_ffi_web: ^1.0.0
+  path_provider: ^2.1.5
+  flutter_hooks: ^0.21.2
 
 dev_dependencies:
   flutter_test:
@@ -55,13 +58,6 @@ flutter:
     - assets/fonts/Inter-VariableFont_opsz,wght.ttf
     - assets/fonts/NotoSerif-Italic-VariableFont_wdth,wght.ttf
     - assets/fonts/NotoSerif-VariableFont_wdth,wght.ttf
-    - sound/mishary_rashid_alafasy_3.mp3
-    - sound/ahmad_al_nafees.mp3
-    - sound/hafiz_mustafa_ozcan.mp3
-    - sound/karl_jenkins.mp3
-    - sound/mishary_rashid_alafasy.mp3
-    - sound/mishary_rashid_alafasy_2.mp3
-    - sound/mansour_al_zahrani.mp3
     - assets/icon/logo.svg
     - assets/pngs/logo_background.png
 

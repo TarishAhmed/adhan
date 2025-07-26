@@ -4204,7 +4204,7 @@ as int?,
 /// @nodoc
 mixin _$Timings {
 
-@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get fajr;@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get sunrise;@JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get dhuhr;@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get asr;@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get sunset;@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get maghrib;@JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get isha;@JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get imsak;@JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get midnight;@JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get firstthird;@JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get lastthird;
+@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get fajr;@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get sunrise;@JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get Zuhr;@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get asr;@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get sunset;@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get maghrib;@JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get isha;@JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get imsak;@JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get midnight;@JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get firstthird;@JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? get lastthird;
 /// Create a copy of Timings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -4217,16 +4217,16 @@ $TimingsCopyWith<Timings> get copyWith => _$TimingsCopyWithImpl<Timings>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Timings&&(identical(other.fajr, fajr) || other.fajr == fajr)&&(identical(other.sunrise, sunrise) || other.sunrise == sunrise)&&(identical(other.dhuhr, dhuhr) || other.dhuhr == dhuhr)&&(identical(other.asr, asr) || other.asr == asr)&&(identical(other.sunset, sunset) || other.sunset == sunset)&&(identical(other.maghrib, maghrib) || other.maghrib == maghrib)&&(identical(other.isha, isha) || other.isha == isha)&&(identical(other.imsak, imsak) || other.imsak == imsak)&&(identical(other.midnight, midnight) || other.midnight == midnight)&&(identical(other.firstthird, firstthird) || other.firstthird == firstthird)&&(identical(other.lastthird, lastthird) || other.lastthird == lastthird));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Timings&&(identical(other.fajr, fajr) || other.fajr == fajr)&&(identical(other.sunrise, sunrise) || other.sunrise == sunrise)&&(identical(other.Zuhr, Zuhr) || other.Zuhr == Zuhr)&&(identical(other.asr, asr) || other.asr == asr)&&(identical(other.sunset, sunset) || other.sunset == sunset)&&(identical(other.maghrib, maghrib) || other.maghrib == maghrib)&&(identical(other.isha, isha) || other.isha == isha)&&(identical(other.imsak, imsak) || other.imsak == imsak)&&(identical(other.midnight, midnight) || other.midnight == midnight)&&(identical(other.firstthird, firstthird) || other.firstthird == firstthird)&&(identical(other.lastthird, lastthird) || other.lastthird == lastthird));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fajr,sunrise,dhuhr,asr,sunset,maghrib,isha,imsak,midnight,firstthird,lastthird);
+int get hashCode => Object.hash(runtimeType,fajr,sunrise,Zuhr,asr,sunset,maghrib,isha,imsak,midnight,firstthird,lastthird);
 
 @override
 String toString() {
-  return 'Timings(fajr: $fajr, sunrise: $sunrise, dhuhr: $dhuhr, asr: $asr, sunset: $sunset, maghrib: $maghrib, isha: $isha, imsak: $imsak, midnight: $midnight, firstthird: $firstthird, lastthird: $lastthird)';
+  return 'Timings(fajr: $fajr, sunrise: $sunrise, Zuhr: $Zuhr, asr: $asr, sunset: $sunset, maghrib: $maghrib, isha: $isha, imsak: $imsak, midnight: $midnight, firstthird: $firstthird, lastthird: $lastthird)';
 }
 
 
@@ -4237,7 +4237,7 @@ abstract mixin class $TimingsCopyWith<$Res>  {
   factory $TimingsCopyWith(Timings value, $Res Function(Timings) _then) = _$TimingsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? fajr,@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunrise,@JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? dhuhr,@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? asr,@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunset,@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? maghrib,@JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? isha,@JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? imsak,@JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? midnight,@JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? firstthird,@JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? lastthird
+@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? fajr,@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunrise,@JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? Zuhr,@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? asr,@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunset,@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? maghrib,@JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? isha,@JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? imsak,@JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? midnight,@JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? firstthird,@JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? lastthird
 });
 
 
@@ -4254,11 +4254,11 @@ class _$TimingsCopyWithImpl<$Res>
 
 /// Create a copy of Timings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fajr = freezed,Object? sunrise = freezed,Object? dhuhr = freezed,Object? asr = freezed,Object? sunset = freezed,Object? maghrib = freezed,Object? isha = freezed,Object? imsak = freezed,Object? midnight = freezed,Object? firstthird = freezed,Object? lastthird = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fajr = freezed,Object? sunrise = freezed,Object? Zuhr = freezed,Object? asr = freezed,Object? sunset = freezed,Object? maghrib = freezed,Object? isha = freezed,Object? imsak = freezed,Object? midnight = freezed,Object? firstthird = freezed,Object? lastthird = freezed,}) {
   return _then(_self.copyWith(
 fajr: freezed == fajr ? _self.fajr : fajr // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,sunrise: freezed == sunrise ? _self.sunrise : sunrise // ignore: cast_nullable_to_non_nullable
-as TimeOfDay?,dhuhr: freezed == dhuhr ? _self.dhuhr : dhuhr // ignore: cast_nullable_to_non_nullable
+as TimeOfDay?,Zuhr: freezed == Zuhr ? _self.Zuhr : Zuhr // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,asr: freezed == asr ? _self.asr : asr // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,sunset: freezed == sunset ? _self.sunset : sunset // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,maghrib: freezed == maghrib ? _self.maghrib : maghrib // ignore: cast_nullable_to_non_nullable
@@ -4352,10 +4352,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunrise, @JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? dhuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? lastthird)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunrise, @JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? Zuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? lastthird)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Timings() when $default != null:
-return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
+return $default(_that.fajr,_that.sunrise,_that.Zuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
   return orElse();
 
 }
@@ -4373,10 +4373,10 @@ return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunrise, @JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? dhuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? lastthird)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunrise, @JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? Zuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? lastthird)  $default,) {final _that = this;
 switch (_that) {
 case _Timings():
-return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
+return $default(_that.fajr,_that.sunrise,_that.Zuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -4393,10 +4393,10 @@ return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunrise, @JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? dhuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? lastthird)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunrise, @JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? Zuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour)  TimeOfDay? lastthird)?  $default,) {final _that = this;
 switch (_that) {
 case _Timings() when $default != null:
-return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
+return $default(_that.fajr,_that.sunrise,_that.Zuhr,_that.asr,_that.sunset,_that.maghrib,_that.isha,_that.imsak,_that.midnight,_that.firstthird,_that.lastthird);case _:
   return null;
 
 }
@@ -4408,12 +4408,12 @@ return $default(_that.fajr,_that.sunrise,_that.dhuhr,_that.asr,_that.sunset,_tha
 @JsonSerializable()
 
 class _Timings implements Timings {
-  const _Timings({@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.sunrise, @JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.dhuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.lastthird});
+  const _Timings({@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.fajr, @JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.sunrise, @JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.Zuhr, @JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.asr, @JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.sunset, @JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.maghrib, @JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.isha, @JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.imsak, @JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.midnight, @JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.firstthird, @JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) this.lastthird});
   factory _Timings.fromJson(Map<String, dynamic> json) => _$TimingsFromJson(json);
 
 @override@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? fajr;
 @override@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? sunrise;
-@override@JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? dhuhr;
+@override@JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? Zuhr;
 @override@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? asr;
 @override@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? sunset;
 @override@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) final  TimeOfDay? maghrib;
@@ -4436,16 +4436,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Timings&&(identical(other.fajr, fajr) || other.fajr == fajr)&&(identical(other.sunrise, sunrise) || other.sunrise == sunrise)&&(identical(other.dhuhr, dhuhr) || other.dhuhr == dhuhr)&&(identical(other.asr, asr) || other.asr == asr)&&(identical(other.sunset, sunset) || other.sunset == sunset)&&(identical(other.maghrib, maghrib) || other.maghrib == maghrib)&&(identical(other.isha, isha) || other.isha == isha)&&(identical(other.imsak, imsak) || other.imsak == imsak)&&(identical(other.midnight, midnight) || other.midnight == midnight)&&(identical(other.firstthird, firstthird) || other.firstthird == firstthird)&&(identical(other.lastthird, lastthird) || other.lastthird == lastthird));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Timings&&(identical(other.fajr, fajr) || other.fajr == fajr)&&(identical(other.sunrise, sunrise) || other.sunrise == sunrise)&&(identical(other.Zuhr, Zuhr) || other.Zuhr == Zuhr)&&(identical(other.asr, asr) || other.asr == asr)&&(identical(other.sunset, sunset) || other.sunset == sunset)&&(identical(other.maghrib, maghrib) || other.maghrib == maghrib)&&(identical(other.isha, isha) || other.isha == isha)&&(identical(other.imsak, imsak) || other.imsak == imsak)&&(identical(other.midnight, midnight) || other.midnight == midnight)&&(identical(other.firstthird, firstthird) || other.firstthird == firstthird)&&(identical(other.lastthird, lastthird) || other.lastthird == lastthird));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fajr,sunrise,dhuhr,asr,sunset,maghrib,isha,imsak,midnight,firstthird,lastthird);
+int get hashCode => Object.hash(runtimeType,fajr,sunrise,Zuhr,asr,sunset,maghrib,isha,imsak,midnight,firstthird,lastthird);
 
 @override
 String toString() {
-  return 'Timings(fajr: $fajr, sunrise: $sunrise, dhuhr: $dhuhr, asr: $asr, sunset: $sunset, maghrib: $maghrib, isha: $isha, imsak: $imsak, midnight: $midnight, firstthird: $firstthird, lastthird: $lastthird)';
+  return 'Timings(fajr: $fajr, sunrise: $sunrise, Zuhr: $Zuhr, asr: $asr, sunset: $sunset, maghrib: $maghrib, isha: $isha, imsak: $imsak, midnight: $midnight, firstthird: $firstthird, lastthird: $lastthird)';
 }
 
 
@@ -4456,7 +4456,7 @@ abstract mixin class _$TimingsCopyWith<$Res> implements $TimingsCopyWith<$Res> {
   factory _$TimingsCopyWith(_Timings value, $Res Function(_Timings) _then) = __$TimingsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? fajr,@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunrise,@JsonKey(name: "Dhuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? dhuhr,@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? asr,@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunset,@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? maghrib,@JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? isha,@JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? imsak,@JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? midnight,@JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? firstthird,@JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? lastthird
+@JsonKey(name: "Fajr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? fajr,@JsonKey(name: "Sunrise", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunrise,@JsonKey(name: "Zuhr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? Zuhr,@JsonKey(name: "Asr", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? asr,@JsonKey(name: "Sunset", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? sunset,@JsonKey(name: "Maghrib", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? maghrib,@JsonKey(name: "Isha", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? isha,@JsonKey(name: "Imsak", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? imsak,@JsonKey(name: "Midnight", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? midnight,@JsonKey(name: "Firstthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? firstthird,@JsonKey(name: "Lastthird", fromJson: convertTo12Hour, toJson: convertTo24Hour) TimeOfDay? lastthird
 });
 
 
@@ -4473,11 +4473,11 @@ class __$TimingsCopyWithImpl<$Res>
 
 /// Create a copy of Timings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fajr = freezed,Object? sunrise = freezed,Object? dhuhr = freezed,Object? asr = freezed,Object? sunset = freezed,Object? maghrib = freezed,Object? isha = freezed,Object? imsak = freezed,Object? midnight = freezed,Object? firstthird = freezed,Object? lastthird = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fajr = freezed,Object? sunrise = freezed,Object? Zuhr = freezed,Object? asr = freezed,Object? sunset = freezed,Object? maghrib = freezed,Object? isha = freezed,Object? imsak = freezed,Object? midnight = freezed,Object? firstthird = freezed,Object? lastthird = freezed,}) {
   return _then(_Timings(
 fajr: freezed == fajr ? _self.fajr : fajr // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,sunrise: freezed == sunrise ? _self.sunrise : sunrise // ignore: cast_nullable_to_non_nullable
-as TimeOfDay?,dhuhr: freezed == dhuhr ? _self.dhuhr : dhuhr // ignore: cast_nullable_to_non_nullable
+as TimeOfDay?,Zuhr: freezed == Zuhr ? _self.Zuhr : Zuhr // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,asr: freezed == asr ? _self.asr : asr // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,sunset: freezed == sunset ? _self.sunset : sunset // ignore: cast_nullable_to_non_nullable
 as TimeOfDay?,maghrib: freezed == maghrib ? _self.maghrib : maghrib // ignore: cast_nullable_to_non_nullable

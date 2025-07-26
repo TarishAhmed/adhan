@@ -235,7 +235,7 @@ Map<String, dynamic> _$ParamsToJson(_Params instance) => <String, dynamic>{
 _Timings _$TimingsFromJson(Map<String, dynamic> json) => _Timings(
   fajr: convertTo12Hour(json['Fajr'] as String),
   sunrise: convertTo12Hour(json['Sunrise'] as String),
-  dhuhr: convertTo12Hour(json['Dhuhr'] as String),
+  Zuhr: convertTo12Hour(json['Zuhr'] as String),
   asr: convertTo12Hour(json['Asr'] as String),
   sunset: convertTo12Hour(json['Sunset'] as String),
   maghrib: convertTo12Hour(json['Maghrib'] as String),
@@ -249,7 +249,7 @@ _Timings _$TimingsFromJson(Map<String, dynamic> json) => _Timings(
 Map<String, dynamic> _$TimingsToJson(_Timings instance) => <String, dynamic>{
   'Fajr': convertTo24Hour(instance.fajr),
   'Sunrise': convertTo24Hour(instance.sunrise),
-  'Dhuhr': convertTo24Hour(instance.dhuhr),
+  'Zuhr': convertTo24Hour(instance.Zuhr),
   'Asr': convertTo24Hour(instance.asr),
   'Sunset': convertTo24Hour(instance.sunset),
   'Maghrib': convertTo24Hour(instance.maghrib),

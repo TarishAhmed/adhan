@@ -1,3 +1,4 @@
+import 'package:adhan_app/utils/sound_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:adhan_app/services/notification_preferences_service.dart';
@@ -8,12 +9,10 @@ class NotificationSettingsScreen extends ConsumerStatefulWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  ConsumerState<NotificationSettingsScreen> createState() =>
-      _NotificationSettingsScreenState();
+  ConsumerState<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
 }
 
-class _NotificationSettingsScreenState
-    extends ConsumerState<NotificationSettingsScreen> {
+class _NotificationSettingsScreenState extends ConsumerState<NotificationSettingsScreen> {
   Map<String, bool> _notificationPreferences = {};
   Map<String, String> _soundPreferences = {};
   Map<String, int> _advanceTimePreferences = {};
@@ -29,12 +28,9 @@ class _NotificationSettingsScreenState
     setState(() => _isLoading = true);
 
     try {
-      final notificationPrefs =
-          await NotificationPreferencesService.getAllNotificationPreferences();
-      final soundPrefs =
-          await NotificationPreferencesService.getAllSoundPreferences();
-      final advanceTimePrefs =
-          await NotificationPreferencesService.getAllAdvanceTimePreferences();
+      final notificationPrefs = await NotificationPreferencesService.getAllNotificationPreferences();
+      final soundPrefs = await NotificationPreferencesService.getAllSoundPreferences();
+      final advanceTimePrefs = await NotificationPreferencesService.getAllAdvanceTimePreferences();
 
       setState(() {
         _notificationPreferences = notificationPrefs;
@@ -56,10 +52,7 @@ class _NotificationSettingsScreenState
       _notificationPreferences[prayerName] = newValue;
     });
 
-    await NotificationPreferencesService.setPrayerNotificationEnabled(
-      prayerName,
-      newValue,
-    );
+    await NotificationPreferencesService.setPrayerNotificationEnabled(prayerName, newValue);
 
     // Reschedule notifications if enabled
     if (newValue) {
@@ -87,10 +80,7 @@ class _NotificationSettingsScreenState
       _advanceTimePreferences[prayerName] = minutes;
     });
 
-    await NotificationPreferencesService.setPrayerAdvanceTime(
-      prayerName,
-      minutes,
-    );
+    await NotificationPreferencesService.setPrayerAdvanceTime(prayerName, minutes);
 
     // Reschedule notifications with new advance time
     await DailyNotificationScheduler.cancelAllNotifications();
@@ -102,18 +92,10 @@ class _NotificationSettingsScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Reset All Preferences'),
-        content: const Text(
-          'Are you sure you want to reset all notification preferences to defaults?',
-        ),
+        content: const Text('Are you sure you want to reset all notification preferences to defaults?'),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Reset'),
-          ),
+          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Reset')),
         ],
       ),
     );
@@ -125,9 +107,7 @@ class _NotificationSettingsScreenState
       await DailyNotificationScheduler.manuallyScheduleDailyNotifications();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('All preferences reset to defaults')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('All preferences reset to defaults')));
       }
     }
   }
@@ -136,49 +116,21 @@ class _NotificationSettingsScreenState
     try {
       await NotificationService.schedulePrayerNotification(
         id: 99999,
-        title:
-            '${NotificationPreferencesService.prayerNames[prayerName]} Prayer',
-        body:
-            'Test notification for ${NotificationPreferencesService.prayerNames[prayerName]} prayer.',
+        title: prayerName,
+        body: 'Test notification for $prayerName prayer.',
         scheduledTime: DateTime.now().add(const Duration(seconds: 5)),
-        sound: _getAdhanSound(_soundPreferences[prayerName] ?? 'default'),
         prayerName: prayerName,
       );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Test notification scheduled for 5 seconds from now'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Test notification scheduled for 5 seconds from now')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error scheduling test notification: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error scheduling test notification: $e')));
       }
-    }
-  }
-
-  AdhanSound _getAdhanSound(String soundName) {
-    switch (soundName) {
-      case 'mishary_rashid_alafasy':
-        return AdhanSound.misharyRashidAlafasy;
-      case 'mishary_rashid_alafasy_2':
-        return AdhanSound.misharyRashidAlafasy2;
-      case 'mishary_rashid_alafasy_3':
-        return AdhanSound.misharyRashidAlafasy3;
-      case 'mansour_al_zahrani':
-        return AdhanSound.mansourAlZahrani;
-      case 'hafiz_mustafa_ozcan':
-        return AdhanSound.hafizMustafaOzcan;
-      case 'karl_jenkins':
-        return AdhanSound.karlJenkins;
-      case 'ahmad_al_nafees':
-        return AdhanSound.ahmadAlNafees;
-      default:
-        return AdhanSound.defaultRingtone;
     }
   }
 
@@ -188,11 +140,7 @@ class _NotificationSettingsScreenState
       appBar: AppBar(
         title: const Text('Notification Settings'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _loadPreferences,
-            tooltip: 'Refresh',
-          ),
+          IconButton(icon: const Icon(Icons.refresh), onPressed: _loadPreferences, tooltip: 'Refresh'),
           PopupMenuButton<String>(
             onSelected: (value) {
               switch (value) {
@@ -208,49 +156,38 @@ class _NotificationSettingsScreenState
               }
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'reset',
-                child: Text('Reset All Preferences'),
-              ),
-              const PopupMenuItem(
-                value: 'test_all',
-                child: Text('Test All Notifications'),
-              ),
-              const PopupMenuItem(
-                value: 'test_scheduler',
-                child: Text('Test Daily Scheduler'),
-              ),
+              const PopupMenuItem(value: 'reset', child: Text('Reset All Preferences')),
+              const PopupMenuItem(value: 'test_all', child: Text('Test All Notifications')),
+              const PopupMenuItem(value: 'test_scheduler', child: Text('Test Daily Scheduler')),
             ],
           ),
         ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: NotificationPreferencesService.prayerNames.length,
-              itemBuilder: (context, index) {
-                final prayerKey = NotificationPreferencesService
-                    .prayerNames
-                    .keys
-                    .elementAt(index);
-                final prayerName =
-                    NotificationPreferencesService.prayerNames[prayerKey]!;
+          : ExpansionPanelList.radio(
+              initialOpenPanelValue: 1,
+              children: NotificationPreferencesService.prayerNames.keys.map<ExpansionPanelRadio>((prayerKey) {
+                final prayerName = NotificationPreferencesService.prayerNames[prayerKey]!;
                 final isEnabled = _notificationPreferences[prayerKey] ?? true;
-                final sound = _soundPreferences[prayerKey] ?? 'default';
+                final sound = _soundPreferences[prayerKey] ??  AdhanAudioLibrary.values.first.url;
                 final advanceTime = _advanceTimePreferences[prayerKey] ?? 0;
 
-                return Card(
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
+                return ExpansionPanelRadio(
+                  value: prayerKey,
+                  body: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSoundSelector(prayerKey, sound),
+                      _buildAdvanceTimeSelector(prayerKey, advanceTime),
+                      _buildTestButton(prayerKey, prayerName),
+                    ],
                   ),
-                  child: ExpansionTile(
+                  headerBuilder: (context, isExpanded) => ListTile(
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     title: Row(
                       children: [
-                        Switch(
-                          value: isEnabled,
-                          onChanged: (value) => _toggleNotification(prayerKey),
-                        ),
+                        Switch(value: isEnabled, onChanged: (value) => _toggleNotification(prayerKey)),
                         const SizedBox(width: 16),
                         Text(
                           prayerName,
@@ -263,45 +200,23 @@ class _NotificationSettingsScreenState
                       ],
                     ),
                     subtitle: isEnabled
-                        ? Text(
-                            'Sound: ${sound.replaceAll('_', ' ').toUpperCase()}, Advance: ${advanceTime}min',
-                          )
+                        ? Text('Sound: ${sound.replaceAll('_', ' ').toUpperCase()}, Advance: ${advanceTime}min')
                         : const Text('Notifications disabled'),
-                    children: [
-                      if (isEnabled) ...[
-                        _buildSoundSelector(prayerKey, sound),
-                        _buildAdvanceTimeSelector(prayerKey, advanceTime),
-                        _buildTestButton(prayerKey, prayerName),
-                      ],
-                    ],
                   ),
                 );
-              },
+              }).toList(),
             ),
     );
   }
 
   Widget _buildSoundSelector(String prayerKey, String currentSound) {
-    final sounds = {
-      'default': 'Default Ringtone',
-      'mishary_rashid_alafasy': 'Mishary Rashid Alafasy',
-      'mishary_rashid_alafasy_2': 'Mishary Rashid Alafasy 2',
-      'mishary_rashid_alafasy_3': 'Mishary Rashid Alafasy 3',
-      'mansour_al_zahrani': 'Mansour Al Zahrani',
-      'hafiz_mustafa_ozcan': 'Hafiz Mustafa Ozcan',
-      'karl_jenkins': 'Karl Jenkins',
-      'ahmad_al_nafees': 'Ahmad Al Nafees',
-    };
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Notification Sound',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          const Text('Notification Sound', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
             value: currentSound,
@@ -309,16 +224,14 @@ class _NotificationSettingsScreenState
               border: OutlineInputBorder(),
               contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             ),
-            items: sounds.entries.map((entry) {
-              return DropdownMenuItem(
-                value: entry.key,
-                child: Text(entry.value),
-              );
+            items: AdhanAudioLibrary.values.map((audio) {
+              return DropdownMenuItem(value: audio.url, child: Text(audio.displayName));
             }).toList(),
             onChanged: (value) {
-              if (value != null) {
-                _changeSound(prayerKey, value);
-              }
+              if (value == null) return;
+              // NotificationService.downloadSound(value, '$prayerKey.mp3');
+              print('Downloaded sound for $prayerKey: $value');
+              _changeSound(prayerKey, value);
             },
           ),
         ],
@@ -332,10 +245,7 @@ class _NotificationSettingsScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Advance Notification Time',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+          const Text('Advance Notification Time', style: TextStyle(fontWeight: FontWeight.bold)),
           const SizedBox(height: 8),
           Row(
             children: [
@@ -366,10 +276,7 @@ class _NotificationSettingsScreenState
         onPressed: () => _testNotification(prayerKey),
         icon: const Icon(Icons.notifications),
         label: Text('Test $prayerName Notification'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.blue,
-          foregroundColor: Colors.white,
-        ),
+        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, foregroundColor: Colors.white),
       ),
     );
   }
@@ -383,19 +290,13 @@ class _NotificationSettingsScreenState
       }
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Test notifications scheduled for all enabled prayers',
-            ),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Test notifications scheduled for all enabled prayers')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error scheduling test notifications: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error scheduling test notifications: $e')));
       }
     }
   }
@@ -406,17 +307,13 @@ class _NotificationSettingsScreenState
       await DailyNotificationScheduler.manuallyScheduleDailyNotifications();
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Daily notification scheduler test completed'),
-          ),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Daily notification scheduler test completed')));
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error testing daily scheduler: $e')),
-        );
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error testing daily scheduler: $e')));
       }
     }
   }

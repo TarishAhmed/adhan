@@ -1,9 +1,12 @@
+import 'dart:developer' show log;
+
 import 'package:workmanager/workmanager.dart';
 import 'package:adhan_app/services/prayer_data_manager.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
 import 'package:adhan_app/services/daily_notification_scheduler.dart';
 import 'package:adhan_app/api/api_helper.dart';
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
+import 'package:timezone/data/latest_all.dart' as tzdata;
 
 class BackgroundPrayerService {
   static const String _fetchNextMonthTask = 'fetchNextMonthPrayerTimings';
@@ -12,6 +15,7 @@ class BackgroundPrayerService {
   /// Initialize the background service
   static Future<void> initialize() async {
     await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+    tzdata.initializeTimeZones();
   }
 
   /// Schedule background tasks
@@ -159,7 +163,7 @@ class BackgroundPrayerService {
   ) async {
     try {
       final url = 'https://www.alislam.org/adhan/api/timings/month';
-      final response = await ApiHelper.dio.get(
+      final response = await ApiHelper.instance.dio.get(
         url,
         queryParameters: {
           'lat': location['lat'],
@@ -211,6 +215,8 @@ class BackgroundPrayerService {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    tzdata.initializeTimeZones();
+    print('Background task: $task');
     try {
       switch (task) {
         case 'fetchNextMonthPrayerTimings':
@@ -222,12 +228,15 @@ void callbackDispatcher() {
         case 'scheduleDailyNotifications':
           await DailyNotificationScheduler.scheduleDailyNotifications();
           break;
+        case 'testNotifications':
+          await DailyNotificationScheduler.testNotifications();
+          break;
         default:
           print('Unknown background task: $task');
       }
       return true;
-    } catch (e) {
-      print('Background task error: $e');
+    } catch (e,st) {
+      log('Background task error:', error: e, stackTrace: st);
       return false;
     }
   });

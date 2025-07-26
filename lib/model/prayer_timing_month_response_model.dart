@@ -8,13 +8,10 @@ import 'dart:convert';
 part 'prayer_timing_month_response_model.freezed.dart';
 part 'prayer_timing_month_response_model.g.dart';
 
-PrayerTimingMonthResponseModel prayerTimingMonthResponseModelFromJson(
-  String str,
-) => PrayerTimingMonthResponseModel.fromJson(json.decode(str));
+PrayerTimingMonthResponseModel prayerTimingMonthResponseModelFromJson(String str) =>
+    PrayerTimingMonthResponseModel.fromJson(json.decode(str));
 
-String prayerTimingMonthResponseModelToJson(
-  PrayerTimingMonthResponseModel data,
-) => json.encode(data.toJson());
+String prayerTimingMonthResponseModelToJson(PrayerTimingMonthResponseModel data) => json.encode(data.toJson());
 
 @freezed
 abstract class PrayerTimingMonthResponseModel with _$PrayerTimingMonthResponseModel {
@@ -35,8 +32,7 @@ abstract class LocationInfo with _$LocationInfo {
     @JsonKey(name: "timezone") String? timezone,
   }) = _LocationInfo;
 
-  factory LocationInfo.fromJson(Map<String, dynamic> json) =>
-      _$LocationInfoFromJson(json);
+  factory LocationInfo.fromJson(Map<String, dynamic> json) => _$LocationInfoFromJson(json);
 }
 
 @freezed
@@ -44,20 +40,14 @@ abstract class MultiDayTiming with _$MultiDayTiming {
   const factory MultiDayTiming({
     @JsonKey(name: "prayers") List<Prayer>? prayers,
     @JsonKey(name: "coordinates") Coordinates? coordinates,
-    @JsonKey(
-      name: "date",
-      fromJson: DateTime.fromMillisecondsSinceEpoch,
-      toJson: dateToMillisecondsSinceEpoch,
-    )
+    @JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)
     DateTime? date,
   }) = _MultiDayTiming;
 
-  factory MultiDayTiming.fromJson(Map<String, dynamic> json) =>
-      _$MultiDayTimingFromJson(json);
+  factory MultiDayTiming.fromJson(Map<String, dynamic> json) => _$MultiDayTimingFromJson(json);
 }
 
-int? dateToMillisecondsSinceEpoch(DateTime? date) =>
-    date?.millisecondsSinceEpoch;
+int? dateToMillisecondsSinceEpoch(DateTime? date) => date?.millisecondsSinceEpoch;
 
 @freezed
 abstract class Coordinates with _$Coordinates {
@@ -66,19 +56,14 @@ abstract class Coordinates with _$Coordinates {
     @JsonKey(name: "longitude") double? longitude,
   }) = _Coordinates;
 
-  factory Coordinates.fromJson(Map<String, dynamic> json) =>
-      _$CoordinatesFromJson(json);
+  factory Coordinates.fromJson(Map<String, dynamic> json) => _$CoordinatesFromJson(json);
 }
 
 @freezed
 abstract class Prayer with _$Prayer {
   const factory Prayer({
     @JsonKey(name: "name") Name? name,
-    @JsonKey(
-      name: "time",
-      fromJson: DateTime.fromMillisecondsSinceEpoch,
-      toJson: dateToMillisecondsSinceEpoch,
-    )
+    @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)
     DateTime? time,
     @JsonKey(name: "audio") String? audio,
   }) = _Prayer;
@@ -88,19 +73,23 @@ abstract class Prayer with _$Prayer {
 
 enum Name {
   @JsonValue("Asr")
-  ASR,
+  ASR('Asr'),
   @JsonValue("Fajr")
-  FAJR,
+  FAJR('Fajr'),
   @JsonValue("Isha")
-  ISHA,
+  ISHA('Isha'),
   @JsonValue("Maghrib")
-  MAGHRIB,
+  MAGHRIB('Maghrib'),
   @JsonValue("Sunrise")
-  SUNRISE,
+  SUNRISE('Sunrise'),
   @JsonValue("Sunset")
-  SUNSET,
+  SUNSET('Sunset'),
   @JsonValue("Zuhr")
-  ZUHR,
+  ZUHR('Zuhr');
+
+  const Name(this.displayName);
+
+  final String displayName;
 }
 
 final nameValues = EnumValues({

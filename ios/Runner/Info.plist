@@ -55,5 +55,9 @@
 		<string>task-identifier</string>
 		<string>dev.fluttercommunity.workmanagerExample.iOSBackgroundAppRefresh</string>
 	</array>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs access to location to determine the direction to the Kaaba for prayer times.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs access to location to determine the direction to the Kaaba for prayer times.</string>
 </dict>
 </plist>

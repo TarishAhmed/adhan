@@ -9,6 +9,7 @@ import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:workmanager/workmanager.dart';
@@ -27,14 +28,7 @@ void main() async {
   await NotificationService.initialize();
 
   if (!kIsWeb) {
-    await Workmanager().initialize(
-      callbackDispatcher, // The top level function, aka callbackDispatcher
-      isInDebugMode:
-          true, // If enabled it will post a notification whenever the task is running. Handy for debugging tasks
-    );
-
     await AndroidAlarmManager.initialize();
-
     // Initialize background prayer service
     await BackgroundPrayerService.initialize();
     await BackgroundPrayerService.scheduleBackgroundTasks();
@@ -68,25 +62,23 @@ class MyApp extends ConsumerWidget {
       darkTheme: MaterialTheme().dark(),
       themeMode: themeMode,
       routerConfig: router,
-      builder: (context, child) {
-        return BatteryOptimizationWrapper(child: child!);
-      },
+      builder: (context, child) => BatteryOptimizationWrapper(child: child!),
     );
   }
 }
 
-class BatteryOptimizationWrapper extends StatefulWidget {
+class BatteryOptimizationWrapper extends StatefulHookConsumerWidget {
   final Widget child;
 
   const BatteryOptimizationWrapper({super.key, required this.child});
 
   @override
-  State<BatteryOptimizationWrapper> createState() =>
+  ConsumerState<BatteryOptimizationWrapper> createState() =>
       _BatteryOptimizationWrapperState();
 }
 
 class _BatteryOptimizationWrapperState
-    extends State<BatteryOptimizationWrapper> {
+    extends ConsumerState<BatteryOptimizationWrapper> {
   bool _hasCheckedBatteryOptimization = false;
 
   @override
@@ -104,7 +96,7 @@ class _BatteryOptimizationWrapperState
         _hasCheckedBatteryOptimization = true;
       });
 
-      await BatteryOptimizationService.checkBatteryOptimization(context);
+      await BatteryOptimizationService.checkBatteryOptimization(context, ref);
     }
   }
 
@@ -112,77 +104,4 @@ class _BatteryOptimizationWrapperState
   Widget build(BuildContext context) {
     return widget.child;
   }
-}
-
-@pragma(
-  'vm:entry-point',
-) // Mandatory if the App is obfuscated or using Flutter 3.1+
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    print(
-      "Native called background task: $task",
-    ); //simpleTask will be emitted here.
-
-    try {
-      switch (task) {
-        case 'test-task':
-          testTask(inputData!);
-          break;
-        case 'fetchNextMonthPrayerTimings':
-          await BackgroundPrayerService.checkAndFetchPrayerTimings();
-          break;
-        case 'checkAndFetchPrayerTimings':
-          await BackgroundPrayerService.checkAndFetchPrayerTimings();
-          break;
-        case 'scheduleDailyNotifications':
-          await DailyNotificationScheduler.scheduleDailyNotifications();
-          break;
-        default:
-          print('Unknown task: $task');
-      }
-      return true;
-    } catch (e) {
-      print('Background task error: $e');
-      return false;
-    }
-  });
-}
-
-testTask(Map<String, dynamic> data) async {
-  await NotificationService.initialize();
-  final prayer = PrayerTime.fromJson(data);
-  await NotificationService.schedulePrayerNotification(
-    id: 99999,
-    title: '${prayer.name.displayName} Prayer',
-    body: 'It\'s time for ${prayer.name.displayName} prayer.',
-    scheduledTime: DateTime.now().add(const Duration(seconds: 5)),
-    sound: AdhanSound.defaultRingtone,
-    prayerName: prayer.name.name.toLowerCase(),
-  );
-  print('Test task: $data');
-}
-
-@pragma('vm:entry-point')
-Future<void> testAlarmManager() async {
-  print('---------------Android----------2');
-  final DateTime now = DateTime.now();
-  final int isolateId = Isolate.current.hashCode;
-  print(
-    "[$now] Hello, world! isolate=${isolateId} function='$testAlarmManager'",
-  );
-
-  await NotificationService.initialize();
-  final prayer = PrayerTime(
-    name: PrayerTimeName.dhuhr,
-    time: DateTime.now().add(const Duration(seconds: 5)),
-  );
-  await NotificationService.schedulePrayerNotification(
-    id: 99999,
-    title: '${prayer.name.displayName} Prayer',
-    body: 'It\'s time for ${prayer.name.displayName} prayer.',
-    scheduledTime: prayer.time,
-    sound: AdhanSound.defaultRingtone,
-    prayerName: prayer.name.name.toLowerCase(),
-  );
-  print('Test task: ${prayer.toJson()}');
 }

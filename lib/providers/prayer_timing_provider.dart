@@ -163,7 +163,6 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
     throw Exception('Error Fetching Prayer Data');
   final todaysPrayers = prayerTimes.multiDayTimings![now.day - 1];
 
-  print('Prayer times 1: ${todaysPrayers}');
 
   final tomorrowsPrayers = prayerTimes.multiDayTimings!.length != now.day
       ? prayerTimes.multiDayTimings![now.day]
@@ -177,7 +176,7 @@ Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
 
   final timings = [
     PrayerTime(time: timing[0].time!, name: PrayerTimeName.fajr),
-    PrayerTime(time: timing[2].time!, name: PrayerTimeName.dhuhr),
+    PrayerTime(time: timing[2].time!, name: PrayerTimeName.zuhr),
     PrayerTime(time: timing[3].time!, name: PrayerTimeName.asr),
     PrayerTime(time: timing[5].time!, name: PrayerTimeName.maghrib),
     PrayerTime(time: timing[6].time!, name: PrayerTimeName.isha),
@@ -225,7 +224,7 @@ class PrayerTime {
 enum PrayerTimeName {
   fajr('Fajr'),
   sunrise('Sunrise'),
-  dhuhr('Dhuhr'),
+  zuhr('Zuhr'),
   asr('Asr'),
   maghrib('Maghrib'),
   isha('Isha'),

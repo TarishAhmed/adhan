@@ -1,3 +1,4 @@
+import 'package:adhan_app/utils/sound_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationPreferencesService {
@@ -9,7 +10,7 @@ class NotificationPreferencesService {
   static const Map<String, String> prayerNames = {
     'fajr': 'Fajr',
     'sunrise': 'Sunrise',
-    'dhuhr': 'Dhuhr',
+    'zuhr': 'Zuhr',
     'asr': 'Asr',
     'maghrib': 'Maghrib',
     'isha': 'Isha',
@@ -96,14 +97,14 @@ class NotificationPreferencesService {
       final Map<String, bool> preferences = {};
 
       for (final prayer in prayerNames.keys) {
-        preferences[prayer] = prefs.getBool('$_prefix$prayer') ?? true;
+        preferences[prayer] = prefs.getBool('$_prefix$prayer') ?? false;
       }
 
       return preferences;
     } catch (e) {
       print('Error getting all notification preferences: $e');
       return Map.fromEntries(
-        prayerNames.keys.map((key) => MapEntry(key, true)),
+        prayerNames.keys.map((key) => MapEntry(key, false)),
       );
     }
   }
@@ -116,14 +117,14 @@ class NotificationPreferencesService {
 
       for (final prayer in prayerNames.keys) {
         preferences[prayer] =
-            prefs.getString('$_soundPrefix$prayer') ?? 'default';
+            prefs.getString('$_soundPrefix$prayer') ?? AdhanAudioLibrary.values.first.url;
       }
 
       return preferences;
     } catch (e) {
       print('Error getting all sound preferences: $e');
       return Map.fromEntries(
-        prayerNames.keys.map((key) => MapEntry(key, 'default')),
+        prayerNames.keys.map((key) => MapEntry(key, AdhanAudioLibrary.values.first.url)),
       );
     }
   }

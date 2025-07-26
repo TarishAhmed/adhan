@@ -8,7 +8,7 @@ This implementation creates individual notification channels for each prayer tim
 
 ### **1. Individual Notification Channels**
 - **Per-Prayer Channels**: Each prayer time has its own notification channel
-- **Custom Names**: Fajr, Sunrise, Dhuhr, Asr, Maghrib, Isha channels
+- **Custom Names**: Fajr, Sunrise, Zuhr, Asr, Maghrib, Isha channels
 - **Individual Control**: Users can control each channel separately
 - **Sound Customization**: Different adhan sounds per prayer
 - **Advance Time Settings**: Individual advance notification times
@@ -36,7 +36,7 @@ This implementation creates individual notification channels for each prayer tim
 static const Map<String, String> prayerChannels = {
   'fajr': 'fajr_prayer_channel',
   'sunrise': 'sunrise_prayer_channel',
-  'dhuhr': 'dhuhr_prayer_channel',
+  'Zuhr': 'Zuhr_prayer_channel',
   'asr': 'asr_prayer_channel',
   'maghrib': 'maghrib_prayer_channel',
   'isha': 'isha_prayer_channel',

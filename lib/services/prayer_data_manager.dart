@@ -134,7 +134,7 @@ class PrayerDataManager {
     String lng,
   ) async {
     final url = 'https://www.alislam.org/adhan/api/timings/month';
-    final response = await ApiHelper.dio.get(
+    final response = await ApiHelper.instance.dio.get(
       url,
       queryParameters: {'lat': lat, 'lng': lng, 'month': month, 'year': year},
     );

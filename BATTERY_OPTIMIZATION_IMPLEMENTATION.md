@@ -99,7 +99,7 @@ Added to `android/app/src/main/AndroidManifest.xml`:
 #### **Method Channel Communication**
 ```dart
 // Flutter side
-static const MethodChannel _channel = MethodChannel('battery_optimization');
+static const MethodChannel _channel = MethodChannel('app_system_utils');
 
 // Android side
 MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
