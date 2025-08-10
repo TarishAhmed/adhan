@@ -5,38 +5,26 @@ import 'package:adhan_app/services/notification_preferences_service.dart';
 import 'package:adhan_app/services/prayer_data_manager.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
-import 'package:adhan_app/utils/sound_utils.dart';
-import 'package:workmanager/workmanager.dart';
+// import 'package:workmanager/workmanager.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 
 class DailyNotificationScheduler {
-  static const String _dailyNotificationTask = 'scheduleDailyNotifications';
+  // static const String _dailyNotificationTask = 'scheduleDailyNotifications';
 
   /// Initialize the daily notification scheduler
   static Future<void> initialize() async {
     tzdata.initializeTimeZones();
   }
 
-  /// Schedule daily notification task
-  static Future<void> scheduleDailyNotificationTask() async {
-    await Workmanager().registerPeriodicTask(
-      _dailyNotificationTask,
-      _dailyNotificationTask,
-      frequency: const Duration(days: 1),
-      constraints: Constraints(
-        networkType: NetworkType.connected,
-        requiresBatteryNotLow: false,
-        requiresCharging: false,
-        requiresDeviceIdle: false,
-        requiresStorageNotLow: false,
-      ),
-    );
-  }
+  // Midnight planning replaces periodic daily task; kept method for API compatibility
+  static Future<void> scheduleDailyNotificationTask() async {}
 
   /// Schedule notifications for the entire day
   static Future<void> scheduleDailyNotifications() async {
     try {
-      print('Daily notification scheduler: Starting daily notification scheduling');
+      print(
+        'Daily notification scheduler: Starting daily notification scheduling',
+      );
 
       // Get user's location
       final location = await LocationStorageService.getStoredLocation();
@@ -56,14 +44,19 @@ class DailyNotificationScheduler {
       );
 
       if (prayerTimings == null || prayerTimings.prayers == null) {
-        print('Daily notification scheduler: No prayer timings available for today');
+        print(
+          'Daily notification scheduler: No prayer timings available for today',
+        );
         return;
       }
 
       // Get user's notification preferences
-      final notificationPreferences = await NotificationPreferencesService.getAllNotificationPreferences();
-      final soundPreferences = await NotificationPreferencesService.getAllSoundPreferences();
-      final advanceTimePreferences = await NotificationPreferencesService.getAllAdvanceTimePreferences();
+      final notificationPreferences =
+          await NotificationPreferencesService.getAllNotificationPreferences();
+      // final soundPreferences =
+      //     await NotificationPreferencesService.getAllSoundPreferences();
+      final advanceTimePreferences =
+          await NotificationPreferencesService.getAllAdvanceTimePreferences();
 
       // Cancel existing notifications for today
       await _cancelExistingNotifications();
@@ -76,15 +69,21 @@ class DailyNotificationScheduler {
         if (prayerName == null) continue;
 
         // Check if notification is enabled for this prayer
-        final isEnabled = notificationPreferences[prayerName.toLowerCase()] ?? false;
+        final isEnabled =
+            notificationPreferences[prayerName.toLowerCase()] ?? false;
         if (!isEnabled) {
-          print('Daily notification scheduler: Skipping $prayerName (disabled)');
+          print(
+            'Daily notification scheduler: Skipping $prayerName (disabled)',
+          );
           continue;
         }
 
         // Get advance time for this prayer
-        final advanceMinutes = advanceTimePreferences[prayerName.toLowerCase()] ?? 0;
-        final notificationTime = prayer.time!.subtract(Duration(minutes: advanceMinutes));
+        final advanceMinutes =
+            advanceTimePreferences[prayerName.toLowerCase()] ?? 0;
+        final notificationTime = prayer.time!.subtract(
+          Duration(minutes: advanceMinutes),
+        );
 
         // Only schedule if notification time is in the future
         if (notificationTime.isAfter(DateTime.now())) {
@@ -97,13 +96,19 @@ class DailyNotificationScheduler {
             prayerName: prayerName,
           );
 
-          print('Daily notification scheduler: Scheduled $prayerName notification for ${notificationTime.toString()}');
+          print(
+            'Daily notification scheduler: Scheduled $prayerName notification for ${notificationTime.toString()}',
+          );
         } else {
-          print('Daily notification scheduler: Skipping $prayerName (time has passed)');
+          print(
+            'Daily notification scheduler: Skipping $prayerName (time has passed)',
+          );
         }
       }
 
-      print('Daily notification scheduler: Completed daily notification scheduling');
+      print(
+        'Daily notification scheduler: Completed daily notification scheduling',
+      );
     } catch (e) {
       print('Daily notification scheduler error: $e');
     }
@@ -123,12 +128,12 @@ class DailyNotificationScheduler {
     // Get today's date
     final today = DateTime.now();
 
-    // Get prayer timings for today
-    final prayerTimings = await PrayerDataManager.getPrayerTimingForDate(
-      date: today,
-      lat: location['lat']!,
-      lng: location['lng']!,
-    );
+    // Optionally fetch timings if needed for debugging
+    // await PrayerDataManager.getPrayerTimingForDate(
+    //   date: today,
+    //   lat: location['lat']!,
+    //   lng: location['lng']!,
+    // );
 
     // Cancel existing notifications for today
     // await _cancelExistingNotifications();
@@ -169,19 +174,19 @@ class DailyNotificationScheduler {
   }
 
   /// Convert prayer enum to string name
-  static String? _getPrayerName(Name prayerEnum) {
+  static String? _getPrayerName(PrayerName prayerEnum) {
     switch (prayerEnum) {
-      case Name.FAJR:
+      case PrayerName.FAJR:
         return 'fajr';
-      case Name.SUNRISE:
+      case PrayerName.SUNRISE:
         return 'sunrise';
-      case Name.ZUHR:
+      case PrayerName.ZUHR:
         return 'zuhr';
-      case Name.ASR:
+      case PrayerName.ASR:
         return 'asr';
-      case Name.MAGHRIB:
+      case PrayerName.MAGHRIB:
         return 'maghrib';
-      case Name.ISHA:
+      case PrayerName.ISHA:
         return 'isha';
       default:
         return null;
@@ -206,7 +211,9 @@ class DailyNotificationScheduler {
 
       print('Daily notification scheduler: Cancelled all notifications');
     } catch (e) {
-      print('Daily notification scheduler: Error cancelling all notifications: $e');
+      print(
+        'Daily notification scheduler: Error cancelling all notifications: $e',
+      );
     }
   }
 
@@ -219,9 +226,17 @@ class DailyNotificationScheduler {
 
       for (final prayerName in prayerNames) {
         final notificationId = _getNotificationId(prayerName, today);
-        final isEnabled = await NotificationPreferencesService.getPrayerNotificationEnabled(prayerName);
-        final sound = await NotificationPreferencesService.getPrayerSound(prayerName);
-        final advanceTime = await NotificationPreferencesService.getPrayerAdvanceTime(prayerName);
+        final isEnabled =
+            await NotificationPreferencesService.getPrayerNotificationEnabled(
+              prayerName,
+            );
+        final sound = await NotificationPreferencesService.getPrayerSound(
+          prayerName,
+        );
+        final advanceTime =
+            await NotificationPreferencesService.getPrayerAdvanceTime(
+              prayerName,
+            );
 
         status[prayerName] = {
           'enabled': isEnabled,
@@ -233,7 +248,9 @@ class DailyNotificationScheduler {
 
       return status;
     } catch (e) {
-      print('Daily notification scheduler: Error getting notification status: $e');
+      print(
+        'Daily notification scheduler: Error getting notification status: $e',
+      );
       return {};
     }
   }

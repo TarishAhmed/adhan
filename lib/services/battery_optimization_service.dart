@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:android_intent_plus/android_intent.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -49,25 +51,17 @@ class BatteryOptimizationService {
           barrierDismissible: false,
           builder: (context) => AlertDialog(
             title: const Text('Battery Optimization'),
-            content: const Column(
+            content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'For prayer time notifications to work reliably, please disable battery optimization for this app.',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 16),
-                Text('This will ensure that:', style: TextStyle(fontWeight: FontWeight.bold)),
-                SizedBox(height: 8),
-                Text('• Daily notifications are scheduled at 2 AM'),
-                Text('• Prayer time notifications arrive on time'),
-                Text('• Background services work properly'),
-                SizedBox(height: 16),
-                Text(
-                  'You can change this later in your device settings.',
-                  style: TextStyle(fontStyle: FontStyle.italic),
-                ),
+                const Text('For reliable prayer time notifications:'),
+                const SizedBox(height: 8),
+                const Text('1. Disable Android battery optimization for this app.'),
+                const Text('2. Allow background activity/autostart (some OEMs).'),
+                const Text('3. Lock the app in recent tasks (MIUI/EMUI).'),
+                const SizedBox(height: 16),
+                _OemHelpList(),
               ],
             ),
             actions: [
@@ -146,6 +140,144 @@ class BatteryOptimizationService {
     } catch (e) {
       print('Error getting notification channels: $e');
     }
+  }
+}
+
+class _OemHelpList extends StatefulWidget {
+  @override
+  State<_OemHelpList> createState() => _OemHelpListState();
+}
+
+class _OemHelpListState extends State<_OemHelpList> {
+  String? _brand;
+
+  @override
+  void initState() {
+    super.initState();
+    _detectBrand();
+  }
+
+  Future<void> _detectBrand() async {
+    if (!Platform.isAndroid) return;
+    final info = await DeviceInfoPlugin().androidInfo;
+    setState(() {
+      _brand = info.brand?.toLowerCase();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final items = <Widget>[];
+
+    items.add(_OemTile(
+      title: 'Open battery optimization settings',
+      onTap: BatteryOptimizationService.openBatteryOptimizationSettings,
+    ));
+
+    if (_brand == 'xiaomi' || _brand == 'redmi' || _brand == 'poco') {
+      items.addAll([
+        _OemTile(
+          title: 'Open Autostart (MIUI)',
+          onTap: () async {
+            final intent = AndroidIntent(
+              action: 'android.intent.action.MAIN',
+              package: 'com.miui.securitycenter',
+              componentName: 'com.miui.permcenter.autostart.AutoStartManagementActivity',
+            );
+            await intent.launch();
+          },
+        ),
+        _OemTile(
+          title: 'Open Battery Saver (MIUI)',
+          onTap: () async {
+            final intent = AndroidIntent(
+              action: 'android.intent.action.MAIN',
+              package: 'com.miui.powerkeeper',
+            );
+            await intent.launch();
+          },
+        ),
+      ]);
+    } else if (_brand == 'huawei' || _brand == 'honor') {
+      items.addAll([
+        _OemTile(
+          title: 'Open App launch control (EMUI)',
+          onTap: () async {
+            final intent = AndroidIntent(
+              action: 'android.intent.action.MAIN',
+              package: 'com.huawei.systemmanager',
+              componentName: 'com.huawei.systemmanager.startupmgr.ui.StartupNormalAppListActivity',
+            );
+            await intent.launch();
+          },
+        ),
+      ]);
+    } else if (_brand == 'samsung') {
+      items.addAll([
+        _OemTile(
+          title: 'Open Sleeping apps settings (OneUI)',
+          onTap: () async {
+            final intent = const AndroidIntent(
+              action: 'android.settings.APP_BATTERY_SETTINGS',
+            );
+            await intent.launch();
+          },
+        ),
+      ]);
+    } else if (_brand == 'oneplus' || _brand == 'oppo' || _brand == 'realme') {
+      items.addAll([
+        _OemTile(
+          title: 'Allow auto-launch (ColorOS/OxygenOS)',
+          onTap: () async {
+            final intent = AndroidIntent(
+              action: 'android.settings.APPLICATION_DETAILS_SETTINGS',
+              data: 'package:${await _packageName()}',
+            );
+            await intent.launch();
+          },
+        ),
+      ]);
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Quick actions:'),
+        const SizedBox(height: 8),
+        ...items,
+      ],
+    );
+  }
+
+  Future<String> _packageName() async {
+    const channel = MethodChannel('flutter/baseflow.com/package_info');
+    try {
+      final map = await channel.invokeMethod<Map>('getAll');
+      return map?['packageName'] as String? ?? '';
+    } catch (_) {
+      return '';
+    }
+  }
+}
+
+class _OemTile extends StatelessWidget {
+  final String title;
+  final Future<void> Function() onTap;
+
+  const _OemTile({required this.title, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: OutlinedButton(
+        onPressed: onTap,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Text(title),
+        ),
+      ),
+    );
   }
 }
 

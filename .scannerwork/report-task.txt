@@ -1,0 +1,6 @@
+projectKey=adhan
+serverUrl=http://localhost:9000
+serverVersion=25.8.0.112029
+dashboardUrl=http://localhost:9000/dashboard?id=adhan
+ceTaskId=b4d7a7f6-dfe5-4795-a2c3-34ee2a51bc51
+ceTaskUrl=http://localhost:9000/api/ce/task?id=b4d7a7f6-dfe5-4795-a2c3-34ee2a51bc51

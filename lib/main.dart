@@ -1,6 +1,3 @@
-import 'dart:isolate';
-
-import 'package:adhan_app/providers/prayer_timing_provider.dart';
 import 'package:adhan_app/services/background_prayer_service.dart';
 import 'package:adhan_app/services/daily_notification_scheduler.dart';
 import 'package:adhan_app/services/battery_optimization_service.dart';
@@ -12,11 +9,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
-import 'package:workmanager/workmanager.dart';
 import 'providers/router_provider.dart';
 import 'providers/app_providers.dart';
 import 'services/notification_service.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
+import 'services/home_widget_service.dart';
 
 const Color kPrimaryGreen = Color(0xFF2E6B57);
 const Color kBackground = Color(0xFFF7FBF7);
@@ -31,13 +28,18 @@ void main() async {
     await AndroidAlarmManager.initialize();
     // Initialize background prayer service
     await BackgroundPrayerService.initialize();
-    await BackgroundPrayerService.scheduleBackgroundTasks();
 
-    // Initialize daily notification scheduler
+    // Initialize daily notification scheduler (timezones)
     await DailyNotificationScheduler.initialize();
+
+    // Ensure all work and today's notifications are (re)scheduled after boot/app start
+    await BackgroundPrayerService.rescheduleAfterBootOrAppStart();
 
     // Request notification permission on app launch
     await NotificationService.requestPermission();
+
+    // Initial home widget update
+    await HomeWidgetService.updateNextPrayerWidget();
   }
 
   if (kIsWeb) {

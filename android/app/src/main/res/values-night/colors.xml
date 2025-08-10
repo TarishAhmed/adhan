@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dark mode fallbacks for pre-Android 12 -->
+    <color name="widget_surface_variant">#FF2B2930</color>
+    <color name="widget_on_surface">#FFE6E1E5</color>
+    <color name="widget_on_surface_variant">#FFCAC4D0</color>
+</resources>

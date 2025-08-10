@@ -80,11 +80,11 @@ Map<String, dynamic> _$PrayerToJson(_Prayer instance) => <String, dynamic>{
 };
 
 const _$NameEnumMap = {
-  Name.ASR: 'Asr',
-  Name.FAJR: 'Fajr',
-  Name.ISHA: 'Isha',
-  Name.MAGHRIB: 'Maghrib',
-  Name.SUNRISE: 'Sunrise',
-  Name.SUNSET: 'Sunset',
-  Name.ZUHR: 'Zuhr',
+  PrayerName.ASR: 'Asr',
+  PrayerName.FAJR: 'Fajr',
+  PrayerName.ISHA: 'Isha',
+  PrayerName.MAGHRIB: 'Maghrib',
+  PrayerName.SUNRISE: 'Sunrise',
+  PrayerName.SUNSET: 'Sunset',
+  PrayerName.ZUHR: 'Zuhr',
 };

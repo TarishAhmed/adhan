@@ -1149,7 +1149,7 @@ as double?,
 /// @nodoc
 mixin _$Prayer {
 
-@JsonKey(name: "name") Name? get name;@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get time;@JsonKey(name: "audio") String? get audio;
+@JsonKey(name: "name") PrayerName? get name;@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get time;@JsonKey(name: "audio") String? get audio;
 /// Create a copy of Prayer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1182,7 +1182,7 @@ abstract mixin class $PrayerCopyWith<$Res>  {
   factory $PrayerCopyWith(Prayer value, $Res Function(Prayer) _then) = _$PrayerCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "name") Name? name,@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time,@JsonKey(name: "audio") String? audio
+@JsonKey(name: "name") PrayerName? name,@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time,@JsonKey(name: "audio") String? audio
 });
 
 
@@ -1202,7 +1202,7 @@ class _$PrayerCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? time = freezed,Object? audio = freezed,}) {
   return _then(_self.copyWith(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as Name?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as PrayerName?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime?,audio: freezed == audio ? _self.audio : audio // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
@@ -1289,7 +1289,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "name")  Name? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "name")  PrayerName? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Prayer() when $default != null:
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1310,7 +1310,7 @@ return $default(_that.name,_that.time,_that.audio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "name")  Name? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "name")  PrayerName? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)  $default,) {final _that = this;
 switch (_that) {
 case _Prayer():
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1330,7 +1330,7 @@ return $default(_that.name,_that.time,_that.audio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "name")  Name? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "name")  PrayerName? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)?  $default,) {final _that = this;
 switch (_that) {
 case _Prayer() when $default != null:
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1348,7 +1348,7 @@ class _Prayer implements Prayer {
   const _Prayer({@JsonKey(name: "name") this.name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.time, @JsonKey(name: "audio") this.audio});
   factory _Prayer.fromJson(Map<String, dynamic> json) => _$PrayerFromJson(json);
 
-@override@JsonKey(name: "name") final  Name? name;
+@override@JsonKey(name: "name") final  PrayerName? name;
 @override@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) final  DateTime? time;
 @override@JsonKey(name: "audio") final  String? audio;
 
@@ -1385,7 +1385,7 @@ abstract mixin class _$PrayerCopyWith<$Res> implements $PrayerCopyWith<$Res> {
   factory _$PrayerCopyWith(_Prayer value, $Res Function(_Prayer) _then) = __$PrayerCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "name") Name? name,@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time,@JsonKey(name: "audio") String? audio
+@JsonKey(name: "name") PrayerName? name,@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time,@JsonKey(name: "audio") String? audio
 });
 
 
@@ -1405,7 +1405,7 @@ class __$PrayerCopyWithImpl<$Res>
 @override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? time = freezed,Object? audio = freezed,}) {
   return _then(_Prayer(
 name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as Name?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
+as PrayerName?,time: freezed == time ? _self.time : time // ignore: cast_nullable_to_non_nullable
 as DateTime?,audio: freezed == audio ? _self.audio : audio // ignore: cast_nullable_to_non_nullable
 as String?,
   ));

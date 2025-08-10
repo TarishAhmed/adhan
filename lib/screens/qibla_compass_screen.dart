@@ -4,6 +4,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'dart:async';
+import 'package:sensors_plus/sensors_plus.dart';
+import '../widgets/qibla_map_widget.dart';
 import '../services/qibla_service.dart';
 import '../widgets/qibla_compass_widget.dart';
 
@@ -23,6 +25,10 @@ class QiblaCompassScreen extends HookConsumerWidget {
     final compassSubscription = useState<StreamSubscription<CompassEvent>?>(
       null,
     );
+    final tiltSubscription = useState<StreamSubscription<AccelerometerEvent>?>(
+      null,
+    );
+    final deviceTiltDegrees = useState<double>(0.0);
 
     // Initialize compass and location
     useEffect(() {
@@ -70,7 +76,7 @@ class QiblaCompassScreen extends HookConsumerWidget {
             distance.value = dist;
           }
 
-          // Start compass stream with throttling for 60 FPS
+          // Start compass stream
           final subscription = FlutterCompass.events?.listen(
             (event) {
               if (!isMounted) return;
@@ -93,6 +99,17 @@ class QiblaCompassScreen extends HookConsumerWidget {
             compassSubscription.value = subscription;
             isLoading.value = false;
           }
+
+          // Start accelerometer stream to estimate tilt
+          final tiltSub = accelerometerEvents.listen((event) {
+            if (!isMounted) return;
+            // Compute tilt from Z axis assuming device flat when z ~ 9.8
+            final g = 9.81;
+            final z = event.z;
+            final tilt = (90 - (z.abs() / g).clamp(0.0, 1.0) * 90).toDouble();
+            deviceTiltDegrees.value = tilt;
+          });
+          tiltSubscription.value = tiltSub;
         } catch (e) {
           if (isMounted) {
             isLoading.value = false;
@@ -106,6 +123,7 @@ class QiblaCompassScreen extends HookConsumerWidget {
       return () {
         isMounted = false;
         compassSubscription.value?.cancel();
+        tiltSubscription.value?.cancel();
       };
     }, []);
 
@@ -157,52 +175,54 @@ class QiblaCompassScreen extends HookConsumerWidget {
           child: Column(
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              // Instructions
-              // if (!isLoading.value && errorMessage.value == null)
-              //   Container(
-              //     width: double.infinity,
-              //     padding: const EdgeInsets.all(16),
-              //     margin: const EdgeInsets.only(bottom: 16),
-              //     decoration: BoxDecoration(
-              //       color: Theme.of(context).colorScheme.primaryContainer,
-              //       borderRadius: BorderRadius.circular(12),
-              //     ),
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Row(
-              //           children: [
-              //             Icon(
-              //               Icons.info_outline,
-              //               color: Theme.of(
-              //                 context,
-              //               ).colorScheme.onPrimaryContainer,
-              //             ),
-              //             const SizedBox(width: 8),
-              //             Text(
-              //               'Instructions',
-              //               style: Theme.of(context).textTheme.titleMedium
-              //                   ?.copyWith(
-              //                     fontWeight: FontWeight.bold,
-              //                     color: Theme.of(
-              //                       context,
-              //                     ).colorScheme.onPrimaryContainer,
-              //                   ),
-              //             ),
-              //           ],
-              //         ),
-              //         const SizedBox(height: 8),
-              //         Text(
-              //           'Hold your device flat and rotate it until the red needle points to the green dot. The green dot represents the direction to the Kaaba.',
-              //           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              //             color: Theme.of(
-              //               context,
-              //             ).colorScheme.onPrimaryContainer,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
+              // Calibration tips
+              if (!isLoading.value && errorMessage.value == null)
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Icon(
+                        Icons.tips_and_updates_outlined,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Calibration tips',
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimaryContainer,
+                                  ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Move phone in a figure-8 motion, away from metal or magnets. Place it flat. Tilt: ${deviceTiltDegrees.value.toStringAsFixed(0)}°',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onPrimaryContainer,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
 
               // Compass Widget
               QiblaCompassWidget(
@@ -214,6 +234,14 @@ class QiblaCompassScreen extends HookConsumerWidget {
                 isLoading: isLoading.value,
                 errorMessage: errorMessage.value,
               ),
+
+              const SizedBox(height: 16),
+              if (currentPosition.value != null)
+                QiblaMapWidget(
+                  latitude: currentPosition.value!.latitude,
+                  longitude: currentPosition.value!.longitude,
+                  qiblaBearingDegrees: qiblaDirection.value,
+                ),
 
               // Additional information
               // if (!isLoading.value &&
@@ -264,38 +292,5 @@ class QiblaCompassScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildLocationInfo(
-    BuildContext context,
-    String title,
-    String value,
-    IconData icon,
-  ) {
-    return Row(
-      children: [
-        Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(
-                    context,
-                  ).colorScheme.onSurface.withOpacity(0.7),
-                ),
-              ),
-              Text(
-                value,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
+  // Removed unused helper _buildLocationInfo
 }

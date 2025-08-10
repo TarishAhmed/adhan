@@ -3,4 +3,9 @@
     <color name="light_blue_200">#FF81D4FA</color>
     <color name="light_blue_600">#FF039BE5</color>
     <color name="light_blue_900">#FF01579B</color>
+
+    <!-- Widget dynamic-friendly fallbacks for pre-material3 attrs -->
+    <color name="widget_surface_variant">#FFE7E0EC</color>
+    <color name="widget_on_surface">#FF1C1B1F</color>
+    <color name="widget_on_surface_variant">#FF49454F</color>
 </resources>

@@ -1,5 +1,6 @@
 import 'package:adhan_app/utils/sound_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:adhan_app/services/reschedule_service.dart';
 
 class NotificationPreferencesService {
   static const String _prefix = 'notification_pref_';
@@ -35,6 +36,8 @@ class NotificationPreferencesService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('$_prefix${prayerName.toLowerCase()}', enabled);
+      await RescheduleService.markNeedsReschedule();
+      await RescheduleService.enqueueImmediateReschedule();
     } catch (e) {
       print('Error setting notification preference for $prayerName: $e');
     }
@@ -57,6 +60,8 @@ class NotificationPreferencesService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('$_soundPrefix${prayerName.toLowerCase()}', sound);
+      await RescheduleService.markNeedsReschedule();
+      await RescheduleService.enqueueImmediateReschedule();
     } catch (e) {
       print('Error setting sound preference for $prayerName: $e');
     }
@@ -85,6 +90,8 @@ class NotificationPreferencesService {
         '$_advanceTimePrefix${prayerName.toLowerCase()}',
         minutes,
       );
+      await RescheduleService.markNeedsReschedule();
+      await RescheduleService.enqueueImmediateReschedule();
     } catch (e) {
       print('Error setting advance time for $prayerName: $e');
     }
@@ -117,14 +124,17 @@ class NotificationPreferencesService {
 
       for (final prayer in prayerNames.keys) {
         preferences[prayer] =
-            prefs.getString('$_soundPrefix$prayer') ?? AdhanAudioLibrary.values.first.url;
+            prefs.getString('$_soundPrefix$prayer') ??
+            AdhanAudioLibrary.defaultAdhan.url;
       }
 
       return preferences;
     } catch (e) {
       print('Error getting all sound preferences: $e');
       return Map.fromEntries(
-        prayerNames.keys.map((key) => MapEntry(key, AdhanAudioLibrary.values.first.url)),
+        prayerNames.keys.map(
+          (key) => MapEntry(key, AdhanAudioLibrary.defaultAdhan.url),
+        ),
       );
     }
   }

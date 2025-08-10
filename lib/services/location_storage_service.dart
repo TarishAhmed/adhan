@@ -1,4 +1,6 @@
+import 'package:adhan_app/utils/location_format_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:adhan_app/services/reschedule_service.dart';
 
 class LocationStorageService {
   static const String _latKey = 'stored_lat';
@@ -14,12 +16,15 @@ class LocationStorageService {
     String? city,
   }) async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_latKey, lat.toString());
-    await prefs.setString(_lngKey, lng.toString());
+    await prefs.setString(_latKey, formatLatitude(lat));
+    await prefs.setString(_lngKey, formatLongitude(lng));
     await prefs.setString(_timezoneKey, timezone);
     if (city != null) {
       await prefs.setString(_cityKey, city);
     }
+    // Mark for reschedule after location change
+    await RescheduleService.markNeedsReschedule();
+    await RescheduleService.enqueueImmediateReschedule();
   }
 
   /// Get stored location data
@@ -76,6 +81,8 @@ class LocationStorageService {
       final currentLocation = await getStoredLocation();
       if (currentLocation == null) {
         await storeLocation(lat: lat, lng: lng, timezone: timezone, city: city);
+        await RescheduleService.markNeedsReschedule();
+        await RescheduleService.enqueueImmediateReschedule();
         return true;
       }
 
@@ -95,6 +102,8 @@ class LocationStorageService {
             timezone: timezone,
             city: city,
           );
+          await RescheduleService.markNeedsReschedule();
+          await RescheduleService.enqueueImmediateReschedule();
           return true;
         }
       }

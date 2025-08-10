@@ -18,5 +18,9 @@
         "Rashid",
         "Zahrani",
         "Zuhr"
-    ]
+    ],
+    "sonarlint.connectedMode.project": {
+        "connectionId": "tarishahmed",
+        "projectKey": "TarishAhmed_adhan"
+    }
 }

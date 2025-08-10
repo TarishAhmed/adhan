@@ -1,10 +1,13 @@
+import 'dart:io';
+
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:adhan_app/services/prayer_database_service.dart';
 import 'package:adhan_app/api/api_helper.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PrayerDataManager {
-  static const int _cacheValidityDays = 30; // Cache data for 30 days
+  // Removed unused cache validity constant; API-driven cache is proactive
 
   /// Get prayer timing data for a specific month, with caching
   static Future<PrayerTimingMonthResponseModel> getPrayerTimingsForMonth({
@@ -95,6 +98,50 @@ class PrayerDataManager {
       print('Error getting prayer timing for date: $e');
       rethrow;
     }
+  }
+
+  /// Ensure proactive cache for current and next [monthsToCover-1] months.
+  static Future<void> ensureProactiveCacheForLocation({
+    required String lat,
+    required String lng,
+    required String timezone,
+    int monthsToCover = 3,
+  }) async {
+    try {
+      final now = DateTime.now();
+      for (int offset = 0; offset < monthsToCover; offset++) {
+        final target = DateTime(now.year, now.month + offset, 1);
+        final year = target.year;
+        final month = target.month;
+
+        final hasMonth = await hasDataForMonth(
+          year: year,
+          month: month,
+          lat: lat,
+          lng: lng,
+        );
+        if (!hasMonth) {
+          final data = await _fetchFromAPI(year, month, lat, lng);
+          await PrayerDatabaseService.storePrayerTimings(
+            data,
+            lat,
+            lng,
+            timezone,
+          );
+          print('Proactive cache stored for $year-$month');
+        }
+      }
+    } catch (e) {
+      print('Error ensuring proactive cache: $e');
+    }
+  }
+
+  /// Whether we are close to month boundary (within [thresholdDays]).
+  static bool isNearMonthBoundary({int thresholdDays = 3}) {
+    final now = DateTime.now();
+    final lastDay = DateTime(now.year, now.month + 1, 0).day;
+    final daysLeft = lastDay - now.day;
+    return daysLeft <= thresholdDays;
   }
 
   /// Check if data exists for a specific date
@@ -214,6 +261,7 @@ class PrayerDataManager {
         'prayer_records': prayerCount,
         'location_records': locationCount,
         'database_size': await _getDatabaseSize(),
+        'generated_at': DateTime.now().toIso8601String(),
       };
     } catch (e) {
       print('Error getting database stats: $e');
@@ -242,10 +290,25 @@ class PrayerDataManager {
     try {
       final db = await PrayerDatabaseService.database;
       final path = db.path;
-      // This is a simplified approach - in a real app you might want to use dart:io
-      return 0; // Placeholder
+      if (path.isEmpty) return 0;
+      final file = File(path);
+      if (await file.exists()) {
+        return await file.length();
+      }
+      return 0;
     } catch (e) {
       return 0;
+    }
+  }
+
+  /// Collect and persist metrics for diagnostics.
+  static Future<void> collectAndPersistMetrics() async {
+    try {
+      final stats = await getDatabaseStats();
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('db_metrics', stats.toString());
+    } catch (e) {
+      print('Error persisting DB metrics: $e');
     }
   }
 }

@@ -7,10 +7,14 @@ import 'package:adhan_app/services/daily_notification_scheduler.dart';
 import 'package:adhan_app/api/api_helper.dart';
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
+import 'package:adhan_app/services/reschedule_service.dart';
+import 'package:adhan_app/services/home_widget_service.dart';
 
 class BackgroundPrayerService {
   static const String _fetchNextMonthTask = 'fetchNextMonthPrayerTimings';
   static const String _checkAndFetchTask = 'checkAndFetchPrayerTimings';
+  static const String _cleanupAndMetricsTask = 'cleanupAndMetricsTask';
+  static const String _planNextDayTask = 'planNextDayNotifications';
 
   /// Initialize the background service
   static Future<void> initialize() async {
@@ -24,6 +28,7 @@ class BackgroundPrayerService {
     await Workmanager().registerPeriodicTask(
       _checkAndFetchTask,
       _checkAndFetchTask,
+      existingWorkPolicy: ExistingWorkPolicy.keep,
       frequency: const Duration(days: 1),
       constraints: Constraints(
         networkType: NetworkType.connected,
@@ -34,8 +39,23 @@ class BackgroundPrayerService {
       ),
     );
 
-    // Schedule daily notification scheduling
-    await DailyNotificationScheduler.scheduleDailyNotificationTask();
+    // Schedule periodic cleanup/metrics (weekly)
+    await Workmanager().registerPeriodicTask(
+      _cleanupAndMetricsTask,
+      _cleanupAndMetricsTask,
+      existingWorkPolicy: ExistingWorkPolicy.keep,
+      frequency: const Duration(days: 7),
+      constraints: Constraints(
+        networkType: NetworkType.connected,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresDeviceIdle: false,
+        requiresStorageNotLow: false,
+      ),
+    );
+
+    // Schedule midnight planning for next-day notifications
+    await scheduleMidnightPlanningTask();
 
     // Schedule next month fetch on last day of current month
     await _scheduleNextMonthFetch();
@@ -78,6 +98,7 @@ class BackgroundPrayerService {
       await Workmanager().registerOneOffTask(
         _fetchNextMonthTask,
         _fetchNextMonthTask,
+        existingWorkPolicy: ExistingWorkPolicy.replace,
         initialDelay: nextMonthDelay,
         constraints: Constraints(
           networkType: NetworkType.connected,
@@ -91,6 +112,7 @@ class BackgroundPrayerService {
       await Workmanager().registerOneOffTask(
         _fetchNextMonthTask,
         _fetchNextMonthTask,
+        existingWorkPolicy: ExistingWorkPolicy.replace,
         initialDelay: delay,
         constraints: Constraints(
           networkType: NetworkType.connected,
@@ -103,9 +125,55 @@ class BackgroundPrayerService {
     }
   }
 
+  /// Schedule a one-off task at the next local midnight to plan next-day notifications
+  static Future<void> scheduleMidnightPlanningTask() async {
+    final now = DateTime.now();
+    final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
+    final initialDelay = nextMidnight.difference(now);
+
+    await Workmanager().registerOneOffTask(
+      _planNextDayTask,
+      _planNextDayTask,
+      existingWorkPolicy: ExistingWorkPolicy.replace,
+      initialDelay: initialDelay,
+      constraints: Constraints(
+        // Use connected to satisfy plugin requirement; planning is light
+        networkType: NetworkType.connected,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresDeviceIdle: false,
+        requiresStorageNotLow: false,
+      ),
+    );
+  }
+
+  /// Call on app start (and can be triggered on boot via native receiver) to ensure
+  /// all work and notifications are re-scheduled after reboot/app update.
+  static Future<void> rescheduleAfterBootOrAppStart() async {
+    try {
+      // Re-register periodic background tasks with KEEP policy
+      await scheduleBackgroundTasks();
+
+      // Immediately schedule today's remaining notifications (idempotent)
+      await DailyNotificationScheduler.scheduleDailyNotifications();
+
+      // Clear reschedule flag if set
+      await RescheduleService.clearNeedsReschedule();
+    } catch (e) {
+      print('Background service: reschedule after boot/app start failed: $e');
+    }
+  }
+
   /// Check if we need to fetch prayer timings and fetch if necessary
   static Future<void> checkAndFetchPrayerTimings() async {
     try {
+      // Self-heal: if any component flagged reschedule, perform it and clear flag
+      if (await RescheduleService.getNeedsReschedule()) {
+        print('Background service: Self-heal reschedule in daily check');
+        await BackgroundPrayerService.rescheduleAfterBootOrAppStart();
+        await RescheduleService.clearNeedsReschedule();
+      }
+
       // Get current location (you might need to store this in shared preferences)
       final location = await _getStoredLocation();
       if (location == null) {
@@ -150,6 +218,19 @@ class BackgroundPrayerService {
 
       // Reschedule next month fetch
       await _scheduleNextMonthFetch();
+
+      // Proactive cache next 2 months when near boundary
+      if (await _getStoredLocation() case final loc?) {
+        final now = DateTime.now();
+        if (now.day >= DateTime(now.year, now.month + 1, 0).day - 3) {
+          await PrayerDataManager.ensureProactiveCacheForLocation(
+            lat: loc['lat']!,
+            lng: loc['lng']!,
+            timezone: loc['timezone'] ?? 'UTC',
+            monthsToCover: 3,
+          );
+        }
+      }
     } catch (e) {
       print('Background service error: $e');
     }
@@ -228,6 +309,19 @@ void callbackDispatcher() {
         case 'scheduleDailyNotifications':
           await DailyNotificationScheduler.scheduleDailyNotifications();
           break;
+        case 'rescheduleAll':
+          await BackgroundPrayerService.rescheduleAfterBootOrAppStart();
+          break;
+        case 'cleanupAndMetricsTask':
+          await PrayerDataManager.clearOldData();
+          await PrayerDataManager.collectAndPersistMetrics();
+          break;
+        case 'planNextDayNotifications':
+          // Plan and schedule next day's notifications and re-enqueue next midnight
+          await DailyNotificationScheduler.scheduleDailyNotifications();
+          await HomeWidgetService.updateNextPrayerWidget();
+          await BackgroundPrayerService.scheduleMidnightPlanningTask();
+          break;
         case 'testNotifications':
           await DailyNotificationScheduler.testNotifications();
           break;
@@ -235,7 +329,7 @@ void callbackDispatcher() {
           print('Unknown background task: $task');
       }
       return true;
-    } catch (e,st) {
+    } catch (e, st) {
       log('Background task error:', error: e, stackTrace: st);
       return false;
     }

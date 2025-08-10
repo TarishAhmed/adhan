@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
+import 'package:adhan_app/services/reschedule_service.dart';
 
 part 'app_providers.g.dart';
 
@@ -110,10 +111,16 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setCalculationMethod(String method) {
     state = state.copyWith(calculationMethod: method);
+    // Mark for reschedule when calculation method changes
+    // Avoid direct service coupling by using RescheduleService
+    RescheduleService.markNeedsReschedule();
+    RescheduleService.enqueueImmediateReschedule();
   }
 
   void toggleAutoLocation() {
     state = state.copyWith(autoLocation: !state.autoLocation);
+    RescheduleService.markNeedsReschedule();
+    RescheduleService.enqueueImmediateReschedule();
   }
 
   @override
@@ -121,6 +128,8 @@ class SettingsNotifier extends Notifier<AppSettings> {
     return AppSettings();
   }
 }
+
+// Note: We import RescheduleService directly in this provider to keep logic simple
 
 @riverpod
 FutureOr<String> getTimezone(Ref ref) async =>

@@ -16,7 +16,12 @@ class PrayerDatabaseService {
 
   static Future<Database> _initDatabase() async {
     String path = join(await getDatabasesPath(), 'prayer_timings.db');
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
   }
 
   static Future<void> _onCreate(Database db, int version) async {
@@ -47,6 +52,37 @@ class PrayerDatabaseService {
         UNIQUE(lat, lng)
       )
     ''');
+
+    // Create indices for performance
+    await _createIndices(db);
+  }
+
+  /// Create indices used by queries and maintenance jobs
+  static Future<void> _createIndices(Database db) async {
+    // Optimizes monthly queries: WHERE year=? AND month=? AND location_lat=? AND location_lng=?
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_${tableName}_month_location ON $tableName (year, month, location_lat, location_lng)',
+    );
+
+    // Speeds up cleanup: WHERE created_at < ?
+    await db.execute(
+      'CREATE INDEX IF NOT EXISTS idx_${tableName}_created_at ON $tableName (created_at)',
+    );
+
+    // Note: daily queries benefit from the UNIQUE(year,month,day,location_lat,location_lng) implicit index
+    // and location_info(lat,lng) already has an implicit unique index.
+  }
+
+  /// Handle schema migrations
+  static Future<void> _onUpgrade(
+    Database db,
+    int oldVersion,
+    int newVersion,
+  ) async {
+    if (oldVersion < 2) {
+      // Add indices introduced in version 2
+      await _createIndices(db);
+    }
   }
 
   // Store prayer timing data for a specific month

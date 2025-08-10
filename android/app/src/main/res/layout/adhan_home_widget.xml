@@ -1,19 +1,85 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/Widget.Android.AppWidget.Container"
+    android:id="@+id/widget_root"
+    style="@style/Theme.Android.AppWidgetContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:theme="@style/Theme.Android.AppWidgetContainer">
+    android:padding="@dimen/appwidget_padding"
+    android:background="@drawable/app_widget_background">
 
+    <!-- App logo top-right -->
+    <ImageView
+        android:id="@+id/image_logo"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="8dp"
+        android:contentDescription="TODO"
+        android:src="@mipmap/ic_launcher"
+        android:alpha="0.9" />
+
+    <!-- Prayer name -->
     <TextView
-        android:id="@+id/appwidget_text"
-        style="@style/Widget.Android.AppWidget.InnerView"
+        android:id="@+id/text_prayer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:layout_toLeftOf="@id/image_logo"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="8dp"
+        android:text="Prayer"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textStyle="bold"
+        android:textSize="18sp" />
+
+    <!-- Time -->
+    <TextView
+        android:id="@+id/text_prayer_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_prayer_name"
+        android:layout_marginTop="8dp"
+        android:text="12:44"
+        android:textColor="?android:attr/textColorPrimary"
+        android:textStyle="bold"
+        android:textSize="42sp" />
+
+    <!-- AM/PM -->
+    <TextView
+        android:id="@+id/text_prayer_ampm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/text_prayer_time"
+        android:layout_alignBaseline="@id/text_prayer_time"
+        android:layout_marginLeft="4dp"
+        android:text="PM"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textStyle="bold"
+        android:textSize="12sp" />
+
+    <!-- Location line 1 (city) -->
+    <TextView
+        android:id="@+id/text_location_line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_prayer_time"
+        android:layout_marginTop="8dp"
+        android:text="City"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Location line 2 (country) -->
+    <TextView
+        android:id="@+id/text_location_line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/text_location_line1"
+        android:text=""
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Spacer at bottom to ensure padding under content (optional) -->
+
 </RelativeLayout>
