@@ -15,6 +15,7 @@ class BackgroundPrayerService {
   static const String _checkAndFetchTask = 'checkAndFetchPrayerTimings';
   static const String _cleanupAndMetricsTask = 'cleanupAndMetricsTask';
   static const String _planNextDayTask = 'planNextDayNotifications';
+  static const String _updateWidgetTask = 'updateHomeWidget';
 
   /// Initialize the background service
   static Future<void> initialize() async {
@@ -59,6 +60,9 @@ class BackgroundPrayerService {
 
     // Schedule next month fetch on last day of current month
     await _scheduleNextMonthFetch();
+
+    // Schedule periodic home widget updates (every 15 minutes)
+    await _scheduleWidgetUpdates();
   }
 
   /// Schedule fetching next month's prayer timings
@@ -138,6 +142,33 @@ class BackgroundPrayerService {
       initialDelay: initialDelay,
       constraints: Constraints(
         // Use connected to satisfy plugin requirement; planning is light
+        networkType: NetworkType.connected,
+        requiresBatteryNotLow: false,
+        requiresCharging: false,
+        requiresDeviceIdle: false,
+        requiresStorageNotLow: false,
+      ),
+    );
+  }
+
+  /// Schedule periodic home widget updates (every 15 minutes)
+  static Future<void> _scheduleWidgetUpdates() async {
+    final now = DateTime.now();
+    final nextUpdateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      now.hour,
+      now.minute + 15,
+    );
+    final initialDelay = nextUpdateTime.difference(now);
+
+    await Workmanager().registerPeriodicTask(
+      _updateWidgetTask,
+      _updateWidgetTask,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
+      frequency: const Duration(minutes: 15),
+      constraints: Constraints(
         networkType: NetworkType.connected,
         requiresBatteryNotLow: false,
         requiresCharging: false,
@@ -231,6 +262,9 @@ class BackgroundPrayerService {
           );
         }
       }
+
+      // Update home widget after fetching prayer times
+      await HomeWidgetService.updateNextPrayerWidget();
     } catch (e) {
       print('Background service error: $e');
     }
@@ -321,6 +355,10 @@ void callbackDispatcher() {
           await DailyNotificationScheduler.scheduleDailyNotifications();
           await HomeWidgetService.updateNextPrayerWidget();
           await BackgroundPrayerService.scheduleMidnightPlanningTask();
+          break;
+        case 'updateHomeWidget':
+          // Update home widget with current prayer time
+          await HomeWidgetService.updateNextPrayerWidget();
           break;
         case 'testNotifications':
           await DailyNotificationScheduler.testNotifications();

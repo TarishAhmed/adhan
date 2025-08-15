@@ -1,5 +1,8 @@
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 
 import 'location_storage_service.dart';
 import 'prayer_data_manager.dart';
@@ -7,6 +10,95 @@ import '../model/prayer_timing_month_response_model.dart';
 
 class HomeWidgetService {
   static const String _groupId = 'adhan_home_widget';
+  static Timer? _updateTimer;
+
+  /// Start periodic updates for the home widget
+  static void startPeriodicUpdates() {
+    // Cancel any existing timer
+    _updateTimer?.cancel();
+
+    // Update immediately
+    updateNextPrayerWidget();
+
+    // Then update every minute
+    _updateTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      updateNextPrayerWidget();
+    });
+  }
+
+  /// Stop periodic updates
+  static void stopPeriodicUpdates() {
+    _updateTimer?.cancel();
+    _updateTimer = null;
+  }
+
+  /// Handle app lifecycle changes
+  static void handleAppLifecycleChange(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        // App came to foreground, update widget immediately
+        updateNextPrayerWidget();
+        // Restart periodic updates
+        startPeriodicUpdates();
+        break;
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
+        // App went to background, stop periodic updates to save battery
+        stopPeriodicUpdates();
+        break;
+      case AppLifecycleState.inactive:
+        // App is inactive, update widget one more time before going inactive
+        updateNextPrayerWidget();
+        break;
+    }
+  }
+
+  /// Manually trigger home widget update
+  static Future<void> manualUpdate() async {
+    await updateNextPrayerWidget();
+  }
+
+  /// Check if home widget is available on the device
+  static Future<bool> isWidgetAvailable() async {
+    try {
+      // Try to get widget data to check if widget is available
+      final data = await HomeWidget.getWidgetData<String>('_group');
+      return data != null;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Debug method to test home widget updates
+  static Future<void> debugUpdate() async {
+    try {
+      print('HomeWidgetService: Starting debug update');
+      final location = await LocationStorageService.getStoredLocation();
+      print('HomeWidgetService: Location: $location');
+
+      if (location == null) {
+        print('HomeWidgetService: No location available');
+        return;
+      }
+
+      final now = DateTime.now();
+      print('HomeWidgetService: Current time: $now');
+
+      final today = await PrayerDataManager.getPrayerTimingForDate(
+        date: now,
+        lat: location['lat']!,
+        lng: location['lng']!,
+      );
+
+      print('HomeWidgetService: Today\'s prayers: ${today?.prayers?.length}');
+
+      await updateNextPrayerWidget();
+      print('HomeWidgetService: Debug update completed');
+    } catch (e) {
+      print('HomeWidgetService: Debug update error: $e');
+    }
+  }
 
   static Future<void> updateNextPrayerWidget() async {
     try {

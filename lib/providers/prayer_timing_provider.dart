@@ -2,6 +2,7 @@ import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:adhan_app/providers/app_providers.dart';
 import 'package:adhan_app/providers/storage_provider.dart';
 import 'package:adhan_app/services/prayer_data_manager.dart';
+import 'package:adhan_app/services/home_widget_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:hooks_riverpod/experimental/persist.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -80,6 +81,31 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
       lng: formatLongitude(location.lng),
       timezone: timezone,
     );
+  }
+
+  /// Refresh prayer times and update home widget
+  Future<void> refreshPrayerTimes() async {
+    state = const AsyncValue.loading();
+    try {
+      final now = DateTime.now();
+      final timezone = await ref.read(getTimezoneProvider.future);
+      final location = await ref.read(locationProvider.future);
+
+      final result = await PrayerDataManager.getPrayerTimingsForMonth(
+        year: now.year,
+        month: now.month,
+        lat: formatLatitude(location.lat),
+        lng: formatLongitude(location.lng),
+        timezone: timezone,
+      );
+
+      state = AsyncValue.data(result);
+
+      // Update home widget after refreshing prayer times
+      await HomeWidgetService.updateNextPrayerWidget();
+    } catch (error, stackTrace) {
+      state = AsyncValue.error(error, stackTrace);
+    }
   }
 }
 
@@ -520,4 +546,20 @@ List<ProgressSegment> _computeSegments({
 // Temporary non-generated provider to avoid requiring codegen immediately
 final prayerTimelineStreamProvider = StreamProvider<PrayerWindow?>((ref) {
   return prayerTimeline(ref);
+});
+
+// Provider that automatically updates home widget when prayer times change
+final homeWidgetUpdaterProvider = FutureProvider<void>((ref) async {
+  // Listen to current prayer changes and update home widget
+  ref.listen(currentRelevantPrayerProvider, (previous, next) {
+    next.whenData((prayerTime) {
+      if (prayerTime != null) {
+        // Update home widget when prayer time changes
+        HomeWidgetService.updateNextPrayerWidget();
+      }
+    });
+  });
+
+  // Initial update
+  await HomeWidgetService.updateNextPrayerWidget();
 });

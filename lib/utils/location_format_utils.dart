@@ -9,6 +9,3 @@ String formatCoord(double value) => value.toStringAsFixed(2);
 /// Convenience wrappers for clarity at call sites
 String formatLatitude(double latitude) => formatCoord(latitude);
 String formatLongitude(double longitude) => formatCoord(longitude);
-
-
-

@@ -5,6 +5,7 @@ import '../providers/app_providers.dart';
 import '../providers/background_service_provider.dart';
 import '../services/prayer_data_manager.dart';
 import '../services/battery_optimization_service.dart';
+import '../services/home_widget_service.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -14,7 +15,10 @@ class SettingsScreen extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider);
     final batteryOpt = ref.watch(batteryOptimizationStatusProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings'), backgroundColor: Theme.of(context).colorScheme.inversePrimary),
+      appBar: AppBar(
+        title: const Text('Settings'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -80,10 +84,15 @@ class SettingsScreen extends ConsumerWidget {
                     title: const Text('Battery Optimization'),
                     subtitle:
                         batteryOpt.whenData((batteryOpt) {
-                          final isIgnoring = batteryOpt['is_ignoring_optimization'] ?? false;
+                          final isIgnoring =
+                              batteryOpt['is_ignoring_optimization'] ?? false;
                           return Text(
-                            isIgnoring ? 'Optimization disabled' : 'Optimization enabled - may affect notifications',
-                            style: TextStyle(color: isIgnoring ? Colors.green : Colors.orange),
+                            isIgnoring
+                                ? 'Optimization disabled'
+                                : 'Optimization enabled - may affect notifications',
+                            style: TextStyle(
+                              color: isIgnoring ? Colors.green : Colors.orange,
+                            ),
                           );
                         }).value ??
                         const Text('Checking...'),
@@ -105,10 +114,21 @@ class SettingsScreen extends ConsumerWidget {
                 ListTile(
                   leading: const Icon(Icons.sync),
                   title: const Text('Background Service'),
-                  subtitle: const Text('Manage automatic prayer timing updates'),
+                  subtitle: const Text(
+                    'Manage automatic prayer timing updates',
+                  ),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
                     _showBackgroundServiceDialog(context, ref);
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.widgets),
+                  title: const Text('Home Widget Debug'),
+                  subtitle: const Text('Test home widget updates'),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  onTap: () {
+                    _showHomeWidgetDebugDialog(context);
                   },
                 ),
               ],
@@ -200,9 +220,11 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () async {
                 await PrayerDataManager.clearOldData();
                 Navigator.pop(context);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('Old data cleared successfully')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Old data cleared successfully'),
+                  ),
+                );
               },
             ),
             ListTile(
@@ -212,14 +234,21 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () async {
                 await PrayerDataManager.clearAllData();
                 Navigator.pop(context);
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text('All data cleared successfully')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('All data cleared successfully'),
+                  ),
+                );
               },
             ),
           ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
@@ -233,7 +262,9 @@ class SettingsScreen extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             FutureBuilder<Map<String, dynamic>>(
-              future: ref.read(backgroundServiceNotifierProvider.notifier).getBackgroundServiceStatus(),
+              future: ref
+                  .read(backgroundServiceNotifierProvider.notifier)
+                  .getBackgroundServiceStatus(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -243,12 +274,18 @@ class SettingsScreen extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Location Stored: ${status['has_location'] ?? false ? 'Yes' : 'No'}'),
+                    Text(
+                      'Location Stored: ${status['has_location'] ?? false ? 'Yes' : 'No'}',
+                    ),
                     const SizedBox(height: 8),
-                    Text('Service Running: ${status['service_running'] ?? false ? 'Yes' : 'No'}'),
+                    Text(
+                      'Service Running: ${status['service_running'] ?? false ? 'Yes' : 'No'}',
+                    ),
                     if (status['location'] != null) ...[
                       const SizedBox(height: 8),
-                      Text('Location: ${status['location']['lat']}, ${status['location']['lng']}'),
+                      Text(
+                        'Location: ${status['location']['lat']}, ${status['location']['lng']}',
+                      ),
                     ],
                     const SizedBox(height: 16),
                   ],
@@ -260,9 +297,13 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Start Background Service'),
               subtitle: const Text('Enable automatic prayer timing updates'),
               onTap: () async {
-                await ref.read(backgroundServiceNotifierProvider.notifier).startBackgroundService();
+                await ref
+                    .read(backgroundServiceNotifierProvider.notifier)
+                    .startBackgroundService();
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Background service started')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Background service started')),
+                );
               },
             ),
             ListTile(
@@ -270,9 +311,13 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Stop Background Service'),
               subtitle: const Text('Disable automatic prayer timing updates'),
               onTap: () async {
-                await ref.read(backgroundServiceNotifierProvider.notifier).stopBackgroundService();
+                await ref
+                    .read(backgroundServiceNotifierProvider.notifier)
+                    .stopBackgroundService();
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Background service stopped')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Background service stopped')),
+                );
               },
             ),
             ListTile(
@@ -280,34 +325,109 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Manual Fetch'),
               subtitle: const Text('Manually fetch prayer timings now'),
               onTap: () async {
-                await ref.read(backgroundServiceNotifierProvider.notifier).manuallyFetchPrayerTimings();
+                await ref
+                    .read(backgroundServiceNotifierProvider.notifier)
+                    .manuallyFetchPrayerTimings();
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Manual fetch completed')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Manual fetch completed')),
+                );
               },
             ),
           ],
         ),
-        actions: [TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close'))],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
       ),
     );
   }
 
-  void _showBatteryOptimizationDialog(BuildContext context, WidgetRef ref) async {
+  void _showHomeWidgetDebugDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Home Widget Debug'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.refresh),
+              title: const Text('Test Widget Update'),
+              subtitle: const Text('Manually update the home widget'),
+              onTap: () async {
+                await HomeWidgetService.debugUpdate();
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Home widget debug update completed'),
+                  ),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.play_arrow),
+              title: const Text('Start Periodic Updates'),
+              subtitle: const Text(
+                'Start automatic widget updates every minute',
+              ),
+              onTap: () {
+                HomeWidgetService.startPeriodicUpdates();
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Periodic updates started')),
+                );
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.stop),
+              title: const Text('Stop Periodic Updates'),
+              subtitle: const Text('Stop automatic widget updates'),
+              onTap: () {
+                HomeWidgetService.stopPeriodicUpdates();
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Periodic updates stopped')),
+                );
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBatteryOptimizationDialog(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     showDialog(
       context: context,
       builder: (context) => Consumer(
         builder: (context, ref, _) {
           final batteryOpt = ref.watch(batteryOptimizationStatusProvider);
           final actions = batteryOpt.whenData((batteryOpt) {
-            final isIgnoringOptimizations = batteryOpt['is_ignoring_optimization'] ?? false;
+            final isIgnoringOptimizations =
+                batteryOpt['is_ignoring_optimization'] ?? false;
             return [
-              TextButton(onPressed: () => Navigator.pop(context), child: const Text('Close')),
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Close'),
+              ),
               if (Platform.isAndroid && !isIgnoringOptimizations)
                 ElevatedButton(
                   onPressed: () async {
                     Navigator.pop(context);
                     await BatteryOptimizationService.requestDisableBatteryOptimization();
-
                   },
                   child: const Text('Disable Optimization'),
                 ),
@@ -318,7 +438,8 @@ class SettingsScreen extends ConsumerWidget {
             title: const Text('Battery Optimization'),
             content:
                 batteryOpt.whenData((batteryOpt) {
-                  final isIgnoringOptimizations = batteryOpt['is_ignoring_optimization'] ?? false;
+                  final isIgnoringOptimizations =
+                      batteryOpt['is_ignoring_optimization'] ?? false;
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -328,7 +449,10 @@ class SettingsScreen extends ConsumerWidget {
                         style: TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 16),
-                      const Text('For reliable notifications:', style: TextStyle(fontWeight: FontWeight.bold)),
+                      const Text(
+                        'For reliable notifications:',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
                       const Text('• Disable battery optimization for this app'),
                       const Text('• Allow background activity'),
@@ -342,7 +466,9 @@ class SettingsScreen extends ConsumerWidget {
                           Text(
                             'Status: ${isIgnoringOptimizations ? "Disabled" : "Enabled"}',
                             style: TextStyle(
-                              color: isIgnoringOptimizations ? Colors.green : Colors.orange,
+                              color: isIgnoringOptimizations
+                                  ? Colors.green
+                                  : Colors.orange,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

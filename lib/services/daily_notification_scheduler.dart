@@ -7,6 +7,7 @@ import 'package:adhan_app/services/location_storage_service.dart';
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
+import 'package:adhan_app/services/home_widget_service.dart';
 
 class DailyNotificationScheduler {
   // static const String _dailyNotificationTask = 'scheduleDailyNotifications';
@@ -109,6 +110,9 @@ class DailyNotificationScheduler {
       print(
         'Daily notification scheduler: Completed daily notification scheduling',
       );
+
+      // Update home widget after scheduling notifications
+      await HomeWidgetService.updateNextPrayerWidget();
     } catch (e) {
       print('Daily notification scheduler error: $e');
     }

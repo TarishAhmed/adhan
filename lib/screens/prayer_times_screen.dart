@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../providers/app_providers.dart';
 import '../services/notification_service.dart';
+import '../services/home_widget_service.dart';
 import '../providers/notification_provider.dart';
 import '../widgets/notification_settings_widget.dart';
 
@@ -307,19 +308,43 @@ class PrayerTimeListItem extends ConsumerWidget {
   }
 }
 
-class _PrayerAppBar extends StatelessWidget {
+class _PrayerAppBar extends ConsumerWidget {
   final String city;
   const _PrayerAppBar({required this.city});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return AppBar(
       automaticallyImplyLeading: false,
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       elevation: 0,
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Refresh button
+          IconButton(
+            onPressed: () async {
+              // Refresh prayer times and update home widget
+              await ref
+                  .read(prayerTimeMonthNotifierProvider().notifier)
+                  .refreshPrayerTimes();
+              await HomeWidgetService.manualUpdate();
+
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      'Prayer times refreshed and home widget updated',
+                    ),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              }
+            },
+            icon: const Icon(Icons.refresh),
+            tooltip: 'Refresh prayer times',
+          ),
+          // Location button
           TextButton.icon(
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 8),

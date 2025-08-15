@@ -7,6 +7,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
 import 'package:adhan_app/services/reschedule_service.dart';
+import 'package:adhan_app/services/home_widget_service.dart';
 
 part 'app_providers.g.dart';
 
@@ -69,6 +70,16 @@ final locationProvider =
         timezone: timezone,
       );
     });
+
+// Provider that listens to location changes and updates home widget
+final locationChangeListenerProvider = Provider<void>((ref) {
+  ref.listen(locationProvider, (previous, next) {
+    next.whenData((location) {
+      // Update home widget when location changes
+      HomeWidgetService.updateNextPrayerWidget();
+    });
+  });
+});
 
 // App settings model
 class AppSettings {

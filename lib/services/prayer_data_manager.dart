@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:adhan_app/services/prayer_database_service.dart';
+import 'package:adhan_app/services/home_widget_service.dart';
 import 'package:adhan_app/api/api_helper.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -279,6 +280,9 @@ class PrayerDataManager {
     try {
       await PrayerDatabaseService.storePrayerTimings(data, lat, lng, timezone);
       print('PrayerDataManager: Successfully stored prayer timings');
+
+      // Update home widget after storing new prayer data
+      await HomeWidgetService.updateNextPrayerWidget();
     } catch (e) {
       print('PrayerDataManager: Error storing prayer timings: $e');
       rethrow;

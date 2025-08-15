@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'providers/router_provider.dart';
 import 'providers/app_providers.dart';
+import 'providers/prayer_timing_provider.dart';
 import 'services/notification_service.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'services/home_widget_service.dart';
@@ -40,6 +41,14 @@ void main() async {
 
     // Initial home widget update
     await HomeWidgetService.updateNextPrayerWidget();
+
+    // Start periodic updates for the home widget
+    HomeWidgetService.startPeriodicUpdates();
+
+    // Update home widget after a short delay to ensure everything is initialized
+    Future.delayed(const Duration(seconds: 3), () {
+      HomeWidgetService.updateNextPrayerWidget();
+    });
   }
 
   if (kIsWeb) {
@@ -57,6 +66,12 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeProvider);
+
+    // Initialize home widget updater
+    ref.watch(homeWidgetUpdaterProvider);
+
+    // Initialize location change listener
+    ref.watch(locationChangeListenerProvider);
 
     return MaterialApp.router(
       title: 'Adhan',
@@ -80,13 +95,28 @@ class BatteryOptimizationWrapper extends StatefulHookConsumerWidget {
 }
 
 class _BatteryOptimizationWrapperState
-    extends ConsumerState<BatteryOptimizationWrapper> {
+    extends ConsumerState<BatteryOptimizationWrapper>
+    with WidgetsBindingObserver {
   bool _hasCheckedBatteryOptimization = false;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkBatteryOptimization();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    // Handle home widget updates based on app lifecycle
+    HomeWidgetService.handleAppLifecycleChange(state);
   }
 
   Future<void> _checkBatteryOptimization() async {
