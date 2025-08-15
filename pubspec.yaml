@@ -6,20 +6,20 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.8.0
+  sdk: ^3.9.0
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  go_router: ^14.6.2
+  go_router: ^16.1.0
   flutter_riverpod: ^3.0.0-dev.16
   riverpod_annotation: ^3.0.0-dev.16
   # material_symbols_icons: ^4.2815.1
   dio: ^5.4.3
-  geolocator: ^11.0.0
-  geocoding: ^2.2.0
+  geolocator: ^14.0.2
+  geocoding: ^4.0.0
   flutter_compass: ^0.8.0
   timezone: ^0.10.1
   flutter_timezone: ^4.1.1
@@ -28,18 +28,18 @@ dependencies:
   intl: ^0.20.2
   flutter_local_notifications: ^19.3.0
   shared_preferences: ^2.2.2
-  riverpod_sqflite: ^0.1.2
+  riverpod_sqflite: ^0.2.0
   sqflite: ^2.4.2
   path: ^1.9.1
   hooks_riverpod: ^3.0.0-dev.16
-  workmanager: ^0.8.0
+  workmanager: ^0.9.0+2
   android_alarm_manager_plus: ^4.0.7
   adhan: ^2.0.0+1
   sqflite_common_ffi_web: ^1.0.0
   path_provider: ^2.1.5
   flutter_hooks: ^0.21.2
   sensors_plus: ^6.0.1
-  flutter_map: ^6.1.0
+  flutter_map: ^8.2.1
   latlong2: ^0.9.1
   device_info_plus: ^11.1.0
   android_intent_plus: ^5.0.2
@@ -51,7 +51,7 @@ dev_dependencies:
     sdk: flutter
   flutter_launcher_icons: ^0.14.4
 
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
   riverpod_generator: ^3.0.0-dev.16
   build_runner: ^2.5.4
   json_serializable: ^6.9.5

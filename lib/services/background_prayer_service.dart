@@ -18,7 +18,7 @@ class BackgroundPrayerService {
 
   /// Initialize the background service
   static Future<void> initialize() async {
-    await Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+    await Workmanager().initialize(callbackDispatcher);
     tzdata.initializeTimeZones();
   }
 
@@ -28,7 +28,7 @@ class BackgroundPrayerService {
     await Workmanager().registerPeriodicTask(
       _checkAndFetchTask,
       _checkAndFetchTask,
-      existingWorkPolicy: ExistingWorkPolicy.keep,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
       frequency: const Duration(days: 1),
       constraints: Constraints(
         networkType: NetworkType.connected,
@@ -43,7 +43,7 @@ class BackgroundPrayerService {
     await Workmanager().registerPeriodicTask(
       _cleanupAndMetricsTask,
       _cleanupAndMetricsTask,
-      existingWorkPolicy: ExistingWorkPolicy.keep,
+      existingWorkPolicy: ExistingPeriodicWorkPolicy.keep,
       frequency: const Duration(days: 7),
       constraints: Constraints(
         networkType: NetworkType.connected,

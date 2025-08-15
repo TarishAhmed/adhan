@@ -6,6 +6,7 @@ class NotificationPreferencesService {
   static const String _prefix = 'notification_pref_';
   static const String _soundPrefix = 'notification_sound_';
   static const String _advanceTimePrefix = 'notification_advance_';
+  static const String _daysPrefix = 'notification_days_';
 
   // Prayer time names for preferences
   static const Map<String, String> prayerNames = {
@@ -166,6 +167,7 @@ class NotificationPreferencesService {
         await prefs.remove('$_prefix$prayer');
         await prefs.remove('$_soundPrefix$prayer');
         await prefs.remove('$_advanceTimePrefix$prayer');
+        await prefs.remove('$_daysPrefix$prayer');
       }
 
       print('All notification preferences reset to defaults');
@@ -196,6 +198,70 @@ class NotificationPreferencesService {
     } catch (e) {
       print('Error getting enabled prayer notifications: $e');
       return prayerNames.keys.toList(); // Default to all enabled
+    }
+  }
+
+  /// Get selected days for a specific prayer
+  static Future<Set<String>> getPrayerSelectedDays(String prayerName) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final daysString = prefs.getString(
+        '$_daysPrefix${prayerName.toLowerCase()}',
+      );
+      if (daysString != null && daysString.isNotEmpty) {
+        return daysString.split(',').toSet();
+      }
+      // Default to all days selected
+      return {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
+    } catch (e) {
+      print('Error getting selected days for $prayerName: $e');
+      return {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'}; // Default to all days
+    }
+  }
+
+  /// Set selected days for a specific prayer
+  static Future<void> setPrayerSelectedDays(
+    String prayerName,
+    Set<String> days,
+  ) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final daysString = days.join(',');
+      await prefs.setString(
+        '$_daysPrefix${prayerName.toLowerCase()}',
+        daysString,
+      );
+      await RescheduleService.markNeedsReschedule();
+      await RescheduleService.enqueueImmediateReschedule();
+    } catch (e) {
+      print('Error setting selected days for $prayerName: $e');
+    }
+  }
+
+  /// Get all day preferences
+  static Future<Map<String, Set<String>>> getAllDayPreferences() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final Map<String, Set<String>> preferences = {};
+
+      for (final prayer in prayerNames.keys) {
+        final daysString = prefs.getString('$_daysPrefix$prayer');
+        if (daysString != null && daysString.isNotEmpty) {
+          preferences[prayer] = daysString.split(',').toSet();
+        } else {
+          // Default to all days selected
+          preferences[prayer] = {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
+        }
+      }
+
+      return preferences;
+    } catch (e) {
+      print('Error getting all day preferences: $e');
+      return Map.fromEntries(
+        prayerNames.keys.map(
+          (key) => MapEntry(key, {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'}),
+        ),
+      );
     }
   }
 }

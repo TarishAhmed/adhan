@@ -31,6 +31,7 @@ class _NotificationSettingsWidgetState
   Map<String, bool> _notificationPreferences = {};
   Map<String, String> _soundPreferences = {};
   Map<String, int> _advanceTimePreferences = {};
+  Map<String, Set<String>> _dayPreferences = {};
 
   @override
   void initState() {
@@ -46,11 +47,14 @@ class _NotificationSettingsWidgetState
           await NotificationPreferencesService.getAllSoundPreferences();
       final advanceTimePrefs =
           await NotificationPreferencesService.getAllAdvanceTimePreferences();
+      final dayPrefs =
+          await NotificationPreferencesService.getAllDayPreferences();
 
       setState(() {
         _notificationPreferences = notificationPrefs;
         _soundPreferences = soundPrefs;
         _advanceTimePreferences = advanceTimePrefs;
+        _dayPreferences = dayPrefs;
       });
     } catch (e) {
       print('Error loading notification preferences: $e');
@@ -90,6 +94,29 @@ class _NotificationSettingsWidgetState
     await NotificationPreferencesService.setPrayerAdvanceTime(
       prayerName,
       minutes,
+    );
+
+    // Indirect reschedule handled by service flagging
+  }
+
+  Future<void> _toggleDay(String prayerName, String dayAbbreviation) async {
+    final currentDays =
+        _dayPreferences[prayerName] ?? {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
+    final newDays = Set<String>.from(currentDays);
+
+    if (newDays.contains(dayAbbreviation)) {
+      newDays.remove(dayAbbreviation);
+    } else {
+      newDays.add(dayAbbreviation);
+    }
+
+    setState(() {
+      _dayPreferences[prayerName] = newDays;
+    });
+
+    await NotificationPreferencesService.setPrayerSelectedDays(
+      prayerName,
+      newDays,
     );
 
     // Indirect reschedule handled by service flagging
@@ -225,7 +252,9 @@ class _NotificationSettingsWidgetState
                   _soundPreferences[prayerKey] ??
                   AdhanAudioLibrary.defaultAdhan.url;
               final advanceTime = _advanceTimePreferences[prayerKey] ?? 0;
-
+              final selectedDays =
+                  _dayPreferences[prayerKey] ??
+                  {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
               return ExpansionPanelRadio(
                 canTapOnHeader: true,
                 value: prayerKey,
@@ -234,7 +263,110 @@ class _NotificationSettingsWidgetState
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
+                    spacing: 8,
                     children: [
+                      const Text(
+                        'Days',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        spacing: 8,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: DayOfWeek.values
+                            .map(
+                              (day) => OutlinedButton(
+                                onPressed: isEnabled
+                                    ? () => _toggleDay(
+                                        prayerKey,
+                                        day.abbreviation,
+                                      )
+                                    : null,
+                                style: OutlinedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                      Radius.elliptical(30, 30),
+                                    ),
+                                  ),
+                                  side: selectedDays.contains(day.abbreviation)
+                                      ? BorderSide(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.primary,
+                                          width: 2,
+                                        )
+                                      : BorderSide.none,
+                                  // fixedSize: const Size(14, 14),
+                                  tapTargetSize:
+                                      MaterialTapTargetSize.shrinkWrap,
+                                  visualDensity: VisualDensity.compact,
+                                  minimumSize: const Size(20, 20),
+                                  maximumSize: const Size(50, 50),
+                                  foregroundColor: Colors.black,
+                                  // backgroundColor: Colors.white,
+                                  padding: EdgeInsets.zero,
+                                  textStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        fontFeatures: const [
+                                          FontFeature.tabularFigures(),
+                                        ],
+                                      ),
+                                ),
+                                child: Container(
+                                  // decoration: BoxDecoration(
+                                  //   border: day.abbreviation == 'S'
+                                  //       ? Border.all(
+                                  //           color: Theme.of(
+                                  //             context,
+                                  //           ).colorScheme.primary,
+                                  //         )
+                                  //       : null,
+                                  //   borderRadius: BorderRadius.all(
+                                  //     Radius.elliptical(30, 30),
+                                  //   ),
+                                  // ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  child: SizedBox(
+                                    width: 30,
+                                    height: 30,
+                                    child: Center(
+                                      child: Text(
+                                        day.abbreviation,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: isEnabled
+                                                  ? (selectedDays.contains(
+                                                          day.abbreviation,
+                                                        )
+                                                        ? Theme.of(
+                                                            context,
+                                                          ).colorScheme.primary
+                                                        : Theme.of(context)
+                                                              .colorScheme
+                                                              .onSurface)
+                                                  : Colors.grey,
+                                              fontFeatures: const [
+                                                FontFeature.tabularFigures(),
+                                              ],
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
                       HookConsumer(
                         builder: (context, ref, _) {
                           final isLoadingAdhan = useState(false);
@@ -422,4 +554,17 @@ class _NotificationSettingsWidgetState
       ],
     );
   }
+}
+
+enum DayOfWeek {
+  monday(abbreviation: 'M'),
+  tuesday(abbreviation: 'Tu'),
+  wednesday(abbreviation: 'W'),
+  thursday(abbreviation: 'Th'),
+  friday(abbreviation: 'F'),
+  saturday(abbreviation: 'Sa'),
+  sunday(abbreviation: 'Su');
+
+  const DayOfWeek({required this.abbreviation});
+  final String abbreviation;
 }
