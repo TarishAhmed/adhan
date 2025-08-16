@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: write
+  packages: write
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -58,31 +62,18 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.version.outputs.version }}
-          release_name: Release v${{ steps.version.outputs.version }}
-          body: |
-            ## What's Changed
-            - New release with version ${{ steps.version.outputs.version }}
-            
-            ## Download
-            Download the APK from the assets below.
-          draft: false
-          prerelease: false
+        run: |
+          gh release create v${{ steps.version.outputs.version }} \
+            --title "Release v${{ steps.version.outputs.version }}" \
+            --notes "## What's Changed
+          - New release with version ${{ steps.version.outputs.version }}
           
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          ## Download
+          Download the APK from the assets below." \
+            --repo ${{ github.repository }} \
+            ./build/app/outputs/flutter-apk/app-release.apk
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./build/app/outputs/flutter-apk/app-release.apk
-          asset_name: adhan-app-${{ steps.version.outputs.version }}.apk
-          asset_content_type: application/vnd.android.package-archive
           
       - name: Update Firebase Remote Config
         run: |
