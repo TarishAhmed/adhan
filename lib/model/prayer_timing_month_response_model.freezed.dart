@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PrayerTimingMonthResponseModel {
 
-@JsonKey(name: "locationInfo") LocationInfo? get locationInfo;@JsonKey(name: "multiDayTimings") List<MultiDayTiming>? get multiDayTimings;
+ LocationInfo? get locationInfo; List<MultiDayTiming>? get multiDayTimings;
 /// Create a copy of PrayerTimingMonthResponseModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $PrayerTimingMonthResponseModelCopyWith<$Res>  {
   factory $PrayerTimingMonthResponseModelCopyWith(PrayerTimingMonthResponseModel value, $Res Function(PrayerTimingMonthResponseModel) _then) = _$PrayerTimingMonthResponseModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "locationInfo") LocationInfo? locationInfo,@JsonKey(name: "multiDayTimings") List<MultiDayTiming>? multiDayTimings
+ LocationInfo? locationInfo, List<MultiDayTiming>? multiDayTimings
 });
 
 
@@ -166,7 +166,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "locationInfo")  LocationInfo? locationInfo, @JsonKey(name: "multiDayTimings")  List<MultiDayTiming>? multiDayTimings)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( LocationInfo? locationInfo,  List<MultiDayTiming>? multiDayTimings)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PrayerTimingMonthResponseModel() when $default != null:
 return $default(_that.locationInfo,_that.multiDayTimings);case _:
@@ -187,7 +187,7 @@ return $default(_that.locationInfo,_that.multiDayTimings);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "locationInfo")  LocationInfo? locationInfo, @JsonKey(name: "multiDayTimings")  List<MultiDayTiming>? multiDayTimings)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( LocationInfo? locationInfo,  List<MultiDayTiming>? multiDayTimings)  $default,) {final _that = this;
 switch (_that) {
 case _PrayerTimingMonthResponseModel():
 return $default(_that.locationInfo,_that.multiDayTimings);case _:
@@ -207,7 +207,7 @@ return $default(_that.locationInfo,_that.multiDayTimings);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "locationInfo")  LocationInfo? locationInfo, @JsonKey(name: "multiDayTimings")  List<MultiDayTiming>? multiDayTimings)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( LocationInfo? locationInfo,  List<MultiDayTiming>? multiDayTimings)?  $default,) {final _that = this;
 switch (_that) {
 case _PrayerTimingMonthResponseModel() when $default != null:
 return $default(_that.locationInfo,_that.multiDayTimings);case _:
@@ -222,12 +222,12 @@ return $default(_that.locationInfo,_that.multiDayTimings);case _:
 @JsonSerializable()
 
 class _PrayerTimingMonthResponseModel implements PrayerTimingMonthResponseModel {
-  const _PrayerTimingMonthResponseModel({@JsonKey(name: "locationInfo") this.locationInfo, @JsonKey(name: "multiDayTimings") final  List<MultiDayTiming>? multiDayTimings}): _multiDayTimings = multiDayTimings;
+  const _PrayerTimingMonthResponseModel({this.locationInfo, final  List<MultiDayTiming>? multiDayTimings}): _multiDayTimings = multiDayTimings;
   factory _PrayerTimingMonthResponseModel.fromJson(Map<String, dynamic> json) => _$PrayerTimingMonthResponseModelFromJson(json);
 
-@override@JsonKey(name: "locationInfo") final  LocationInfo? locationInfo;
+@override final  LocationInfo? locationInfo;
  final  List<MultiDayTiming>? _multiDayTimings;
-@override@JsonKey(name: "multiDayTimings") List<MultiDayTiming>? get multiDayTimings {
+@override List<MultiDayTiming>? get multiDayTimings {
   final value = _multiDayTimings;
   if (value == null) return null;
   if (_multiDayTimings is EqualUnmodifiableListView) return _multiDayTimings;
@@ -269,7 +269,7 @@ abstract mixin class _$PrayerTimingMonthResponseModelCopyWith<$Res> implements $
   factory _$PrayerTimingMonthResponseModelCopyWith(_PrayerTimingMonthResponseModel value, $Res Function(_PrayerTimingMonthResponseModel) _then) = __$PrayerTimingMonthResponseModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "locationInfo") LocationInfo? locationInfo,@JsonKey(name: "multiDayTimings") List<MultiDayTiming>? multiDayTimings
+ LocationInfo? locationInfo, List<MultiDayTiming>? multiDayTimings
 });
 
 
@@ -313,7 +313,7 @@ $LocationInfoCopyWith<$Res>? get locationInfo {
 /// @nodoc
 mixin _$LocationInfo {
 
-@JsonKey(name: "lat") String? get lat;@JsonKey(name: "lng") String? get lng;@JsonKey(name: "timezone") String? get timezone;
+ String? get lat; String? get lng; String? get timezone;
 /// Create a copy of LocationInfo
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -346,7 +346,7 @@ abstract mixin class $LocationInfoCopyWith<$Res>  {
   factory $LocationInfoCopyWith(LocationInfo value, $Res Function(LocationInfo) _then) = _$LocationInfoCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "lat") String? lat,@JsonKey(name: "lng") String? lng,@JsonKey(name: "timezone") String? timezone
+ String? lat, String? lng, String? timezone
 });
 
 
@@ -453,7 +453,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "lat")  String? lat, @JsonKey(name: "lng")  String? lng, @JsonKey(name: "timezone")  String? timezone)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? lat,  String? lng,  String? timezone)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _LocationInfo() when $default != null:
 return $default(_that.lat,_that.lng,_that.timezone);case _:
@@ -474,7 +474,7 @@ return $default(_that.lat,_that.lng,_that.timezone);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "lat")  String? lat, @JsonKey(name: "lng")  String? lng, @JsonKey(name: "timezone")  String? timezone)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? lat,  String? lng,  String? timezone)  $default,) {final _that = this;
 switch (_that) {
 case _LocationInfo():
 return $default(_that.lat,_that.lng,_that.timezone);case _:
@@ -494,7 +494,7 @@ return $default(_that.lat,_that.lng,_that.timezone);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "lat")  String? lat, @JsonKey(name: "lng")  String? lng, @JsonKey(name: "timezone")  String? timezone)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? lat,  String? lng,  String? timezone)?  $default,) {final _that = this;
 switch (_that) {
 case _LocationInfo() when $default != null:
 return $default(_that.lat,_that.lng,_that.timezone);case _:
@@ -509,12 +509,12 @@ return $default(_that.lat,_that.lng,_that.timezone);case _:
 @JsonSerializable()
 
 class _LocationInfo implements LocationInfo {
-  const _LocationInfo({@JsonKey(name: "lat") this.lat, @JsonKey(name: "lng") this.lng, @JsonKey(name: "timezone") this.timezone});
+  const _LocationInfo({this.lat, this.lng, this.timezone});
   factory _LocationInfo.fromJson(Map<String, dynamic> json) => _$LocationInfoFromJson(json);
 
-@override@JsonKey(name: "lat") final  String? lat;
-@override@JsonKey(name: "lng") final  String? lng;
-@override@JsonKey(name: "timezone") final  String? timezone;
+@override final  String? lat;
+@override final  String? lng;
+@override final  String? timezone;
 
 /// Create a copy of LocationInfo
 /// with the given fields replaced by the non-null parameter values.
@@ -549,7 +549,7 @@ abstract mixin class _$LocationInfoCopyWith<$Res> implements $LocationInfoCopyWi
   factory _$LocationInfoCopyWith(_LocationInfo value, $Res Function(_LocationInfo) _then) = __$LocationInfoCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "lat") String? lat,@JsonKey(name: "lng") String? lng,@JsonKey(name: "timezone") String? timezone
+ String? lat, String? lng, String? timezone
 });
 
 
@@ -582,7 +582,7 @@ as String?,
 /// @nodoc
 mixin _$MultiDayTiming {
 
-@JsonKey(name: "prayers") List<Prayer>? get prayers;@JsonKey(name: "coordinates") Coordinates? get coordinates;@JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get date;
+ List<Prayer>? get prayers; Coordinates? get coordinates;@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get date;
 /// Create a copy of MultiDayTiming
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -615,7 +615,7 @@ abstract mixin class $MultiDayTimingCopyWith<$Res>  {
   factory $MultiDayTimingCopyWith(MultiDayTiming value, $Res Function(MultiDayTiming) _then) = _$MultiDayTimingCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "prayers") List<Prayer>? prayers,@JsonKey(name: "coordinates") Coordinates? coordinates,@JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? date
+ List<Prayer>? prayers, Coordinates? coordinates,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? date
 });
 
 
@@ -734,7 +734,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "prayers")  List<Prayer>? prayers, @JsonKey(name: "coordinates")  Coordinates? coordinates, @JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? date)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<Prayer>? prayers,  Coordinates? coordinates, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? date)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MultiDayTiming() when $default != null:
 return $default(_that.prayers,_that.coordinates,_that.date);case _:
@@ -755,7 +755,7 @@ return $default(_that.prayers,_that.coordinates,_that.date);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "prayers")  List<Prayer>? prayers, @JsonKey(name: "coordinates")  Coordinates? coordinates, @JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? date)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<Prayer>? prayers,  Coordinates? coordinates, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? date)  $default,) {final _that = this;
 switch (_that) {
 case _MultiDayTiming():
 return $default(_that.prayers,_that.coordinates,_that.date);case _:
@@ -775,7 +775,7 @@ return $default(_that.prayers,_that.coordinates,_that.date);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "prayers")  List<Prayer>? prayers, @JsonKey(name: "coordinates")  Coordinates? coordinates, @JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? date)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<Prayer>? prayers,  Coordinates? coordinates, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? date)?  $default,) {final _that = this;
 switch (_that) {
 case _MultiDayTiming() when $default != null:
 return $default(_that.prayers,_that.coordinates,_that.date);case _:
@@ -790,11 +790,11 @@ return $default(_that.prayers,_that.coordinates,_that.date);case _:
 @JsonSerializable()
 
 class _MultiDayTiming implements MultiDayTiming {
-  const _MultiDayTiming({@JsonKey(name: "prayers") final  List<Prayer>? prayers, @JsonKey(name: "coordinates") this.coordinates, @JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.date}): _prayers = prayers;
+  const _MultiDayTiming({final  List<Prayer>? prayers, this.coordinates, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.date}): _prayers = prayers;
   factory _MultiDayTiming.fromJson(Map<String, dynamic> json) => _$MultiDayTimingFromJson(json);
 
  final  List<Prayer>? _prayers;
-@override@JsonKey(name: "prayers") List<Prayer>? get prayers {
+@override List<Prayer>? get prayers {
   final value = _prayers;
   if (value == null) return null;
   if (_prayers is EqualUnmodifiableListView) return _prayers;
@@ -802,8 +802,8 @@ class _MultiDayTiming implements MultiDayTiming {
   return EqualUnmodifiableListView(value);
 }
 
-@override@JsonKey(name: "coordinates") final  Coordinates? coordinates;
-@override@JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) final  DateTime? date;
+@override final  Coordinates? coordinates;
+@override@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) final  DateTime? date;
 
 /// Create a copy of MultiDayTiming
 /// with the given fields replaced by the non-null parameter values.
@@ -838,7 +838,7 @@ abstract mixin class _$MultiDayTimingCopyWith<$Res> implements $MultiDayTimingCo
   factory _$MultiDayTimingCopyWith(_MultiDayTiming value, $Res Function(_MultiDayTiming) _then) = __$MultiDayTimingCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "prayers") List<Prayer>? prayers,@JsonKey(name: "coordinates") Coordinates? coordinates,@JsonKey(name: "date", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? date
+ List<Prayer>? prayers, Coordinates? coordinates,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? date
 });
 
 
@@ -883,7 +883,7 @@ $CoordinatesCopyWith<$Res>? get coordinates {
 /// @nodoc
 mixin _$Coordinates {
 
-@JsonKey(name: "latitude") double? get latitude;@JsonKey(name: "longitude") double? get longitude;
+ double? get latitude; double? get longitude;
 /// Create a copy of Coordinates
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -916,7 +916,7 @@ abstract mixin class $CoordinatesCopyWith<$Res>  {
   factory $CoordinatesCopyWith(Coordinates value, $Res Function(Coordinates) _then) = _$CoordinatesCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude
+ double? latitude, double? longitude
 });
 
 
@@ -1022,7 +1022,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( double? latitude,  double? longitude)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Coordinates() when $default != null:
 return $default(_that.latitude,_that.longitude);case _:
@@ -1043,7 +1043,7 @@ return $default(_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( double? latitude,  double? longitude)  $default,) {final _that = this;
 switch (_that) {
 case _Coordinates():
 return $default(_that.latitude,_that.longitude);case _:
@@ -1063,7 +1063,7 @@ return $default(_that.latitude,_that.longitude);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "latitude")  double? latitude, @JsonKey(name: "longitude")  double? longitude)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( double? latitude,  double? longitude)?  $default,) {final _that = this;
 switch (_that) {
 case _Coordinates() when $default != null:
 return $default(_that.latitude,_that.longitude);case _:
@@ -1078,11 +1078,11 @@ return $default(_that.latitude,_that.longitude);case _:
 @JsonSerializable()
 
 class _Coordinates implements Coordinates {
-  const _Coordinates({@JsonKey(name: "latitude") this.latitude, @JsonKey(name: "longitude") this.longitude});
+  const _Coordinates({this.latitude, this.longitude});
   factory _Coordinates.fromJson(Map<String, dynamic> json) => _$CoordinatesFromJson(json);
 
-@override@JsonKey(name: "latitude") final  double? latitude;
-@override@JsonKey(name: "longitude") final  double? longitude;
+@override final  double? latitude;
+@override final  double? longitude;
 
 /// Create a copy of Coordinates
 /// with the given fields replaced by the non-null parameter values.
@@ -1117,7 +1117,7 @@ abstract mixin class _$CoordinatesCopyWith<$Res> implements $CoordinatesCopyWith
   factory _$CoordinatesCopyWith(_Coordinates value, $Res Function(_Coordinates) _then) = __$CoordinatesCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "latitude") double? latitude,@JsonKey(name: "longitude") double? longitude
+ double? latitude, double? longitude
 });
 
 
@@ -1149,7 +1149,7 @@ as double?,
 /// @nodoc
 mixin _$Prayer {
 
-@JsonKey(name: "name") PrayerName? get name;@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get time;@JsonKey(name: "audio") String? get audio;
+ PrayerName? get name;@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get time; String? get audio;
 /// Create a copy of Prayer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1182,7 +1182,7 @@ abstract mixin class $PrayerCopyWith<$Res>  {
   factory $PrayerCopyWith(Prayer value, $Res Function(Prayer) _then) = _$PrayerCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "name") PrayerName? name,@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time,@JsonKey(name: "audio") String? audio
+ PrayerName? name,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time, String? audio
 });
 
 
@@ -1289,7 +1289,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "name")  PrayerName? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Prayer() when $default != null:
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1310,7 +1310,7 @@ return $default(_that.name,_that.time,_that.audio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "name")  PrayerName? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)  $default,) {final _that = this;
 switch (_that) {
 case _Prayer():
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1330,7 +1330,7 @@ return $default(_that.name,_that.time,_that.audio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "name")  PrayerName? name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time, @JsonKey(name: "audio")  String? audio)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)?  $default,) {final _that = this;
 switch (_that) {
 case _Prayer() when $default != null:
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1345,12 +1345,12 @@ return $default(_that.name,_that.time,_that.audio);case _:
 @JsonSerializable()
 
 class _Prayer implements Prayer {
-  const _Prayer({@JsonKey(name: "name") this.name, @JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.time, @JsonKey(name: "audio") this.audio});
+  const _Prayer({this.name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.time, this.audio});
   factory _Prayer.fromJson(Map<String, dynamic> json) => _$PrayerFromJson(json);
 
-@override@JsonKey(name: "name") final  PrayerName? name;
-@override@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) final  DateTime? time;
-@override@JsonKey(name: "audio") final  String? audio;
+@override final  PrayerName? name;
+@override@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) final  DateTime? time;
+@override final  String? audio;
 
 /// Create a copy of Prayer
 /// with the given fields replaced by the non-null parameter values.
@@ -1385,7 +1385,7 @@ abstract mixin class _$PrayerCopyWith<$Res> implements $PrayerCopyWith<$Res> {
   factory _$PrayerCopyWith(_Prayer value, $Res Function(_Prayer) _then) = __$PrayerCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "name") PrayerName? name,@JsonKey(name: "time", fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time,@JsonKey(name: "audio") String? audio
+ PrayerName? name,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time, String? audio
 });
 
 

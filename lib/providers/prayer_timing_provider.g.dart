@@ -55,7 +55,7 @@ final class PrayerTimeMonthNotifierProvider
 }
 
 String _$prayerTimeMonthNotifierHash() =>
-    r'c6e2dd7150bc7a16cc0a0ce2cd932357609f55dc';
+    r'aeeb9dac635336e3213eded6a7926338135c26b1';
 
 final class PrayerTimeMonthNotifierFamily extends $Family
     with
@@ -190,7 +190,7 @@ final class PrayerTimingForDateProvider
 }
 
 String _$prayerTimingForDateHash() =>
-    r'82e2138470784b973fe344e67d8b3bca9ab9c662';
+    r'0074b7d0550da5c215f9b8d72a7f3b4127747536';
 
 final class PrayerTimingForDateFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<MultiDayTiming?>, DateTime> {
@@ -260,7 +260,7 @@ final class HasPrayerDataForDateProvider
 }
 
 String _$hasPrayerDataForDateHash() =>
-    r'fd374877bdef185298fbc7ea94c11dd033d661e6';
+    r'22d25ec8b67d8276d565031165342781268f7871';
 
 final class HasPrayerDataForDateFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<bool>, DateTime> {
@@ -313,7 +313,7 @@ final class HasPrayerDataForCurrentMonthProvider
 }
 
 String _$hasPrayerDataForCurrentMonthHash() =>
-    r'90313126bacb32d01d789dc924df8ae97caa4737';
+    r'5b2d24f27d1f266115494b85fb9342bb8ede72a0';
 
 @ProviderFor(currentRelevantPrayer)
 const currentRelevantPrayerProvider = CurrentRelevantPrayerProvider._();
@@ -355,7 +355,46 @@ final class CurrentRelevantPrayerProvider
 }
 
 String _$currentRelevantPrayerHash() =>
-    r'688745c4534e9a3fafafa62150020a56b13b0665';
+    r'20fc89a23573cf926531bee821044086a1fd9a09';
+
+@ProviderFor(prayerTimeline)
+const prayerTimelineProvider = PrayerTimelineProvider._();
+
+final class PrayerTimelineProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<PrayerWindow?>,
+          PrayerWindow?,
+          Stream<PrayerWindow?>
+        >
+    with $FutureModifier<PrayerWindow?>, $StreamProvider<PrayerWindow?> {
+  const PrayerTimelineProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'prayerTimelineProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$prayerTimelineHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<PrayerWindow?> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<PrayerWindow?> create(Ref ref) {
+    return prayerTimeline(ref);
+  }
+}
+
+String _$prayerTimelineHash() => r'213048dce8921500833dded758a548a5517bdac6';
 
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
@@ -380,15 +419,16 @@ abstract class _$PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifierBase {
   /// A variant of [persist], for JSON-specific encoding.
   ///
   /// You can override [key] to customize the key used for storage.
-  FutureOr<void> persist(
+  PersistResult persist(
     FutureOr<Storage<String, String>> storage, {
+    String? key,
     String Function(PrayerTimingMonthResponseModel state)? encode,
     PrayerTimingMonthResponseModel Function(String encoded)? decode,
     StorageOptions options = const StorageOptions(),
   }) {
     return NotifierPersistX(this).persist<String, String>(
       storage,
-      key: key,
+      key: key ?? this.key,
       encode: encode ?? $jsonCodex.encode,
       decode:
           decode ??

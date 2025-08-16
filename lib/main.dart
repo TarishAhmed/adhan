@@ -3,6 +3,7 @@ import 'package:adhan_app/services/daily_notification_scheduler.dart';
 import 'package:adhan_app/services/battery_optimization_service.dart';
 import 'package:adhan_app/theme/theme.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +16,8 @@ import 'providers/prayer_timing_provider.dart';
 import 'services/notification_service.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'services/home_widget_service.dart';
+import 'firebase_options.dart';
+import 'widgets/update_manager.dart';
 
 const Color kPrimaryGreen = Color(0xFF2E6B57);
 const Color kBackground = Color(0xFFF7FBF7);
@@ -23,6 +26,10 @@ void main() async {
   if (kIsWeb) usePathUrlStrategy();
 
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   await NotificationService.initialize();
 
   if (!kIsWeb) {
@@ -79,7 +86,8 @@ class MyApp extends ConsumerWidget {
       darkTheme: MaterialTheme().dark(),
       themeMode: themeMode,
       routerConfig: router,
-      builder: (context, child) => BatteryOptimizationWrapper(child: child!),
+      builder: (context, child) =>
+          UpdateManager(child: BatteryOptimizationWrapper(child: child!)),
     );
   }
 }

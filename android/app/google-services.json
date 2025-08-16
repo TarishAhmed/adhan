@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "148536360935",
+    "project_id": "adhan-ahmadiyya",
+    "storage_bucket": "adhan-ahmadiyya.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:148536360935:android:7e4e41f0463be80bee0742",
+        "android_client_info": {
+          "package_name": "org.tarish.adhan"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2vC7XMLyzkf_Eb3DEGuuO2su9zI8P7LI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
