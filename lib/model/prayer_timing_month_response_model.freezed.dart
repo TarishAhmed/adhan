@@ -1149,7 +1149,7 @@ as double?,
 /// @nodoc
 mixin _$Prayer {
 
- PrayerName? get name;@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get time; String? get audio;
+@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson) PrayerName? get name;@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? get time; String? get audio;
 /// Create a copy of Prayer
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1182,7 +1182,7 @@ abstract mixin class $PrayerCopyWith<$Res>  {
   factory $PrayerCopyWith(Prayer value, $Res Function(Prayer) _then) = _$PrayerCopyWithImpl;
 @useResult
 $Res call({
- PrayerName? name,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time, String? audio
+@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson) PrayerName? name,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time, String? audio
 });
 
 
@@ -1289,7 +1289,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson)  PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Prayer() when $default != null:
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1310,7 +1310,7 @@ return $default(_that.name,_that.time,_that.audio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson)  PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)  $default,) {final _that = this;
 switch (_that) {
 case _Prayer():
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1330,7 +1330,7 @@ return $default(_that.name,_that.time,_that.audio);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson)  PrayerName? name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch)  DateTime? time,  String? audio)?  $default,) {final _that = this;
 switch (_that) {
 case _Prayer() when $default != null:
 return $default(_that.name,_that.time,_that.audio);case _:
@@ -1345,10 +1345,10 @@ return $default(_that.name,_that.time,_that.audio);case _:
 @JsonSerializable()
 
 class _Prayer implements Prayer {
-  const _Prayer({this.name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.time, this.audio});
+  const _Prayer({@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson) this.name, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.time, this.audio});
   factory _Prayer.fromJson(Map<String, dynamic> json) => _$PrayerFromJson(json);
 
-@override final  PrayerName? name;
+@override@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson) final  PrayerName? name;
 @override@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) final  DateTime? time;
 @override final  String? audio;
 
@@ -1385,7 +1385,7 @@ abstract mixin class _$PrayerCopyWith<$Res> implements $PrayerCopyWith<$Res> {
   factory _$PrayerCopyWith(_Prayer value, $Res Function(_Prayer) _then) = __$PrayerCopyWithImpl;
 @override @useResult
 $Res call({
- PrayerName? name,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time, String? audio
+@JsonKey(fromJson: PrayerName.fromJson, toJson: PrayerName.toJson) PrayerName? name,@JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) DateTime? time, String? audio
 });
 
 

@@ -16,6 +16,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:collection/collection.dart';
+import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
 
 class NotificationSettingsWidget extends ConsumerStatefulWidget {
   const NotificationSettingsWidget({super.key, required this.prayerTiming});
@@ -61,9 +62,8 @@ class _NotificationSettingsWidgetState
     }
   }
 
-  Future<void> _toggleNotification(String prayerName) async {
-    final currentValue = _notificationPreferences[prayerName] ?? false;
-    final newValue = !currentValue;
+  Future<void> _toggleNotification(String prayerName, bool isEnabled) async {
+    final newValue = isEnabled;
 
     setState(() {
       _notificationPreferences[prayerName] = newValue;
@@ -86,7 +86,7 @@ class _NotificationSettingsWidgetState
     // Indirect reschedule handled by service flagging
   }
 
-  Future<void> _changeAdvanceTime(String prayerName, int minutes) async {
+  Future<int> _changeAdvanceTime(String prayerName, int minutes) async {
     setState(() {
       _advanceTimePreferences[prayerName] = minutes;
     });
@@ -96,20 +96,12 @@ class _NotificationSettingsWidgetState
       minutes,
     );
 
+    return minutes;
+
     // Indirect reschedule handled by service flagging
   }
 
-  Future<void> _toggleDay(String prayerName, String dayAbbreviation) async {
-    final currentDays =
-        _dayPreferences[prayerName] ?? {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
-    final newDays = Set<String>.from(currentDays);
-
-    if (newDays.contains(dayAbbreviation)) {
-      newDays.remove(dayAbbreviation);
-    } else {
-      newDays.add(dayAbbreviation);
-    }
-
+  Future<Set<String>> _toggleDay(String prayerName, Set<String> newDays) async {
     setState(() {
       _dayPreferences[prayerName] = newDays;
     });
@@ -118,7 +110,7 @@ class _NotificationSettingsWidgetState
       prayerName,
       newDays,
     );
-
+    return newDays;
     // Indirect reschedule handled by service flagging
   }
 
@@ -229,221 +221,180 @@ class _NotificationSettingsWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: ExpansionPanelList.radio(
-        expandedHeaderPadding: EdgeInsets.zero,
-        elevation: 0,
-        materialGapSize: 16,
-        // separatorBuilder: (context, index) => const SizedBox(height: 8),
-        // shrinkWrap: true,
-        // itemCount: NotificationPreferencesService.prayerNames.length,
-        children: NotificationPreferencesService.prayerNames.entries
-            .where((entry) => entry.key != 'sunrise')
-            .mapIndexed((index, entry) {
-              final prayerTiming = widget.prayerTiming.firstWhere(
-                (prayer) =>
-                    StringUtils.equalsIgnoreCase(prayer.name?.name, entry.key),
-              );
+    return ListView(
+      // separatorBuilder: (context, index) => const SizedBox(height: 8),
+      // shrinkWrap: true,
+      // itemCount: NotificationPreferencesService.prayerNames.length,
+      children: NotificationPreferencesService.prayerNames.entries
+          .where((entry) => entry.key != 'sunrise')
+          .mapIndexed((index, entry) {
+            final prayerTiming = widget.prayerTiming.firstWhere(
+              (prayer) =>
+                  StringUtils.equalsIgnoreCase(prayer.name?.name, entry.key),
+            );
 
-              final prayerKey = entry.key;
-              final prayerName = entry.value;
-              final isEnabled = _notificationPreferences[prayerKey] ?? false;
-              final sound =
+            final prayerKey = entry.key;
+            final prayerName = entry.value;
+
+            return HookConsumer(
+              builder: (context, ref, _) {
+                final isEnabled = useState(
+                  _notificationPreferences[prayerKey] ?? false,
+                );
+
+                final sound = useState(
                   _soundPreferences[prayerKey] ??
-                  AdhanAudioLibrary.defaultAdhan.url;
-              final advanceTime = _advanceTimePreferences[prayerKey] ?? 0;
-              final selectedDays =
-                  _dayPreferences[prayerKey] ??
-                  {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
-              return ExpansionPanelRadio(
-                canTapOnHeader: true,
-                value: prayerKey,
-                backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-                body: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    spacing: 8,
-                    children: [
-                      const Text(
-                        'Days',
-                        style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Row(
-                        spacing: 8,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: DayOfWeek.values
-                            .map(
-                              (day) => OutlinedButton(
-                                onPressed: isEnabled
-                                    ? () => _toggleDay(
-                                        prayerKey,
-                                        day.abbreviation,
-                                      )
-                                    : null,
-                                style: OutlinedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.elliptical(30, 30),
-                                    ),
-                                  ),
-                                  side: selectedDays.contains(day.abbreviation)
-                                      ? BorderSide(
-                                          color: Theme.of(
-                                            context,
-                                          ).colorScheme.primary,
-                                          width: 2,
-                                        )
-                                      : BorderSide.none,
-                                  // fixedSize: const Size(14, 14),
-                                  tapTargetSize:
-                                      MaterialTapTargetSize.shrinkWrap,
-                                  visualDensity: VisualDensity.compact,
-                                  minimumSize: const Size(20, 20),
-                                  maximumSize: const Size(50, 50),
-                                  foregroundColor: Colors.black,
-                                  // backgroundColor: Colors.white,
-                                  padding: EdgeInsets.zero,
-                                  textStyle: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.copyWith(
-                                        fontFeatures: const [
-                                          FontFeature.tabularFigures(),
-                                        ],
-                                      ),
-                                ),
-                                child: Container(
-                                  // decoration: BoxDecoration(
-                                  //   border: day.abbreviation == 'S'
-                                  //       ? Border.all(
-                                  //           color: Theme.of(
-                                  //             context,
-                                  //           ).colorScheme.primary,
-                                  //         )
-                                  //       : null,
-                                  //   borderRadius: BorderRadius.all(
-                                  //     Radius.elliptical(30, 30),
-                                  //   ),
-                                  // ),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                    vertical: 4,
-                                  ),
-                                  child: SizedBox(
-                                    width: 30,
-                                    height: 30,
-                                    child: Center(
-                                      child: Text(
-                                        day.abbreviation,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: isEnabled
-                                                  ? (selectedDays.contains(
-                                                          day.abbreviation,
-                                                        )
-                                                        ? Theme.of(
-                                                            context,
-                                                          ).colorScheme.primary
-                                                        : Theme.of(context)
-                                                              .colorScheme
-                                                              .onSurface)
-                                                  : Colors.grey,
-                                              fontFeatures: const [
-                                                FontFeature.tabularFigures(),
-                                              ],
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                      HookConsumer(
-                        builder: (context, ref, _) {
-                          final isLoadingAdhan = useState(false);
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            spacing: 8,
-                            children: [
-                              Expanded(
-                                child: _buildSoundSelector(
-                                  prayerKey,
-                                  sound,
-                                  (isLoading) =>
-                                      isLoadingAdhan.value = isLoading,
-                                ),
-                              ),
-                              isLoadingAdhan.value
-                                  ? const SizedBox(
-                                      width: 24,
-                                      height: 24,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 2,
-                                      ),
-                                    )
-                                  : IconButton(
-                                      style: IconButton.styleFrom(
-                                        foregroundColor: Theme.of(
-                                          context,
-                                        ).colorScheme.onPrimaryContainer,
-                                        padding: EdgeInsets.zero,
-                                        visualDensity: VisualDensity.compact,
-                                        tapTargetSize:
-                                            MaterialTapTargetSize.shrinkWrap,
-                                      ),
-                                      icon: const Icon(Icons.play_arrow),
-                                      onPressed: () =>
-                                          _testNotification(prayerKey, sound),
-                                      tooltip: 'Test notification',
-                                    ),
-                            ],
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 8),
-                      _buildAdvanceTimeSelector(prayerKey, advanceTime),
-                    ],
-                  ),
-                ),
+                      AdhanAudioLibrary.defaultAdhan.url,
+                );
 
-                headerBuilder: (context, isExpanded) => ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        prayerName,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: isEnabled
-                                  ? Theme.of(context).colorScheme.onSurface
-                                  : Colors.grey,
-                            ),
-                      ),
-                      Text(
-                        DateFormat(
-                          'h:mm a',
-                        ).format(prayerTiming.time ?? DateTime.now()),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: isEnabled
-                              ? Theme.of(context).colorScheme.onSurface
-                              : Colors.grey,
+                return ListTile(
+                  key: Key('notification_setting_$prayerKey'),
+                  onTap: () {
+                    const _pagePadding = 16.0;
+                    const _buttonHeight = 48.0;
+                    const _bottomPaddingForButton = 16.0;
+
+                    SliverWoltModalSheetPage page1(
+                      BuildContext modalSheetContext,
+                      TextTheme textTheme,
+                    ) {
+                      return WoltModalSheetPage(
+                        hasSabGradient: false,
+                        topBarTitle: Text(
+                          prayerName,
+                          style: textTheme.titleSmall,
                         ),
-                      ),
-                    ],
+                        isTopBarLayerAlwaysVisible: true,
+                        trailingNavBarWidget: IconButton(
+                          padding: const EdgeInsets.all(_pagePadding),
+                          icon: const Icon(Icons.close),
+                          onPressed: Navigator.of(modalSheetContext).pop,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(_pagePadding),
+                          child: HookConsumer(
+                            builder: (context, ref, _) {
+                              return Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 8,
+                                children: [
+                                  _daysWidget(isEnabled, prayerKey, context),
+                                  HookConsumer(
+                                    builder: (context, ref, _) {
+                                      final isLoadingAdhan = useState(false);
+                                      return Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
+                                        spacing: 8,
+                                        children: [
+                                          Expanded(
+                                            child: _buildSoundSelector(
+                                              prayerKey,
+                                              sound.value,
+                                              (isLoading) =>
+                                                  isLoadingAdhan.value =
+                                                      isLoading,
+                                            ),
+                                          ),
+                                          isLoadingAdhan.value
+                                              ? const SizedBox(
+                                                  width: 24,
+                                                  height: 24,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                      ),
+                                                )
+                                              : IconButton(
+                                                  style: IconButton.styleFrom(
+                                                    foregroundColor:
+                                                        Theme.of(context)
+                                                            .colorScheme
+                                                            .onPrimaryContainer,
+                                                    padding: EdgeInsets.zero,
+                                                    visualDensity:
+                                                        VisualDensity.compact,
+                                                    tapTargetSize:
+                                                        MaterialTapTargetSize
+                                                            .shrinkWrap,
+                                                  ),
+                                                  icon: const Icon(
+                                                    Icons.play_arrow,
+                                                  ),
+                                                  onPressed: () =>
+                                                      _testNotification(
+                                                        prayerKey,
+                                                        sound.value,
+                                                      ),
+                                                  tooltip: 'Test notification',
+                                                ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                  const SizedBox(height: 8),
+                                  _buildAdvanceTimeSelector(prayerKey),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
+
+                    WoltModalSheet.show<void>(
+                      context: context,
+                      pageListBuilder: (modalSheetContext) {
+                        final textTheme = Theme.of(context).textTheme;
+                        return [page1(modalSheetContext, textTheme)];
+                      },
+                      // modalTypeBuilder: (context) => WoltBottomSheetType(),
+                      onModalDismissedWithBarrierTap: () {
+                        debugPrint('Closed modal sheet with barrier tap');
+                        Navigator.of(context).pop();
+                      },
+                    );
+                  },
+                  title: HookConsumer(
+                    builder: (context, ref, _) {
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            prayerName,
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: isEnabled.value
+                                      ? Theme.of(context).colorScheme.onSurface
+                                      : Colors.grey,
+                                ),
+                          ),
+                          Text(
+                            DateFormat(
+                              'h:mm a',
+                            ).format(prayerTiming.time ?? DateTime.now()),
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: isEnabled.value
+                                      ? Theme.of(context).colorScheme.onSurface
+                                      : Colors.grey,
+                                ),
+                          ),
+                        ],
+                      );
+                    },
                   ),
-                  trailing: Switch(
-                    value: isEnabled,
-                    onChanged: (value) => _toggleNotification(prayerKey),
+                  trailing: HookConsumer(
+                    builder: (context, ref, _) {
+                      return Switch(
+                        value: isEnabled.value,
+                        onChanged: (value) async {
+                          isEnabled.value = value;
+                          await _toggleNotification(prayerKey, value);
+                        },
+                      );
+                    },
                   ),
                   contentPadding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -453,11 +404,147 @@ class _NotificationSettingsWidgetState
                   //   isEnabled ? Icons.notifications : Icons.notifications_off,
                   //   color: isEnabled ? Theme.of(context).colorScheme.primary : Colors.grey,
                   // ),
-                ),
-              );
-            })
-            .toList(),
-      ),
+                );
+              },
+            );
+          })
+          .toList(),
+    );
+  }
+
+  Widget _daysWidget(
+    ValueNotifier<bool> isEnabled,
+    String prayerKey,
+    BuildContext context,
+  ) {
+    return Column(
+      spacing: 8,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Days',
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+        ),
+        HookConsumer(
+          builder: (context, ref, _) {
+            final selectedDays = useState(
+              _dayPreferences[prayerKey] ?? dayAbbreviations,
+            );
+            return Row(
+              spacing: 8,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: DayOfWeek.values
+                  .map(
+                    (day) => InkWell(
+                      onTap: isEnabled.value
+                          ? () async {
+                              final newDays = {...selectedDays.value};
+
+                              if (newDays.contains(day.abbreviation)) {
+                                newDays.remove(day.abbreviation);
+                              } else {
+                                newDays.add(day.abbreviation);
+                              }
+
+                              selectedDays.value = newDays;
+
+                              // await _toggleDay(
+                              //   prayerKey,
+                              //   day.abbreviation,
+                              // );
+                            }
+                          : null,
+
+                      customBorder: RoundedSuperellipseBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        // side: selectedDays.value.contains(day.abbreviation)
+                        //     ? BorderSide(
+                        //         color: Theme.of(context).colorScheme.primary,
+                        //         width: 2,
+                        //       )
+                        //     : BorderSide(
+                        //         color: Theme.of(context).colorScheme.primary,
+                        //         width: 2,
+                        //       ),
+                      ),
+
+                      // style: OutlinedButton.styleFrom(
+
+                      //   // fixedSize: const Size(14, 14),
+                      //   tapTargetSize:
+                      //       MaterialTapTargetSize.shrinkWrap,
+                      //   visualDensity: VisualDensity.compact,
+
+                      //   // minimumSize: const Size(20, 20),
+                      //   // maximumSize: const Size(50, 50),
+                      //   foregroundColor: Colors.black,
+                      //   // backgroundColor: Colors.white,
+                      //   padding: EdgeInsets.zero,
+                      //   textStyle: Theme.of(context)
+                      //       .textTheme
+                      //       .bodyMedium
+                      //       ?.copyWith(
+                      //         fontFeatures: const [
+                      //           FontFeature.tabularFigures(),
+                      //         ],
+                      //       ),
+                      // ),
+                      child: DecoratedBox(
+                        decoration: ShapeDecoration(
+                          color:
+                              selectedDays.value.contains(day.abbreviation) &&
+                                  isEnabled.value
+                              ? Theme.of(context).colorScheme.primary
+                              : null,
+                          shape: RoundedSuperellipseBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(12)),
+                            side: BorderSide(
+                              color: isEnabled.value
+                                  ? selectedDays.value.contains(
+                                          day.abbreviation,
+                                        )
+                                        ? Theme.of(context).colorScheme.primary
+                                        : Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface
+                                  : Colors.grey,
+                            ),
+                          ),
+                        ),
+                        child: SizedBox(
+                          width: 36,
+                          height: 36,
+                          child: Center(
+                            child: Text(
+                              day.abbreviation,
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: isEnabled.value
+                                        ? (selectedDays.value.contains(
+                                                day.abbreviation,
+                                              )
+                                              ? Theme.of(
+                                                  context,
+                                                ).colorScheme.onPrimary
+                                              : Theme.of(
+                                                  context,
+                                                ).colorScheme.onSurface)
+                                        : Colors.grey,
+                                    fontFeatures: const [
+                                      FontFeature.tabularFigures(),
+                                    ],
+                                  ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -520,50 +607,56 @@ class _NotificationSettingsWidgetState
     );
   }
 
-  Widget _buildAdvanceTimeSelector(String prayerKey, int currentAdvanceTime) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Advance Time',
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-        ),
-        Row(
+  Widget _buildAdvanceTimeSelector(String prayerKey) {
+    return HookConsumer(
+      builder: (context, ref, _) {
+        final advanceTime = useState(_advanceTimePreferences[prayerKey] ?? 0);
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Slider(
-                value: currentAdvanceTime.toDouble(),
-                min: 0,
-                max: 30,
-                divisions: 6,
-                label: '${currentAdvanceTime} minutes',
-                onChanged: (value) {
-                  _changeAdvanceTime(prayerKey, value.round());
-                },
-              ),
+            const Text(
+              'Advance Time',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
-            SizedBox(
-              width: 50,
-              child: Text(
-                '${currentAdvanceTime}min',
-                style: const TextStyle(fontSize: 12),
-              ),
+            Row(
+              children: [
+                Expanded(
+                  child: Slider(
+                    value: advanceTime.value.toDouble(),
+                    min: 0,
+                    max: 30,
+                    divisions: 6,
+                    label: '${advanceTime.value} minutes',
+                    onChanged: (value) async {
+                      advanceTime.value = value.round();
+                      _changeAdvanceTime(prayerKey, value.round());
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: 50,
+                  child: Text(
+                    '${advanceTime.value}min',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ],
             ),
           ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
 enum DayOfWeek {
-  monday(abbreviation: 'M'),
-  tuesday(abbreviation: 'Tu'),
-  wednesday(abbreviation: 'W'),
-  thursday(abbreviation: 'Th'),
-  friday(abbreviation: 'F'),
-  saturday(abbreviation: 'Sa'),
-  sunday(abbreviation: 'Su');
+  monday(abbreviation: 'Mon'),
+  tuesday(abbreviation: 'Tue'),
+  wednesday(abbreviation: 'Wed'),
+  thursday(abbreviation: 'Thu'),
+  friday(abbreviation: 'Fri'),
+  saturday(abbreviation: 'Sat'),
+  sunday(abbreviation: 'Sun');
 
   const DayOfWeek({required this.abbreviation});
   final String abbreviation;

@@ -46,8 +46,9 @@ class PrayerDataManager {
       );
 
       return apiData;
-    } catch (e) {
+    } catch (e, st) {
       print('Error getting prayer timings: $e');
+      print('stack trace: $st');
       rethrow;
     }
   }

@@ -2,6 +2,9 @@ import 'package:adhan_app/utils/sound_utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adhan_app/services/reschedule_service.dart';
 
+
+const dayAbbreviations = {'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'};
+
 class NotificationPreferencesService {
   static const String _prefix = 'notification_pref_';
   static const String _soundPrefix = 'notification_sound_';
@@ -212,10 +215,10 @@ class NotificationPreferencesService {
         return daysString.split(',').toSet();
       }
       // Default to all days selected
-      return {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
+      return dayAbbreviations;
     } catch (e) {
       print('Error getting selected days for $prayerName: $e');
-      return {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'}; // Default to all days
+      return dayAbbreviations; // Default to all days
     }
   }
 
@@ -250,7 +253,7 @@ class NotificationPreferencesService {
           preferences[prayer] = daysString.split(',').toSet();
         } else {
           // Default to all days selected
-          preferences[prayer] = {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'};
+          preferences[prayer] = dayAbbreviations;
         }
       }
 
@@ -259,7 +262,7 @@ class NotificationPreferencesService {
       print('Error getting all day preferences: $e');
       return Map.fromEntries(
         prayerNames.keys.map(
-          (key) => MapEntry(key, {'M', 'Tu', 'W', 'Th', 'F', 'Sa', 'Su'}),
+          (key) => MapEntry(key, dayAbbreviations),
         ),
       );
     }

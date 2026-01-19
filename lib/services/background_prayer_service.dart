@@ -18,6 +18,7 @@ class BackgroundPrayerService {
   static const String _updateWidgetTask = 'updateHomeWidget';
 
   /// Initialize the background service
+  @pragma('vm:entry-point')
   static Future<void> initialize() async {
     await Workmanager().initialize(callbackDispatcher);
     tzdata.initializeTimeZones();

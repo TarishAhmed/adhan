@@ -68,23 +68,13 @@ Map<String, dynamic> _$CoordinatesToJson(_Coordinates instance) =>
     };
 
 _Prayer _$PrayerFromJson(Map<String, dynamic> json) => _Prayer(
-  name: $enumDecodeNullable(_$PrayerNameEnumMap, json['name']),
+  name: PrayerName.fromJson(json['name'] as String),
   time: DateTime.fromMillisecondsSinceEpoch((json['time'] as num).toInt()),
   audio: json['audio'] as String?,
 );
 
 Map<String, dynamic> _$PrayerToJson(_Prayer instance) => <String, dynamic>{
-  'name': _$PrayerNameEnumMap[instance.name],
+  'name': PrayerName.toJson(instance.name),
   'time': dateToMillisecondsSinceEpoch(instance.time),
   'audio': instance.audio,
-};
-
-const _$PrayerNameEnumMap = {
-  PrayerName.ASR: 'ASR',
-  PrayerName.FAJR: 'FAJR',
-  PrayerName.ISHA: 'ISHA',
-  PrayerName.MAGHRIB: 'MAGHRIB',
-  PrayerName.SUNRISE: 'SUNRISE',
-  PrayerName.SUNSET: 'SUNSET',
-  PrayerName.ZUHR: 'ZUHR',
 };
