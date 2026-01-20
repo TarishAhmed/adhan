@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:adhan_app/utils/sound_utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adhan_app/services/reschedule_service.dart';
-
 
 const dayAbbreviations = {'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'};
 
@@ -47,17 +49,7 @@ class NotificationPreferencesService {
     }
   }
 
-  /// Get sound preference for a specific prayer
-  static Future<String> getPrayerSound(String prayerName) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('$_soundPrefix${prayerName.toLowerCase()}') ??
-          'default';
-    } catch (e) {
-      print('Error getting sound preference for $prayerName: $e');
-      return 'default';
-    }
-  }
+
 
   /// Set sound preference for a specific prayer
   static Future<void> setPrayerSound(String prayerName, String sound) async {
@@ -102,6 +94,7 @@ class NotificationPreferencesService {
   }
 
   /// Get all notification preferences
+  ///
   static Future<Map<String, bool>> getAllNotificationPreferences() async {
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -120,15 +113,26 @@ class NotificationPreferencesService {
     }
   }
 
+  static Future<bool> getSpecificNotificationPreferences(String prayerKey) async {
+    const defaultNotificationPref = false;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      return prefs.getBool('$_prefix$prayerKey') ?? defaultNotificationPref;
+    } catch (e) {
+      print('Error getting specific notification preferences: $e');
+      return defaultNotificationPref;
+    }
+  }
+
   /// Get all sound preferences
   static Future<Map<String, String>> getAllSoundPreferences() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
+      final pref = await SharedPreferences.getInstance();
       final Map<String, String> preferences = {};
 
       for (final prayer in prayerNames.keys) {
         preferences[prayer] =
-            prefs.getString('$_soundPrefix$prayer') ??
+            pref.getString('$_soundPrefix$prayer') ??
             AdhanAudioLibrary.defaultAdhan.url;
       }
 
@@ -140,6 +144,17 @@ class NotificationPreferencesService {
           (key) => MapEntry(key, AdhanAudioLibrary.defaultAdhan.url),
         ),
       );
+    }
+  }
+
+  static Future<String> getSpecificSoundPreferences(String prayerKey) async {
+    final defaultSound = AdhanAudioLibrary.defaultAdhan.url;
+    try {
+      final pref = await SharedPreferences.getInstance();
+      return pref.getString('$_soundPrefix$prayerKey') ?? defaultSound;
+    } catch (e) {
+      print('Error getting specific sound preferences: $e');
+      return defaultSound;
     }
   }
 
@@ -157,6 +172,21 @@ class NotificationPreferencesService {
     } catch (e) {
       print('Error getting all advance time preferences: $e');
       return Map.fromEntries(prayerNames.keys.map((key) => MapEntry(key, 0)));
+    }
+  }
+
+  static Future<int> getSpecificAdvanceTimePreferences(String prayerKey) async {
+    final defaultAdvanceTime = 0;
+    try {
+      final pref = await SharedPreferences.getInstance();
+      // final Map<String, int> preferences = {};
+      return pref.getInt('$_advanceTimePrefix$prayerKey') ?? defaultAdvanceTime;
+      // for (final prayer in prayerNames.keys) {
+      // }
+      // return preferences;
+    } catch (e) {
+      print('Error getting all advance time preferences: $e');
+      return defaultAdvanceTime;
     }
   }
 
@@ -261,10 +291,145 @@ class NotificationPreferencesService {
     } catch (e) {
       print('Error getting all day preferences: $e');
       return Map.fromEntries(
-        prayerNames.keys.map(
-          (key) => MapEntry(key, dayAbbreviations),
-        ),
+        prayerNames.keys.map((key) => MapEntry(key, dayAbbreviations)),
       );
     }
+  }
+
+  static Future<Set<String>> getSpecificDayPreferences(String prayerKey) async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final daysString = prefs.getString('$_daysPrefix$prayerKey');
+        if (daysString != null && daysString.isNotEmpty) {
+          return daysString.split(',').toSet();
+        } else {
+          // Default to all days selected
+          return dayAbbreviations;
+        }
+    } catch (e) {
+      print('Error getting all day preferences: $e');
+      return dayAbbreviations;
+    }
+  }
+}
+
+final allNotificationPrefProvider =
+    AsyncNotifierProvider<AllNotificationPrefNotifier, Map<String, dynamic>>(
+      AllNotificationPrefNotifier.new,
+    );
+
+final specificNotificationPrefProvider =
+    AsyncNotifierProvider.family<SpecificNotificationPrefNotifier, bool, String>(
+      SpecificNotificationPrefNotifier.new,
+    );
+
+final allSoundPrefProvider =
+    AsyncNotifierProvider<AllSoundPrefNotifier, Map<String, dynamic>>(
+      AllSoundPrefNotifier.new,
+    );
+
+final specificSoundPrefProvider =
+    AsyncNotifierProvider.family<SpecificSoundPrefNotifier, String, String>(
+      SpecificSoundPrefNotifier.new,
+    );
+
+final allAdvanceTimePrefProvider =
+    AsyncNotifierProvider<AllAdvanceTimePrefNotifier, Map<String, dynamic>>(
+      AllAdvanceTimePrefNotifier.new,
+    );
+
+final specificAdvanceTimePrefProvider =
+    AsyncNotifierProvider.family<SpecificAdvanceTimePrefNotifier, int, String>(
+      SpecificAdvanceTimePrefNotifier.new,
+    );
+
+final allDayPrefProvider =
+    AsyncNotifierProvider<AllDayPrefNotifier, Map<String, dynamic>>(
+      AllDayPrefNotifier.new,
+    );
+
+final specificDayPrefProvider =
+    AsyncNotifierProvider.family<SpecificDayPrefNotifier, Set<String>, String>(
+      SpecificDayPrefNotifier.new,
+    );
+
+class AllNotificationPrefNotifier extends AsyncNotifier<Map<String, dynamic>> {
+  @override
+  FutureOr<Map<String, dynamic>> build() {
+    return NotificationPreferencesService.getAllNotificationPreferences();
+  }
+}
+
+class SpecificNotificationPrefNotifier extends FamilyAsyncNotifier<bool, String> {
+  @override
+  FutureOr<bool> build(String prayerKey) {
+    return NotificationPreferencesService.getSpecificNotificationPreferences(prayerKey);
+  }
+
+  Future<void> toggleNotification(String prayerName, bool isNotificationEnabled) async {
+    await NotificationPreferencesService.setPrayerNotificationEnabled(prayerName, isNotificationEnabled);
+    ref.invalidateSelf();
+  }
+}
+
+class AllSoundPrefNotifier extends AsyncNotifier<Map<String, dynamic>> {
+  @override
+  FutureOr<Map<String, dynamic>> build() async {
+    return await NotificationPreferencesService.getAllSoundPreferences();
+  }
+
+  Future<void> setSoundPref(String prayerName, String sound) async {
+    await NotificationPreferencesService.setPrayerSound(prayerName, sound);
+    ref.invalidateSelf();
+  }
+}
+
+class SpecificSoundPrefNotifier extends FamilyAsyncNotifier<String, String> {
+  @override
+  FutureOr<String> build(String prayerKey) async {
+    return await NotificationPreferencesService.getSpecificSoundPreferences(prayerKey);
+  }
+
+  Future<void> setSoundPref(String prayerKey, String sound) async {
+    await NotificationPreferencesService.setPrayerSound(prayerKey, sound);
+    ref.invalidateSelf();
+  }
+}
+
+class SpecificDayPrefNotifier extends FamilyAsyncNotifier<Set<String>, String> {
+  @override
+  FutureOr<Set<String>> build(String prayerKey) async {
+    return await NotificationPreferencesService.getSpecificDayPreferences(prayerKey);
+  }
+
+  Future<void> setDayPref(String prayerKey, Set<String> prefs) async {
+    await NotificationPreferencesService.setPrayerSelectedDays(prayerKey, prefs);
+    ref.invalidateSelf();
+  }
+}
+
+class AllAdvanceTimePrefNotifier extends AsyncNotifier<Map<String, dynamic>> {
+  @override
+  FutureOr<Map<String, dynamic>> build() {
+    return NotificationPreferencesService.getAllSoundPreferences();
+  }
+}
+
+class SpecificAdvanceTimePrefNotifier extends FamilyAsyncNotifier<int, String> {
+  @override
+  FutureOr<int> build(String prayerKey) {
+    return NotificationPreferencesService.getSpecificAdvanceTimePreferences(prayerKey);
+  }
+
+  Future<void> setAdvanceTimePref(String prayerKey, int mins) async {
+    await NotificationPreferencesService.setPrayerAdvanceTime(prayerKey, mins);
+    ref.invalidateSelf();
+  }
+}
+
+class AllDayPrefNotifier extends AsyncNotifier<Map<String, dynamic>> {
+  @override
+  FutureOr<Map<String, dynamic>> build() {
+    return NotificationPreferencesService.getAllSoundPreferences();
   }
 }

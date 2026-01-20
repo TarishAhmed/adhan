@@ -234,7 +234,7 @@ class DailyNotificationScheduler {
             await NotificationPreferencesService.getPrayerNotificationEnabled(
               prayerName,
             );
-        final sound = await NotificationPreferencesService.getPrayerSound(
+        final sound = await NotificationPreferencesService.getSpecificSoundPreferences(
           prayerName,
         );
         final advanceTime =
