@@ -189,6 +189,21 @@ class NotificationService {
     return file.path;
   }
 
+  static Future<String> copyFile(String sourceFileName, String destinationFileName) async {
+    final filesDir = await getApplicationSupportDirectory();
+    final dir = Directory('${filesDir.path}/adhan');
+    
+    final sourceFile = File('${dir.path}/$sourceFileName');
+    final destinationFile = File('${dir.path}/$destinationFileName');
+    
+    if (!await sourceFile.exists()) {
+      throw FileSystemException('Source file not found', sourceFile.path);
+    }
+    
+    await sourceFile.copy(destinationFile.path);
+    return destinationFile.path;
+  }
+
   static Future<void> cancelPrayerNotification(int id) async {
     await _notificationsPlugin.cancel(id);
   }

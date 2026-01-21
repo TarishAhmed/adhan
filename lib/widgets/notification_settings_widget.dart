@@ -12,6 +12,7 @@ import 'package:adhan_app/services/notification_preferences_service.dart';
 import 'package:adhan_app/services/notification_service.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:wolt_modal_sheet/wolt_modal_sheet.dart';
@@ -414,9 +415,9 @@ class NotificationSettingMainSideSheetPage extends HookConsumerWidget {
               contentPadding: EdgeInsets.zero,
               title: Text(
                 'Notification Sound',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500),
               ),
               subtitle: Text(
                 AdhanAudioLibrary.values
@@ -424,9 +425,9 @@ class NotificationSettingMainSideSheetPage extends HookConsumerWidget {
                         ?.displayName ??
                     'Default',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withAlpha(150),
-                      fontWeight: FontWeight.w500,
-                    ),
+                  color: Theme.of(context).colorScheme.onSurface.withAlpha(150),
+                  fontWeight: FontWeight.w500,
+                ),
               ),
 
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -435,88 +436,88 @@ class NotificationSettingMainSideSheetPage extends HookConsumerWidget {
               },
             ),
 
-            Row(
-              children: [
-                Expanded(
-                  child: DropdownButtonFormField<AdhanAudioLibrary>(
-                    value: AdhanAudioLibrary.values.firstWhere(
-                      (audio) => audio.url == currentSound,
-                      orElse: () => AdhanAudioLibrary.defaultAdhan,
-                    ),
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      isDense: true,
-                    ),
-                    items: AdhanAudioLibrary.values.map((audio) {
-                      return DropdownMenuItem(
-                        value: audio,
-                        child: Text(
-                          audio.displayName,
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (value) async {
-                      if (value == null) return;
-                      isLoadingAdhan.value = true;
-                      ref
-                          .read(specificSoundPrefProvider(prayerKey).notifier)
-                          .setSoundPref(prayerKey, value.url);
-                  
-                      await updatePrayerNotificationMethod(prayerKey, value.url)
-                          .catchError((error, stack) {
-                            final er = error as DioException;
-                            log(
-                              'Error downloading sound: $error',
-                              error: error,
-                              stackTrace: stack,
-                            );
-                            if (!context.mounted) return;
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Error downloading sound: ${er.message}',
-                                ),
-                              ),
-                            );
-                          })
-                          .whenComplete(() {
-                            isLoadingAdhan.value = false;
-                          });
-                    },
-                  ),
-                ),
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: DropdownButtonFormField<AdhanAudioLibrary>(
+            //         value: AdhanAudioLibrary.values.firstWhere(
+            //           (audio) => audio.url == currentSound,
+            //           orElse: () => AdhanAudioLibrary.defaultAdhan,
+            //         ),
+            //         decoration: const InputDecoration(
+            //           border: OutlineInputBorder(),
+            //           contentPadding: EdgeInsets.symmetric(
+            //             horizontal: 8,
+            //             vertical: 4,
+            //           ),
+            //           isDense: true,
+            //         ),
+            //         items: AdhanAudioLibrary.values.map((audio) {
+            //           return DropdownMenuItem(
+            //             value: audio,
+            //             child: Text(
+            //               audio.displayName,
+            //               style: const TextStyle(fontSize: 12),
+            //             ),
+            //           );
+            //         }).toList(),
+            //         onChanged: (value) async {
+            //           if (value == null) return;
+            //           isLoadingAdhan.value = true;
+            //           ref
+            //               .read(specificSoundPrefProvider(prayerKey).notifier)
+            //               .setSoundPref(prayerKey, value.url);
 
-                isLoadingAdhan.value
-                    ? const SizedBox(
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
-                    : IconButton(
-                        style: IconButton.styleFrom(
-                          foregroundColor: Theme.of(
-                            context,
-                          ).colorScheme.onPrimaryContainer,
-                          padding: EdgeInsets.zero,
-                          visualDensity: VisualDensity.compact,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        icon: const Icon(Icons.play_arrow),
-                        onPressed: () async {
-                          final sound = await ref.read(
-                            specificSoundPrefProvider(prayerKey).future,
-                          );
-                          _testNotification(context, prayerKey, sound);
-                        },
-                        tooltip: 'Test notification',
-                      ),
-              ],
-            ),
+            //           await updatePrayerNotificationMethod(prayerKey, value.url)
+            //               .catchError((error, stack) {
+            //                 final er = error as DioException;
+            //                 log(
+            //                   'Error downloading sound: $error',
+            //                   error: error,
+            //                   stackTrace: stack,
+            //                 );
+            //                 if (!context.mounted) return;
+            //                 ScaffoldMessenger.of(context).showSnackBar(
+            //                   SnackBar(
+            //                     content: Text(
+            //                       'Error downloading sound: ${er.message}',
+            //                     ),
+            //                   ),
+            //                 );
+            //               })
+            //               .whenComplete(() {
+            //                 isLoadingAdhan.value = false;
+            //               });
+            //         },
+            //       ),
+            //     ),
+
+            //     isLoadingAdhan.value
+            //         ? const SizedBox(
+            //             width: 24,
+            //             height: 24,
+            //             child: CircularProgressIndicator(strokeWidth: 2),
+            //           )
+            //         : IconButton(
+            //             style: IconButton.styleFrom(
+            //               foregroundColor: Theme.of(
+            //                 context,
+            //               ).colorScheme.onPrimaryContainer,
+            //               padding: EdgeInsets.zero,
+            //               visualDensity: VisualDensity.compact,
+            //               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            //             ),
+            //             icon: const Icon(Icons.play_arrow),
+            //             onPressed: () async {
+            //               final sound = await ref.read(
+            //                 specificSoundPrefProvider(prayerKey).future,
+            //               );
+            //               // _testNotification(context, prayerKey, sound);
+            //             },
+            //             tooltip: 'Test notification',
+            //           ),
+            //   ],
+            // ),
           ],
         );
       },
@@ -580,65 +581,192 @@ class NotificationSettingMainSideSheetPage extends HookConsumerWidget {
     );
   }
 
-  Future<void> _testNotification(
-    BuildContext context,
-    String prayerName,
-    String soundUrl,
-  ) async {
-    try {
-      await updatePrayerNotificationMethod(prayerName, soundUrl).catchError((
-        e,
-        s,
-      ) {
-        log(
-          'Error updating prayer notification method: $e',
-          error: e,
-          stackTrace: s,
-        );
-        if (!context.mounted) return;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Error updating prayer notification method: $e'),
-          ),
-        );
-      });
+  // Future<void> _testNotification(
+  //   BuildContext context,
+  //   String prayerName,
+  //   String soundUrl,
+  // ) async {
+  //   try {
+  //     await updatePrayerNotificationMethod(prayerName, soundUrl).catchError((
+  //       e,
+  //       s,
+  //     ) {
+  //       log(
+  //         'Error updating prayer notification method: $e',
+  //         error: e,
+  //         stackTrace: s,
+  //       );
+  //       if (!context.mounted) return;
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text('Error updating prayer notification method: $e'),
+  //         ),
+  //       );
+  //     });
 
-      final prayer = Prayer(
-        name: PrayerName.values.firstWhere((e) => e.lCase == prayerName),
-        time: DateTime.now().add(const Duration(seconds: 2)),
-      );
+  //     final prayer = Prayer(
+  //       name: PrayerName.values.firstWhere((e) => e.lCase == prayerName),
+  //       time: DateTime.now().add(const Duration(seconds: 2)),
+  //     );
 
-      await NotificationService.schedulePrayerNotification(
-        id: Random().nextInt(100000),
-        title: prayer.name!.displayName,
-        body: 'Test notification for ${prayer.name?.displayName} prayer.',
-        scheduledTime: prayer.time!,
-        prayerName: prayerName,
-      );
+  //     await NotificationService.schedulePrayerNotification(
+  //       id: Random().nextInt(100000),
+  //       title: prayer.name!.displayName,
+  //       body: 'Test notification for ${prayer.name?.displayName} prayer.',
+  //       scheduledTime: prayer.time!,
+  //       prayerName: prayerName,
+  //     );
 
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Test notification scheduled for ${prayer.time!.difference(DateTime.now()).inSeconds} seconds from now',
-            ),
-          ),
-        );
-      }
-    } catch (e) {
-      if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error scheduling test notification: $e')),
-        );
-      }
-    }
+  //     if (context.mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(
+  //           content: Text(
+  //             'Test notification scheduled for ${prayer.time!.difference(DateTime.now()).inSeconds} seconds from now',
+  //           ),
+  //         ),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     if (context.mounted) {
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Error scheduling test notification: $e')),
+  //       );
+  //     }
+  //   }
+  // }
+
+  // Future<void> updatePrayerNotificationMethod(
+  //   String prayerName,
+  //   String soundUrl,
+  // ) async {
+  //   try {
+  //     final audio = AdhanAudioLibrary.values.firstWhere(
+  //       (audio) => audio.url == soundUrl,
+  //       orElse: () => AdhanAudioLibrary.defaultAdhan,
+  //     );
+
+  //     final filesDir = await getApplicationSupportDirectory();
+  //     final dir = Directory('${filesDir.path}/adhan');
+
+  //     if (!await dir.exists()) {
+  //       await dir.create(recursive: true);
+  //     }
+
+  //     final existingFile = await findFileWithExtension(
+  //       dir.path,
+  //       '$prayerName.',
+  //     );
+  //     if (existingFile != null) {
+  //       await existingFile.delete();
+  //     }
+
+  //     if (!audio.internal) {
+  //       try {
+  //         final newFileName = '$prayerName.${soundUrl.split('.').last}';
+  //         await NotificationService.downloadSound(soundUrl, newFileName);
+  //       } catch (e) {
+  //         print('Failed to download sound for $prayerName: $e');
+  //         rethrow;
+  //       }
+  //     }
+  //   } catch (e) {
+  //     print('Error updating prayer notification method for $prayerName: $e');
+  //     rethrow;
+  //   }
+  // }
+}
+
+
+
+class SoundSettingSideSheetPage extends StatefulHookConsumerWidget {
+  const SoundSettingSideSheetPage({super.key, required this.prayerKey});
+
+  final String prayerKey;
+
+  @override
+  ConsumerState<SoundSettingSideSheetPage> createState() => _SoundSettingSideSheetPageState();
+}
+
+class _SoundSettingSideSheetPageState extends ConsumerState<SoundSettingSideSheetPage> {
+  
+  final player = AudioPlayer();
+
+  @override
+  void dispose() {
+    player.dispose();
+    super.dispose();
+  }  
+  
+  @override
+  Widget build(BuildContext context) {
+
+    final soundPref = ref.watch(specificSoundPrefProvider(widget.prayerKey));
+    final isLoadingAdhan = useState(false);
+    return soundPref.when(
+      error: (error, stackTrace) => Text('Error: $error'),
+      loading: () => Center(child: CircularProgressIndicator()),
+      data: (selectedSound) => Padding(
+        padding: const EdgeInsets.all(_pagePadding),
+        child: Column(
+          children: AdhanAudioLibrary.values.map((audio) {
+            final selectedAdhan = AdhanAudioLibrary.values.firstWhere(
+                      (audio) => audio.url == selectedSound,
+                      orElse: () => AdhanAudioLibrary.defaultAdhan,
+                    );
+            return ChoiceChip(
+              showCheckmark: true,
+              
+              onSelected: (value) async {
+                isLoadingAdhan.value = true;
+                ref
+                    .read(specificSoundPrefProvider(widget.prayerKey).notifier)
+                    .setSoundPref(widget.prayerKey, audio.url);
+
+                await updatePrayerNotificationMethod(widget.prayerKey, audio.url, player)
+                    .catchError((error, stack) {
+                      final er = error as DioException;
+                      log(
+                        'Error downloading sound: $error',
+                        error: error,
+                        stackTrace: stack,
+                      );
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Error downloading sound: ${er.message}',
+                          ),
+                        ),
+                      );
+                    })
+                    .whenComplete(() {
+                      isLoadingAdhan.value = false;
+                    });
+              },
+              label: Row(children: [Expanded(child: Text(audio.displayName)), 
+                if (isLoadingAdhan.value && audio == selectedAdhan) 
+                  SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+              ],),
+              selected: audio == selectedAdhan,
+            );
+          }).toList(),
+        ),
+      ),
+    );
   }
 
   Future<void> updatePrayerNotificationMethod(
     String prayerName,
-    String soundUrl,
+    String soundUrl, AudioPlayer player,
   ) async {
     try {
+      if (player.playing) {
+        await player.stop();
+      }
       final audio = AdhanAudioLibrary.values.firstWhere(
         (audio) => audio.url == soundUrl,
         orElse: () => AdhanAudioLibrary.defaultAdhan,
@@ -651,18 +779,23 @@ class NotificationSettingMainSideSheetPage extends HookConsumerWidget {
         await dir.create(recursive: true);
       }
 
-      final existingFile = await findFileWithExtension(
+      final fileName = soundUrl.split('/').last;
+
+      File? existingFile = await findFileWithExtension(
         dir.path,
-        '$prayerName.',
+        fileName,
       );
-      if (existingFile != null) {
-        await existingFile.delete();
-      }
 
       if (!audio.internal) {
         try {
+          if(existingFile == null) {
+            existingFile = File(await NotificationService.downloadSound(soundUrl, fileName));
+          }
           final newFileName = '$prayerName.${soundUrl.split('.').last}';
-          await NotificationService.downloadSound(soundUrl, newFileName);
+          await NotificationService.copyFile(fileName, newFileName);
+          
+          player.setFilePath(existingFile.path);
+          player.play();
         } catch (e) {
           print('Failed to download sound for $prayerName: $e');
           rethrow;
@@ -675,111 +808,3 @@ class NotificationSettingMainSideSheetPage extends HookConsumerWidget {
   }
 }
 
-class SoundSettingSideSheetPage extends StatelessWidget {
-  const SoundSettingSideSheetPage({super.key, required this.prayerKey});
-
-  final String prayerKey;
-
-  // Row(
-  //             children: [
-  //               Expanded(
-  //                 child: DropdownButtonFormField<AdhanAudioLibrary>(
-  //                   value: AdhanAudioLibrary.values.firstWhere(
-  //                     (audio) => audio.url == currentSound,
-  //                     orElse: () => AdhanAudioLibrary.defaultAdhan,
-  //                   ),
-  //                   decoration: const InputDecoration(
-  //                     border: OutlineInputBorder(),
-  //                     contentPadding: EdgeInsets.symmetric(
-  //                       horizontal: 8,
-  //                       vertical: 4,
-  //                     ),
-  //                     isDense: true,
-  //                   ),
-  //                   items: AdhanAudioLibrary.values.map((audio) {
-  //                     return DropdownMenuItem(
-  //                       value: audio,
-  //                       child: Text(
-  //                         audio.displayName,
-  //                         style: const TextStyle(fontSize: 12),
-  //                       ),
-  //                     );
-  //                   }).toList(),
-  //                   onChanged: (value) async {
-  //                     if (value == null) return;
-  //                     isLoadingAdhan.value = true;
-  //                     ref
-  //                         .read(specificSoundPrefProvider(prayerKey).notifier)
-  //                         .setSoundPref(prayerKey, value.url);
-                  
-  //                     await updatePrayerNotificationMethod(prayerKey, value.url)
-  //                         .catchError((error, stack) {
-  //                           final er = error as DioException;
-  //                           log(
-  //                             'Error downloading sound: $error',
-  //                             error: error,
-  //                             stackTrace: stack,
-  //                           );
-  //                           if (!context.mounted) return;
-  //                           ScaffoldMessenger.of(context).showSnackBar(
-  //                             SnackBar(
-  //                               content: Text(
-  //                                 'Error downloading sound: ${er.message}',
-  //                               ),
-  //                             ),
-  //                           );
-  //                         })
-  //                         .whenComplete(() {
-  //                           isLoadingAdhan.value = false;
-  //                         });
-  //                   },
-  //                 ),
-  //               ),
-
-  //               isLoadingAdhan.value
-  //                   ? const SizedBox(
-  //                       width: 24,
-  //                       height: 24,
-  //                       child: CircularProgressIndicator(strokeWidth: 2),
-  //                     )
-  //                   : IconButton(
-  //                       style: IconButton.styleFrom(
-  //                         foregroundColor: Theme.of(
-  //                           context,
-  //                         ).colorScheme.onPrimaryContainer,
-  //                         padding: EdgeInsets.zero,
-  //                         visualDensity: VisualDensity.compact,
-  //                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-  //                       ),
-  //                       icon: const Icon(Icons.play_arrow),
-  //                       onPressed: () async {
-  //                         final sound = await ref.read(
-  //                           specificSoundPrefProvider(prayerKey).future,
-  //                         );
-  //                         _testNotification(context, prayerKey, sound);
-  //                       },
-  //                       tooltip: 'Test notification',
-  //                     ),
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(_pagePadding),
-      child: Column(
-        children: [
-          ChoiceChip(
-            showCheckmark: false,
-            onSelected: (value) {
-              
-            },
-            
-            label: Row(
-              children: [
-                Expanded(child: Text('label')),
-              ],
-            ), selected: false)
-        ],
-      ),
-    );
-  }
-}
