@@ -5,6 +5,7 @@ import 'package:adhan_app/services/notification_preferences_service.dart';
 import 'package:adhan_app/services/prayer_data_manager.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
 import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
+import 'package:riverpod/src/framework.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:adhan_app/services/home_widget_service.dart';
@@ -21,14 +22,14 @@ class DailyNotificationScheduler {
   static Future<void> scheduleDailyNotificationTask() async {}
 
   /// Schedule notifications for the entire day
-  static Future<void> scheduleDailyNotifications() async {
+  static Future<void> scheduleDailyNotifications(ProviderContainer container) async {
     try {
       print(
         'Daily notification scheduler: Starting daily notification scheduling',
       );
 
       // Get user's location
-      final location = await LocationStorageService.getStoredLocation();
+      final location = await container.read(locationStorageProvider);
       if (location == null) {
         print('Daily notification scheduler: No location available');
         return;
@@ -112,18 +113,18 @@ class DailyNotificationScheduler {
       );
 
       // Update home widget after scheduling notifications
-      await HomeWidgetService.updateNextPrayerWidget();
+      await HomeWidgetService.updateNextPrayerWidget(container);
     } catch (e) {
       print('Daily notification scheduler error: $e');
     }
   }
 
   /// Schedule notifications for the entire day
-  static Future<void> testNotifications() async {
+  static Future<void> testNotifications(ProviderContainer container) async {
     print('Test notification scheduler: Starting test notifications');
 
     // Get user's location
-    final location = await LocationStorageService.getStoredLocation();
+    final location = await container.read(locationStorageProvider);
     if (location == null) {
       print('Test notification scheduler: No location available');
       return;
@@ -198,8 +199,8 @@ class DailyNotificationScheduler {
   }
 
   /// Manually trigger daily notification scheduling
-  static Future<void> manuallyScheduleDailyNotifications() async {
-    await scheduleDailyNotifications();
+  static Future<void> manuallyScheduleDailyNotifications(ProviderContainer container) async {
+    await scheduleDailyNotifications(container);
   }
 
   /// Cancel all scheduled notifications

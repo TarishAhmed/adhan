@@ -1,6 +1,7 @@
 import 'package:adhan_app/services/background_prayer_service.dart';
 import 'package:adhan_app/services/daily_notification_scheduler.dart';
 import 'package:adhan_app/services/battery_optimization_service.dart';
+import 'package:adhan_app/services/location_storage_service.dart';
 import 'package:adhan_app/theme/theme.dart';
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,6 +33,8 @@ void main() async {
 
   await NotificationService.initialize();
 
+  final container = ProviderContainer();
+
   if (!kIsWeb) {
     await AndroidAlarmManager.initialize();
     // Initialize background prayer service
@@ -41,20 +44,20 @@ void main() async {
     await DailyNotificationScheduler.initialize();
 
     // Ensure all work and today's notifications are (re)scheduled after boot/app start
-    await BackgroundPrayerService.rescheduleAfterBootOrAppStart();
+    await BackgroundPrayerService.rescheduleAfterBootOrAppStart(container);
 
     // Request notification permission on app launch
     await NotificationService.requestPermission();
 
     // Initial home widget update
-    await HomeWidgetService.updateNextPrayerWidget();
+    await HomeWidgetService.updateNextPrayerWidget(container);
 
     // Start periodic updates for the home widget
-    HomeWidgetService.startPeriodicUpdates();
+    HomeWidgetService.startPeriodicUpdates(container);
 
     // Update home widget after a short delay to ensure everything is initialized
     Future.delayed(const Duration(seconds: 3), () {
-      HomeWidgetService.updateNextPrayerWidget();
+      HomeWidgetService.updateNextPrayerWidget(container);
     });
   }
 
@@ -73,6 +76,8 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     final themeMode = ref.watch(themeProvider);
+
+    ref.read(sharedPrefProvider);
 
     // Initialize home widget updater
     ref.watch(homeWidgetUpdaterProvider);
@@ -124,7 +129,7 @@ class _BatteryOptimizationWrapperState
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
     // Handle home widget updates based on app lifecycle
-    HomeWidgetService.handleAppLifecycleChange(state);
+    HomeWidgetService.handleAppLifecycleChange(state, ref.container);
   }
 
   Future<void> _checkBatteryOptimization() async {

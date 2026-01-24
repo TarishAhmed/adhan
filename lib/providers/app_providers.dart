@@ -22,61 +22,85 @@ final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(
 );
 
 // Location provider (handles permissions and gets current position)
-final locationProvider =
-    FutureProvider<({double lat, double lng, String? city, String timezone})>((
-      ref,
-    ) async {
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        throw Exception('Location services are disabled.');
-      }
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          throw Exception('Location permissions are denied');
-        }
-      }
-      if (permission == LocationPermission.deniedForever) {
-        throw Exception('Location permissions are permanently denied.');
-      }
-      final position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.reduced,
-      );
+typedef LocationRecord = ({double lat, double lng, String? city, String timezone});
 
-      String? city;
-      if (!kIsWeb) {
-        final places = await placemarkFromCoordinates(
-          position.latitude,
-          position.longitude,
-        );
-        city = places.isNotEmpty ? places.first.locality : null;
-      }
+class LocationNotifier extends AsyncNotifier<LocationRecord> {
+  @override
+  Future<LocationRecord> build() async {
+    // 1. Check cache immediately
+    final lastLocation = ref.read(locationStorageProvider);
+    
+    if (lastLocation != null) {
+      // If we have cached data, we return it so the UI shows it immediately.
+      // We then trigger a background refresh to get the latest GPS.
+      return _parseCache(lastLocation);
+    }
 
-      final timezone = await FlutterTimezone.getLocalTimezone();
+    // 2. No cache? Perform the full fetch (UI will show loading)
+    return await _fetchGPSAndGeocode();
+  }
 
-      // Store location for background service
-      await LocationStorageService.storeLocation(
-        lat: position.latitude,
-        lng: position.longitude,
-        timezone: timezone,
-        city: city,
-      );
+  /// The "Public" way to refresh while keeping old data.
+  /// Calling invalidateSelf() triggers build() again, but Riverpod 
+  /// keeps the current data in the state until the new Future completes.
+  void refreshLocation() => ref.invalidateSelf();
 
-      return (
-        lat: position.latitude,
-        lng: position.longitude,
-        city: city,
-        timezone: timezone,
-      );
-    });
+  /// Internal: Just the GPS/API logic
+  Future<LocationRecord> _fetchGPSAndGeocode() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) throw Exception('Location services are disabled.');
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) throw Exception('Permissions denied');
+    }
+
+    final position = await Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(accuracy: LocationAccuracy.reduced),
+    );
+
+    String? city;
+    if (!kIsWeb) {
+      final places = await placemarkFromCoordinates(position.latitude, position.longitude);
+      city = places.isNotEmpty ? places.first.locality : null;
+    }
+
+    final timezone = await FlutterTimezone.getLocalTimezone();
+    final result = (lat: position.latitude, lng: position.longitude, city: city, timezone: timezone);
+
+    // Save to cache
+    await ref.read(locationStorageProvider.notifier).storeLocation(
+      lat: result.lat,
+      lng: result.lng,
+      timezone: result.timezone,
+      city: result.city,
+    );
+
+    return result;
+  }
+
+  LocationRecord _parseCache(Map<String, String> map) {
+    return (
+      lat: double.parse(map['lat']!),
+      lng: double.parse(map['lng']!),
+      city: map['city'],
+      timezone: map['timezone']!,
+    );
+  }
+}
+
+// Manual Provider Definition
+final locationProvider = AsyncNotifierProvider<LocationNotifier, LocationRecord>(() {
+  return LocationNotifier();
+});
 
 // Provider that listens to location changes and updates home widget
 final locationChangeListenerProvider = Provider<void>((ref) {
   ref.listen(locationProvider, (previous, next) {
     next.whenData((location) {
       // Update home widget when location changes
-      HomeWidgetService.updateNextPrayerWidget();
+      HomeWidgetService.updateNextPrayerWidget(ref.container);
     });
   });
 });

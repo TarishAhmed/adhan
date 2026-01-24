@@ -1,40 +1,61 @@
 import 'package:adhan_app/utils/location_format_utils.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adhan_app/services/reschedule_service.dart';
 
-class LocationStorageService {
+final sharedPrefProvider = FutureProvider<SharedPreferences>((ref) async {
+  final pref = await SharedPreferences.getInstance();
+  return pref;
+});
+
+class LocationStorageService extends Notifier<Map<String, String>?> {
   static const String _latKey = 'stored_lat';
   static const String _lngKey = 'stored_lng';
   static const String _timezoneKey = 'stored_timezone';
   static const String _cityKey = 'stored_city';
 
+  @override
+  Map<String, String>? build() {
+    return _getStoredLocation();
+  }
+
   /// Store location data
-  static Future<void> storeLocation({
+  Future<void> storeLocation({
     required double lat,
     required double lng,
     required String timezone,
     String? city,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_latKey, formatLatitude(lat));
-    await prefs.setString(_lngKey, formatLongitude(lng));
-    await prefs.setString(_timezoneKey, timezone);
+    final pref = ref.read(sharedPrefProvider).value;
+    if (pref == null) throw Exception('SharedPreferences not initialized');
+    await pref.setString(_latKey, formatLatitude(lat));
+    await pref.setString(_lngKey, formatLongitude(lng));
+    await pref.setString(_timezoneKey, timezone);
     if (city != null) {
-      await prefs.setString(_cityKey, city);
+      await pref.setString(_cityKey, city);
     }
+    
+    state = {
+      'lat': formatLatitude(lat),
+      'lng': formatLongitude(lng),
+      'timezone': timezone,
+      if (city != null) 'city': city,
+    };
+    
     // Mark for reschedule after location change
     await RescheduleService.markNeedsReschedule();
     await RescheduleService.enqueueImmediateReschedule();
   }
 
   /// Get stored location data
-  static Future<Map<String, String>?> getStoredLocation() async {
+  Map<String, String>? _getStoredLocation() {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final lat = prefs.getString(_latKey);
-      final lng = prefs.getString(_lngKey);
-      final timezone = prefs.getString(_timezoneKey);
-      final city = prefs.getString(_cityKey);
+      final pref = ref.read(sharedPrefProvider).value;
+      if( pref == null) throw Exception('SharedPreferences not initialized');
+      final lat = pref.getString(_latKey);
+      final lng = pref.getString(_lngKey);
+      final timezone = pref.getString(_timezoneKey);
+      final city = pref.getString(_cityKey);
 
       if (lat != null && lng != null && timezone != null) {
         return {
@@ -52,42 +73,40 @@ class LocationStorageService {
   }
 
   /// Check if location is stored
-  static Future<bool> hasStoredLocation() async {
-    final location = await getStoredLocation();
-    return location != null;
+  bool hasStoredLocation() {
+    return state != null;
   }
 
   /// Clear stored location
-  static Future<void> clearStoredLocation() async {
+  Future<void> clearStoredLocation() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.remove(_latKey);
-      await prefs.remove(_lngKey);
-      await prefs.remove(_timezoneKey);
-      await prefs.remove(_cityKey);
+      final pref = ref.read(sharedPrefProvider).value;
+      if (pref == null) throw Exception('SharedPreferences not initialized');
+      await pref.remove(_latKey);
+      await pref.remove(_lngKey);
+      await pref.remove(_timezoneKey);
+      await pref.remove(_cityKey);
+      state = null;
     } catch (e) {
       print('LocationStorageService: Error clearing stored location: $e');
     }
   }
 
   /// Update location if it has changed
-  static Future<bool> updateLocationIfChanged({
+  Future<bool> updateLocationIfChanged({
     required double lat,
     required double lng,
     required String timezone,
     String? city,
   }) async {
     try {
-      final currentLocation = await getStoredLocation();
-      if (currentLocation == null) {
+      if (state == null) {
         await storeLocation(lat: lat, lng: lng, timezone: timezone, city: city);
-        await RescheduleService.markNeedsReschedule();
-        await RescheduleService.enqueueImmediateReschedule();
         return true;
       }
 
-      final currentLat = double.tryParse(currentLocation['lat'] ?? '');
-      final currentLng = double.tryParse(currentLocation['lng'] ?? '');
+      final currentLat = double.tryParse(state!['lat'] ?? '');
+      final currentLng = double.tryParse(state!['lng'] ?? '');
 
       // Check if location has changed significantly (more than 1km)
       if (currentLat != null && currentLng != null) {
@@ -102,8 +121,6 @@ class LocationStorageService {
             timezone: timezone,
             city: city,
           );
-          await RescheduleService.markNeedsReschedule();
-          await RescheduleService.enqueueImmediateReschedule();
           return true;
         }
       }
@@ -115,3 +132,7 @@ class LocationStorageService {
     }
   }
 }
+
+final locationStorageProvider = NotifierProvider<LocationStorageService, Map<String, String>?>(
+  () => LocationStorageService(),
+);

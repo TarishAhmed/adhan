@@ -1,5 +1,6 @@
 import 'dart:developer' show log;
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:adhan_app/services/prayer_data_manager.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
@@ -25,7 +26,7 @@ class BackgroundPrayerService {
   }
 
   /// Schedule background tasks
-  static Future<void> scheduleBackgroundTasks() async {
+  static Future<void> scheduleBackgroundTasks(ProviderContainer container) async {
     // Schedule daily check for prayer timings
     await Workmanager().registerPeriodicTask(
       _checkAndFetchTask,
@@ -57,7 +58,7 @@ class BackgroundPrayerService {
     );
 
     // Schedule midnight planning for next-day notifications
-    await scheduleMidnightPlanningTask();
+    await scheduleMidnightPlanningTask(container);
 
     // Schedule next month fetch on last day of current month
     await _scheduleNextMonthFetch();
@@ -131,7 +132,7 @@ class BackgroundPrayerService {
   }
 
   /// Schedule a one-off task at the next local midnight to plan next-day notifications
-  static Future<void> scheduleMidnightPlanningTask() async {
+  static Future<void> scheduleMidnightPlanningTask(ProviderContainer container) async {
     final now = DateTime.now();
     final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
     final initialDelay = nextMidnight.difference(now);
@@ -181,13 +182,13 @@ class BackgroundPrayerService {
 
   /// Call on app start (and can be triggered on boot via native receiver) to ensure
   /// all work and notifications are re-scheduled after reboot/app update.
-  static Future<void> rescheduleAfterBootOrAppStart() async {
+  static Future<void> rescheduleAfterBootOrAppStart(ProviderContainer container) async {
     try {
       // Re-register periodic background tasks with KEEP policy
-      await scheduleBackgroundTasks();
+      await scheduleBackgroundTasks(container);
 
       // Immediately schedule today's remaining notifications (idempotent)
-      await DailyNotificationScheduler.scheduleDailyNotifications();
+      await DailyNotificationScheduler.scheduleDailyNotifications(container);
 
       // Clear reschedule flag if set
       await RescheduleService.clearNeedsReschedule();
@@ -197,17 +198,17 @@ class BackgroundPrayerService {
   }
 
   /// Check if we need to fetch prayer timings and fetch if necessary
-  static Future<void> checkAndFetchPrayerTimings() async {
+  static Future<void> checkAndFetchPrayerTimings(ProviderContainer container) async {
     try {
       // Self-heal: if any component flagged reschedule, perform it and clear flag
       if (await RescheduleService.getNeedsReschedule()) {
         print('Background service: Self-heal reschedule in daily check');
-        await BackgroundPrayerService.rescheduleAfterBootOrAppStart();
+        await BackgroundPrayerService.rescheduleAfterBootOrAppStart(container);
         await RescheduleService.clearNeedsReschedule();
       }
 
       // Get current location (you might need to store this in shared preferences)
-      final location = await _getStoredLocation();
+      final location = await _getStoredLocation(container);
       if (location == null) {
         print('Background service: No location available');
         return;
@@ -239,20 +240,20 @@ class BackgroundPrayerService {
       // Fetch current month if missing
       if (!hasCurrentMonthData) {
         print('Background service: Fetching current month data');
-        await _fetchAndStorePrayerTimings(currentYear, currentMonth, location);
+        await _fetchAndStorePrayerTimings(currentYear, currentMonth, location, container);
       }
 
       // Fetch next month if missing
       if (!hasNextMonthData) {
         print('Background service: Fetching next month data');
-        await _fetchAndStorePrayerTimings(nextYear, nextMonth, location);
+        await _fetchAndStorePrayerTimings(nextYear, nextMonth, location, container);
       }
 
       // Reschedule next month fetch
       await _scheduleNextMonthFetch();
 
       // Proactive cache next 2 months when near boundary
-      if (await _getStoredLocation() case final loc?) {
+      if (await _getStoredLocation(container) case final loc?) {
         final now = DateTime.now();
         if (now.day >= DateTime(now.year, now.month + 1, 0).day - 3) {
           await PrayerDataManager.ensureProactiveCacheForLocation(
@@ -265,7 +266,7 @@ class BackgroundPrayerService {
       }
 
       // Update home widget after fetching prayer times
-      await HomeWidgetService.updateNextPrayerWidget();
+      await HomeWidgetService.updateNextPrayerWidget(container);
     } catch (e) {
       print('Background service error: $e');
     }
@@ -276,6 +277,7 @@ class BackgroundPrayerService {
     int year,
     int month,
     Map<String, String> location,
+    ProviderContainer container,
   ) async {
     try {
       final url = 'https://www.alislam.org/adhan/api/timings/month';
@@ -299,6 +301,7 @@ class BackgroundPrayerService {
           location['lat']!,
           location['lng']!,
           location['timezone'] ?? 'UTC',
+          container,
         );
 
         print(
@@ -317,8 +320,8 @@ class BackgroundPrayerService {
   }
 
   /// Get stored location from shared preferences
-  static Future<Map<String, String>?> _getStoredLocation() async {
-    return await LocationStorageService.getStoredLocation();
+  static Future<Map<String, String>?> _getStoredLocation(ProviderContainer container) async {
+    return await container.read(locationStorageProvider);
   }
 
   /// Cancel all background tasks
@@ -331,38 +334,39 @@ class BackgroundPrayerService {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
+    final container = ProviderContainer();
     tzdata.initializeTimeZones();
     print('Background task: $task');
     try {
       switch (task) {
         case 'fetchNextMonthPrayerTimings':
-          await BackgroundPrayerService.checkAndFetchPrayerTimings();
+          await BackgroundPrayerService.checkAndFetchPrayerTimings(container);
           break;
         case 'checkAndFetchPrayerTimings':
-          await BackgroundPrayerService.checkAndFetchPrayerTimings();
+          await BackgroundPrayerService.checkAndFetchPrayerTimings(container);
           break;
         case 'scheduleDailyNotifications':
-          await DailyNotificationScheduler.scheduleDailyNotifications();
+          await DailyNotificationScheduler.scheduleDailyNotifications(container);
           break;
         case 'rescheduleAll':
-          await BackgroundPrayerService.rescheduleAfterBootOrAppStart();
+          await BackgroundPrayerService.rescheduleAfterBootOrAppStart(container);
           break;
         case 'cleanupAndMetricsTask':
-          await PrayerDataManager.clearOldData();
-          await PrayerDataManager.collectAndPersistMetrics();
+          await PrayerDataManager.clearOldData(container);
+          await PrayerDataManager.collectAndPersistMetrics(container  );
           break;
         case 'planNextDayNotifications':
           // Plan and schedule next day's notifications and re-enqueue next midnight
-          await DailyNotificationScheduler.scheduleDailyNotifications();
-          await HomeWidgetService.updateNextPrayerWidget();
-          await BackgroundPrayerService.scheduleMidnightPlanningTask();
+          await DailyNotificationScheduler.scheduleDailyNotifications(container);
+          await HomeWidgetService.updateNextPrayerWidget(container);
+          await BackgroundPrayerService.scheduleMidnightPlanningTask(container);
           break;
         case 'updateHomeWidget':
           // Update home widget with current prayer time
-          await HomeWidgetService.updateNextPrayerWidget();
+          await HomeWidgetService.updateNextPrayerWidget(container);
           break;
         case 'testNotifications':
-          await DailyNotificationScheduler.testNotifications();
+          await DailyNotificationScheduler.testNotifications(container);
           break;
         default:
           print('Unknown background task: $task');

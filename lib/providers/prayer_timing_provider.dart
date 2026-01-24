@@ -84,7 +84,7 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
   }
 
   /// Refresh prayer times and update home widget
-  Future<void> refreshPrayerTimes() async {
+  Future<void> refreshPrayerTimes(ProviderContainer container) async {
     state = const AsyncValue.loading();
     try {
       final now = DateTime.now();
@@ -102,7 +102,7 @@ class PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifier {
       state = AsyncValue.data(result);
 
       // Update home widget after refreshing prayer times
-      await HomeWidgetService.updateNextPrayerWidget();
+      await HomeWidgetService.updateNextPrayerWidget(container);
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
     }
@@ -555,11 +555,11 @@ final homeWidgetUpdaterProvider = FutureProvider<void>((ref) async {
     next.whenData((prayerTime) {
       if (prayerTime != null) {
         // Update home widget when prayer time changes
-        HomeWidgetService.updateNextPrayerWidget();
+        HomeWidgetService.updateNextPrayerWidget(ref.container);
       }
     });
   });
 
   // Initial update
-  await HomeWidgetService.updateNextPrayerWidget();
+  await HomeWidgetService.updateNextPrayerWidget(ref.container);
 });

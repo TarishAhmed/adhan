@@ -1,8 +1,11 @@
+import 'package:adhan_app/providers/app_providers.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:riverpod/src/framework.dart';
 
 import 'location_storage_service.dart';
 import 'prayer_data_manager.dart';
@@ -13,16 +16,16 @@ class HomeWidgetService {
   static Timer? _updateTimer;
 
   /// Start periodic updates for the home widget
-  static void startPeriodicUpdates() {
+  static void startPeriodicUpdates(ProviderContainer container) {
     // Cancel any existing timer
     _updateTimer?.cancel();
 
     // Update immediately
-    updateNextPrayerWidget();
+    updateNextPrayerWidget(container);
 
     // Then update every minute
     _updateTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
-      updateNextPrayerWidget();
+      updateNextPrayerWidget(container);
     });
   }
 
@@ -33,13 +36,13 @@ class HomeWidgetService {
   }
 
   /// Handle app lifecycle changes
-  static void handleAppLifecycleChange(AppLifecycleState state) {
+  static void handleAppLifecycleChange(AppLifecycleState state, ProviderContainer container) {
     switch (state) {
       case AppLifecycleState.resumed:
         // App came to foreground, update widget immediately
-        updateNextPrayerWidget();
+        updateNextPrayerWidget(container);
         // Restart periodic updates
-        startPeriodicUpdates();
+        startPeriodicUpdates(container);
         break;
       case AppLifecycleState.paused:
       case AppLifecycleState.detached:
@@ -49,14 +52,14 @@ class HomeWidgetService {
         break;
       case AppLifecycleState.inactive:
         // App is inactive, update widget one more time before going inactive
-        updateNextPrayerWidget();
+        updateNextPrayerWidget(container);
         break;
     }
   }
 
   /// Manually trigger home widget update
-  static Future<void> manualUpdate() async {
-    await updateNextPrayerWidget();
+  static Future<void> manualUpdate(ProviderContainer container) async {
+    await updateNextPrayerWidget(container);
   }
 
   /// Check if home widget is available on the device
@@ -71,45 +74,39 @@ class HomeWidgetService {
   }
 
   /// Debug method to test home widget updates
-  static Future<void> debugUpdate() async {
+  static Future<void> debugUpdate(WidgetRef ref) async {
     try {
       print('HomeWidgetService: Starting debug update');
-      final location = await LocationStorageService.getStoredLocation();
+      final location = await ref.read(locationProvider.future);
       print('HomeWidgetService: Location: $location');
-
-      if (location == null) {
-        print('HomeWidgetService: No location available');
-        return;
-      }
 
       final now = DateTime.now();
       print('HomeWidgetService: Current time: $now');
 
       final today = await PrayerDataManager.getPrayerTimingForDate(
         date: now,
-        lat: location['lat']!,
-        lng: location['lng']!,
+        lat: location.lat.toString(),
+        lng: location.lng.toString(),
       );
 
       print('HomeWidgetService: Today\'s prayers: ${today?.prayers?.length}');
 
-      await updateNextPrayerWidget();
+      await updateNextPrayerWidget(ref.container);
       print('HomeWidgetService: Debug update completed');
     } catch (e) {
       print('HomeWidgetService: Debug update error: $e');
     }
   }
 
-  static Future<void> updateNextPrayerWidget() async {
+  static Future<void> updateNextPrayerWidget(ProviderContainer container) async {
     try {
-      final location = await LocationStorageService.getStoredLocation();
-      if (location == null) return;
+      final location = await container.read(locationProvider.future);
 
       final now = DateTime.now();
       final today = await PrayerDataManager.getPrayerTimingForDate(
         date: now,
-        lat: location['lat']!,
-        lng: location['lng']!,
+        lat: location.lat.toString(),
+        lng: location.lng.toString(),
       );
 
       MultiDayTiming? tomorrow;
@@ -122,8 +119,8 @@ class HomeWidgetService {
         final tmr = now.add(const Duration(days: 1));
         tomorrow = await PrayerDataManager.getPrayerTimingForDate(
           date: tmr,
-          lat: location['lat']!,
-          lng: location['lng']!,
+          lat: location.lat.toString(),
+          lng: location.lng.toString(),
         );
         if (tomorrow?.prayers != null && tomorrow!.prayers!.isNotEmpty) {
           nextPrayer = tomorrow.prayers!.firstWhere(
@@ -148,7 +145,7 @@ class HomeWidgetService {
       await HomeWidget.saveWidgetData<String>('time_remaining', remainingText);
       await HomeWidget.saveWidgetData<String>(
         'location_city',
-        location['city'] ?? '',
+        location.city ?? '',
       );
       await HomeWidget.saveWidgetData<String>('location_country', '');
 

@@ -108,7 +108,7 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: const Text('Manage cached prayer timing data'),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    _showDatabaseDialog(context);
+                    _showDatabaseDialog(context, ref);
                   },
                 ),
                 ListTile(
@@ -128,7 +128,7 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: const Text('Test home widget updates'),
                   trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () {
-                    _showHomeWidgetDebugDialog(context);
+                    _showHomeWidgetDebugDialog(context, ref);
                   },
                 ),
               ],
@@ -186,7 +186,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showDatabaseDialog(BuildContext context) {
+  void _showDatabaseDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -218,7 +218,7 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Clear Old Data'),
               subtitle: const Text('Remove data older than 3 months'),
               onTap: () async {
-                await PrayerDataManager.clearOldData();
+                await PrayerDataManager.clearOldData(ref.container);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -327,7 +327,7 @@ class SettingsScreen extends ConsumerWidget {
               onTap: () async {
                 await ref
                     .read(backgroundServiceNotifierProvider.notifier)
-                    .manuallyFetchPrayerTimings();
+                    .manuallyFetchPrayerTimings(ref.container);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Manual fetch completed')),
@@ -346,7 +346,7 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showHomeWidgetDebugDialog(BuildContext context) {
+  void _showHomeWidgetDebugDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -359,7 +359,7 @@ class SettingsScreen extends ConsumerWidget {
               title: const Text('Test Widget Update'),
               subtitle: const Text('Manually update the home widget'),
               onTap: () async {
-                await HomeWidgetService.debugUpdate();
+                await HomeWidgetService.debugUpdate(ref);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
@@ -375,7 +375,7 @@ class SettingsScreen extends ConsumerWidget {
                 'Start automatic widget updates every minute',
               ),
               onTap: () {
-                HomeWidgetService.startPeriodicUpdates();
+                HomeWidgetService.startPeriodicUpdates(ref.container);
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Periodic updates started')),

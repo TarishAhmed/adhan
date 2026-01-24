@@ -4,6 +4,7 @@ import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:adhan_app/services/prayer_database_service.dart';
 import 'package:adhan_app/services/home_widget_service.dart';
 import 'package:adhan_app/api/api_helper.dart';
+import 'package:riverpod/src/framework.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -221,7 +222,7 @@ class PrayerDataManager {
   }
 
   /// Clear old data
-  static Future<void> clearOldData() async {
+  static Future<void> clearOldData(ProviderContainer container) async {
     try {
       await PrayerDatabaseService.clearOldData();
       print('Old prayer timing data cleared successfully');
@@ -277,13 +278,14 @@ class PrayerDataManager {
     String lat,
     String lng,
     String timezone,
+    ProviderContainer container,
   ) async {
     try {
       await PrayerDatabaseService.storePrayerTimings(data, lat, lng, timezone);
       print('PrayerDataManager: Successfully stored prayer timings');
 
       // Update home widget after storing new prayer data
-      await HomeWidgetService.updateNextPrayerWidget();
+      await HomeWidgetService.updateNextPrayerWidget(container);
     } catch (e) {
       print('PrayerDataManager: Error storing prayer timings: $e');
       rethrow;
@@ -307,7 +309,7 @@ class PrayerDataManager {
   }
 
   /// Collect and persist metrics for diagnostics.
-  static Future<void> collectAndPersistMetrics() async {
+  static Future<void> collectAndPersistMetrics(ProviderContainer container) async {
     try {
       final stats = await getDatabaseStats();
       final prefs = await SharedPreferences.getInstance();

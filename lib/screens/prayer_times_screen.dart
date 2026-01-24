@@ -327,8 +327,8 @@ class _PrayerAppBar extends ConsumerWidget {
               // Refresh prayer times and update home widget
               await ref
                   .read(prayerTimeMonthNotifierProvider().notifier)
-                  .refreshPrayerTimes();
-              await HomeWidgetService.manualUpdate();
+                  .refreshPrayerTimes(ref.container);
+              await HomeWidgetService.manualUpdate(ref.container);
 
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(

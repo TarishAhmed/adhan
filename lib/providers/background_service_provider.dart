@@ -15,7 +15,7 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   /// Start background service
   Future<void> startBackgroundService() async {
     try {
-      await BackgroundPrayerService.scheduleBackgroundTasks();
+      await BackgroundPrayerService.scheduleBackgroundTasks(ref.container);
       print('Background service started successfully');
     } catch (e) {
       print('Error starting background service: $e');
@@ -40,9 +40,9 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   }
 
   /// Manually trigger prayer timing fetch
-  Future<void> manuallyFetchPrayerTimings() async {
+  Future<void> manuallyFetchPrayerTimings(ProviderContainer container) async {
     try {
-      await BackgroundPrayerService.checkAndFetchPrayerTimings();
+      await BackgroundPrayerService.checkAndFetchPrayerTimings(container);
       print('Manual prayer timing fetch completed');
     } catch (e) {
       print('Error in manual prayer timing fetch: $e');
@@ -52,8 +52,8 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   /// Get background service status
   Future<Map<String, dynamic>> getBackgroundServiceStatus() async {
     try {
-      final hasLocation = await LocationStorageService.hasStoredLocation();
-      final location = await LocationStorageService.getStoredLocation();
+      final hasLocation = await ref.read(locationStorageProvider.notifier).hasStoredLocation();
+      final location = await ref.read(locationStorageProvider);
 
       return {
         'has_location': hasLocation,
