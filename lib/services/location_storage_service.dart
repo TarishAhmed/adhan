@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:adhan_app/services/reschedule_service.dart';
 
-final sharedPrefProvider = FutureProvider<SharedPreferences>((ref) async {
-  final pref = await SharedPreferences.getInstance();
-  return pref;
+final sharedPrefProvider = Provider<SharedPreferences>((ref) {
+  throw UnimplementedError();
 });
 
 class LocationStorageService extends Notifier<Map<String, String>?> {
@@ -26,8 +25,7 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
     required String timezone,
     String? city,
   }) async {
-    final pref = ref.read(sharedPrefProvider).value;
-    if (pref == null) throw Exception('SharedPreferences not initialized');
+    final pref = ref.read(sharedPrefProvider);
     await pref.setString(_latKey, formatLatitude(lat));
     await pref.setString(_lngKey, formatLongitude(lng));
     await pref.setString(_timezoneKey, timezone);
@@ -50,8 +48,7 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
   /// Get stored location data
   Map<String, String>? _getStoredLocation() {
     try {
-      final pref = ref.read(sharedPrefProvider).value;
-      if( pref == null) throw Exception('SharedPreferences not initialized');
+      final pref = ref.read(sharedPrefProvider);
       final lat = pref.getString(_latKey);
       final lng = pref.getString(_lngKey);
       final timezone = pref.getString(_timezoneKey);
@@ -66,8 +63,9 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
         };
       }
       return null;
-    } catch (e) {
+    } catch (e,st) {
       print('LocationStorageService: Error getting stored location: $e');
+      print('LocationStorageService: Stack trace: $st');
       return null;
     }
   }
@@ -80,8 +78,7 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
   /// Clear stored location
   Future<void> clearStoredLocation() async {
     try {
-      final pref = ref.read(sharedPrefProvider).value;
-      if (pref == null) throw Exception('SharedPreferences not initialized');
+      final pref = ref.read(sharedPrefProvider);
       await pref.remove(_latKey);
       await pref.remove(_lngKey);
       await pref.remove(_timezoneKey);

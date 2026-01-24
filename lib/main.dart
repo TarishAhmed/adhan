@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'providers/router_provider.dart';
@@ -33,7 +34,12 @@ void main() async {
 
   await NotificationService.initialize();
 
-  final container = ProviderContainer();
+  final pref = await SharedPreferences.getInstance();
+  final container = ProviderContainer(
+    overrides: [
+      sharedPrefProvider.overrideWithValue(pref),
+    ],
+  );
 
   if (!kIsWeb) {
     await AndroidAlarmManager.initialize();
@@ -66,7 +72,14 @@ void main() async {
     databaseFactory = databaseFactoryFfiWeb;
   }
 
-  runApp(ProviderScope(child: const MyApp()));
+  
+
+  runApp(
+    ProviderScope(
+      overrides: [sharedPrefProvider.overrideWithValue(pref)],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends ConsumerWidget {

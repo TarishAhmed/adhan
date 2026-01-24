@@ -15,7 +15,7 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   /// Start background service
   Future<void> startBackgroundService() async {
     try {
-      await BackgroundPrayerService.scheduleBackgroundTasks(ref.container);
+      await BackgroundPrayerService.scheduleBackgroundTasks();
       print('Background service started successfully');
     } catch (e) {
       print('Error starting background service: $e');

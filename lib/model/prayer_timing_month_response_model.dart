@@ -53,7 +53,6 @@ abstract class MultiDayTiming with _$MultiDayTiming {
   }) = _MultiDayTiming;
 
   factory MultiDayTiming.fromJson(Map<String, dynamic> json) {
-    log('MultiDayTiming.fromJson json:${json}');
     return _$MultiDayTimingFromJson(json);
   }
 }

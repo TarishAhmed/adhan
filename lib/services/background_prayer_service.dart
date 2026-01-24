@@ -1,6 +1,7 @@
 import 'dart:developer' show log;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:adhan_app/services/prayer_data_manager.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
@@ -26,7 +27,7 @@ class BackgroundPrayerService {
   }
 
   /// Schedule background tasks
-  static Future<void> scheduleBackgroundTasks(ProviderContainer container) async {
+  static Future<void> scheduleBackgroundTasks() async {
     // Schedule daily check for prayer timings
     await Workmanager().registerPeriodicTask(
       _checkAndFetchTask,
@@ -58,7 +59,7 @@ class BackgroundPrayerService {
     );
 
     // Schedule midnight planning for next-day notifications
-    await scheduleMidnightPlanningTask(container);
+    await scheduleMidnightPlanningTask();
 
     // Schedule next month fetch on last day of current month
     await _scheduleNextMonthFetch();
@@ -132,7 +133,7 @@ class BackgroundPrayerService {
   }
 
   /// Schedule a one-off task at the next local midnight to plan next-day notifications
-  static Future<void> scheduleMidnightPlanningTask(ProviderContainer container) async {
+  static Future<void> scheduleMidnightPlanningTask() async {
     final now = DateTime.now();
     final nextMidnight = DateTime(now.year, now.month, now.day + 1, 0, 0);
     final initialDelay = nextMidnight.difference(now);
@@ -185,7 +186,7 @@ class BackgroundPrayerService {
   static Future<void> rescheduleAfterBootOrAppStart(ProviderContainer container) async {
     try {
       // Re-register periodic background tasks with KEEP policy
-      await scheduleBackgroundTasks(container);
+      await scheduleBackgroundTasks();
 
       // Immediately schedule today's remaining notifications (idempotent)
       await DailyNotificationScheduler.scheduleDailyNotifications(container);
@@ -334,7 +335,12 @@ class BackgroundPrayerService {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
-    final container = ProviderContainer();
+    final pref = await SharedPreferences.getInstance();
+    final container = ProviderContainer(
+      overrides: [
+        sharedPrefProvider.overrideWithValue(pref),
+      ],
+    );
     tzdata.initializeTimeZones();
     print('Background task: $task');
     try {
@@ -359,7 +365,7 @@ void callbackDispatcher() {
           // Plan and schedule next day's notifications and re-enqueue next midnight
           await DailyNotificationScheduler.scheduleDailyNotifications(container);
           await HomeWidgetService.updateNextPrayerWidget(container);
-          await BackgroundPrayerService.scheduleMidnightPlanningTask(container);
+          await BackgroundPrayerService.scheduleMidnightPlanningTask();
           break;
         case 'updateHomeWidget':
           // Update home widget with current prayer time
