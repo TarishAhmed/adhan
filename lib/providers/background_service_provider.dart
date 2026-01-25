@@ -52,8 +52,8 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   /// Get background service status
   Future<Map<String, dynamic>> getBackgroundServiceStatus() async {
     try {
-      final hasLocation = await ref.read(locationStorageProvider.notifier).hasStoredLocation();
-      final location = await ref.read(locationStorageProvider);
+      final hasLocation = ref.read(locationStorageProvider.notifier).hasStoredLocation();
+      final location = ref.read(locationStorageProvider);
 
       return {
         'has_location': hasLocation,

@@ -29,7 +29,7 @@ class DailyNotificationScheduler {
       );
 
       // Get user's location
-      final location = await container.read(locationStorageProvider);
+      final location = container.read(locationStorageProvider);
       if (location == null) {
         print('Daily notification scheduler: No location available');
         return;
@@ -124,7 +124,7 @@ class DailyNotificationScheduler {
     print('Test notification scheduler: Starting test notifications');
 
     // Get user's location
-    final location = await container.read(locationStorageProvider);
+    final location = container.read(locationStorageProvider);
     if (location == null) {
       print('Test notification scheduler: No location available');
       return;

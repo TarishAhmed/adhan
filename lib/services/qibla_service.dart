@@ -27,38 +27,6 @@ class QiblaService {
     return bearingDegrees;
   }
 
-  /// Get current location
-  static Future<Position?> getCurrentLocation() async {
-    try {
-      // Check if location services are enabled
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        return null;
-      }
-
-      // Check location permission
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          return null;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        return null;
-      }
-
-      // Get current position
-      return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: const Duration(seconds: 10),
-      );
-    } catch (e) {
-      return null;
-    }
-  }
-
   /// Calculate the angle between compass heading and qibla direction
   static double calculateCompassAngle(
     double compassHeading,
@@ -88,7 +56,7 @@ class QiblaService {
   }
 
   /// Check if compass is available
-  static Future<bool> isCompassAvailable() async {
+  static bool isCompassAvailable() {
     try {
       final compass = FlutterCompass.events;
       return compass != null;

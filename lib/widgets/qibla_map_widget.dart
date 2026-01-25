@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart' as latlng;
 import '../services/qibla_service.dart';
@@ -17,6 +18,18 @@ class QiblaMapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final mapController = useMemoized(() => MapController(), []);
+
+    // useEffect(() {
+    //   // Center map on user's location
+    //   mapController.move(
+    //     latlng.LatLng(latitude, longitude),
+    //     4,
+    //   );
+    //   return null;
+    // }, [mapController, latitude, longitude]);
+
     final user = latlng.LatLng(latitude, longitude);
     final kaaba = latlng.LatLng(
       QiblaService.kaabaLatitude,
@@ -35,7 +48,8 @@ class QiblaMapWidget extends StatelessWidget {
       child: SizedBox(
         height: 220,
         child: FlutterMap(
-          options: const MapOptions(initialZoom: 4),
+          mapController: mapController,
+          options: MapOptions(initialZoom: 4, initialCenter: user),
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',

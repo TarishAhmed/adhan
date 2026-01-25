@@ -50,15 +50,17 @@ class LocationNotifier extends AsyncNotifier<LocationRecord> {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) throw Exception('Location services are disabled.');
 
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) throw Exception('Permissions denied');
+    if (ref.read(locationPermissionProvider) == LocationPermission.denied) {
+      await ref.read(locationPermissionProvider.notifier).checkAndRequestPermission();
+      if (ref.read(locationPermissionProvider) == LocationPermission.denied) throw Exception('Permissions denied');
     }
 
     final position = await Geolocator.getCurrentPosition(
-      locationSettings: const LocationSettings(accuracy: LocationAccuracy.reduced),
-    );
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: const Duration(seconds: 10),
+        ),
+      );
 
     String? city;
     if (!kIsWeb) {
@@ -175,4 +177,25 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   ThemeMode build() => ThemeMode.system;
 
   void setTheme(ThemeMode mode) => state = mode;
+}
+
+final locationPermissionProvider = NotifierProvider<LocationPermissionNotifier, LocationPermission>(
+  LocationPermissionNotifier.new,
+);
+
+
+class LocationPermissionNotifier extends Notifier<LocationPermission> {
+  @override
+  LocationPermission build() {
+    return LocationPermission.denied;
+  }
+
+  Future<void> checkAndRequestPermission() async {
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    state = permission;
+    
+  }
 }

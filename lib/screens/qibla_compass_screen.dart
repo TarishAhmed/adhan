@@ -1,3 +1,4 @@
+import 'package:adhan_app/providers/app_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,124 +15,29 @@ class QiblaCompassScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final compassHeading = useState<double>(0.0);
-    final compassAccuracy = useState<double?>(null);
     final qiblaDirection = useState<double>(0.0);
     final distance = useState<double>(0.0);
-    final isLoading = useState<bool>(true);
-    final errorMessage = useState<String?>(null);
-    final currentPosition = useState<Position?>(null);
-    final isCompassAvailable = useState<bool>(false);
-    final compassSubscription = useState<StreamSubscription<CompassEvent>?>(
-      null,
-    );
-    final tiltSubscription = useState<StreamSubscription<AccelerometerEvent>?>(
-      null,
-    );
+    final location = ref.watch(locationProvider);
+
     final deviceTiltDegrees = useState<double>(0.0);
 
-    // Initialize compass and location
+    final compassStream = useMemoized(() => FlutterCompass.events);
+
+    final compassSnapshot = useStream(compassStream);
+
+    final tiltSub = useMemoized<StreamSubscription<AccelerometerEvent>>(() {
+      return accelerometerEventStream().listen((event) {
+        // Compute tilt from Z axis assuming device flat when z ~ 9.8
+        final g = 9.81;
+        final z = event.z;
+        final tilt = (90 - (z.abs() / g).clamp(0.0, 1.0) * 90).toDouble();
+        deviceTiltDegrees.value = tilt;
+      });
+    });
+
     useEffect(() {
-      bool isMounted = true;
-
-      Future<void> initializeCompass() async {
-        try {
-          // Check compass availability first
-          final compassAvailable = await QiblaService.isCompassAvailable();
-          if (!isMounted) return;
-
-          isCompassAvailable.value = compassAvailable;
-
-          if (!compassAvailable) {
-            isLoading.value = false;
-            errorMessage.value = 'Compass sensor not available on this device.';
-            return;
-          }
-
-          // Get current location first
-          final position = await QiblaService.getCurrentLocation();
-          if (!isMounted) return;
-
-          if (position == null) {
-            isLoading.value = false;
-            errorMessage.value =
-                'Unable to get location. Please enable location services and grant permission.';
-            return;
-          }
-
-          currentPosition.value = position;
-
-          // Calculate qibla direction and distance
-          final qiblaDir = QiblaService.calculateQiblaDirection(
-            position.latitude,
-            position.longitude,
-          );
-          final dist = QiblaService.calculateDistanceToKaaba(
-            position.latitude,
-            position.longitude,
-          );
-
-          if (isMounted) {
-            qiblaDirection.value = qiblaDir;
-            distance.value = dist;
-          }
-
-          // Start compass stream
-          final subscription = FlutterCompass.events?.listen(
-            (event) {
-              if (!isMounted) return;
-
-              if (event.heading != null) {
-                compassHeading.value = event.heading!;
-              }
-              if (event.accuracy != null) {
-                compassAccuracy.value = event.accuracy!;
-              }
-            },
-            onError: (error) {
-              if (isMounted) {
-                errorMessage.value = 'Compass error: ${error.toString()}';
-              }
-            },
-          );
-
-          if (isMounted) {
-            compassSubscription.value = subscription;
-            isLoading.value = false;
-          }
-
-          // Start accelerometer stream to estimate tilt
-          final tiltSub = accelerometerEvents.listen((event) {
-            if (!isMounted) return;
-            // Compute tilt from Z axis assuming device flat when z ~ 9.8
-            final g = 9.81;
-            final z = event.z;
-            final tilt = (90 - (z.abs() / g).clamp(0.0, 1.0) * 90).toDouble();
-            deviceTiltDegrees.value = tilt;
-          });
-          tiltSubscription.value = tiltSub;
-        } catch (e) {
-          if (isMounted) {
-            isLoading.value = false;
-            errorMessage.value = 'Error initializing compass: ${e.toString()}';
-          }
-        }
-      }
-
-      initializeCompass();
-
-      return () {
-        isMounted = false;
-        compassSubscription.value?.cancel();
-        tiltSubscription.value?.cancel();
-      };
-    }, []);
-
-    // Calculate compass angle
-    final compassAngle = QiblaService.calculateCompassAngle(
-      compassHeading.value,
-      qiblaDirection.value,
-    );
+      return tiltSub.cancel;
+    }, [tiltSub]);
 
     return Scaffold(
       appBar: AppBar(
@@ -141,29 +47,20 @@ class QiblaCompassScreen extends HookConsumerWidget {
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () async {
-              isLoading.value = true;
-              errorMessage.value = null;
-
               try {
-                final position = await QiblaService.getCurrentLocation();
-                if (position != null) {
-                  currentPosition.value = position;
-                  qiblaDirection.value = QiblaService.calculateQiblaDirection(
-                    position.latitude,
-                    position.longitude,
-                  );
-                  distance.value = QiblaService.calculateDistanceToKaaba(
-                    position.latitude,
-                    position.longitude,
-                  );
-                } else {
-                  errorMessage.value =
-                      'Unable to get location. Please enable location services and grant permission.';
-                }
+                final position = await ref.read(locationProvider.future);
+                qiblaDirection.value = QiblaService.calculateQiblaDirection(
+                  position.lat,
+                  position.lng,
+                );
+                distance.value = QiblaService.calculateDistanceToKaaba(
+                  position.lat,
+                  position.lng,
+                );
               } catch (e) {
-                errorMessage.value = 'Error refreshing: ${e.toString()}';
-              } finally {
-                isLoading.value = false;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error refreshing location: $e')),
+                );
               }
             },
           ),
@@ -176,72 +73,117 @@ class QiblaCompassScreen extends HookConsumerWidget {
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               // Calibration tips
-              if (!isLoading.value && errorMessage.value == null)
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  margin: const EdgeInsets.only(bottom: 16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primaryContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.tips_and_updates_outlined,
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Calibration tips',
-                              style: Theme.of(context).textTheme.titleSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimaryContainer,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Move phone in a figure-8 motion, away from metal or magnets. Place it flat. Tilt: ${deviceTiltDegrees.value.toStringAsFixed(0)}°',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(
-                                    color: Theme.of(
-                                      context,
-                                    ).colorScheme.onPrimaryContainer,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                margin: const EdgeInsets.only(bottom: 16),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-
-              // Compass Widget
-              QiblaCompassWidget(
-                compassAngle: compassAngle,
-                compassHeading: compassHeading.value,
-                compassAccuracy: compassAccuracy.value,
-                qiblaDirection: qiblaDirection.value,
-                distance: distance.value,
-                isLoading: isLoading.value,
-                errorMessage: errorMessage.value,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.tips_and_updates_outlined,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Calibration tips',
+                            style: Theme.of(context).textTheme.titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Move phone in a figure-8 motion, away from metal or magnets. Place it flat. Tilt: ${deviceTiltDegrees.value.toStringAsFixed(0)}°',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
 
-              const SizedBox(height: 16),
-              if (currentPosition.value != null)
-                QiblaMapWidget(
-                  latitude: currentPosition.value!.latitude,
-                  longitude: currentPosition.value!.longitude,
-                  qiblaBearingDegrees: qiblaDirection.value,
+              // Compass Widget
+              location.when(
+                error: (error, stackTrace) => Text(
+                  'Location error: ${error.toString()}',
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
                 ),
+                loading: () => const CircularProgressIndicator(),
+                data: (location) {
+                  final compassAvailable = QiblaService.isCompassAvailable();
+                  if (!compassAvailable) {
+                    return Text(
+                      'Compass sensor not available on this device.',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    );
+                  }
+
+                  // Calculate qibla direction and distance
+                  final qiblaDir = QiblaService.calculateQiblaDirection(
+                    location.lat,
+                    location.lng,
+                  );
+                  final dist = QiblaService.calculateDistanceToKaaba(
+                    location.lat,
+                    location.lng,
+                  );
+
+                  qiblaDirection.value = qiblaDir;
+                  distance.value = dist;
+
+                  final compassAngle = QiblaService.calculateCompassAngle(
+                    compassSnapshot.data?.heading ?? 0,
+                    qiblaDirection.value,
+                  );
+
+                  return Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      compassSnapshot.connectionState == ConnectionState.waiting
+                          ? const CircularProgressIndicator()
+                          : QiblaCompassWidget(
+                              compassAngle: compassAngle,
+                              compassHeading:
+                                  compassSnapshot.data?.heading ?? 0,
+                              compassAccuracy: compassSnapshot.data?.accuracy,
+                              qiblaDirection: qiblaDirection.value,
+                              distance: distance.value,
+                              isLoading: false,
+                              errorMessage: compassSnapshot.hasError
+                                  ? compassSnapshot.error.toString()
+                                  : null,
+                            ),
+
+                      const SizedBox(height: 16),
+                      QiblaMapWidget(
+                        latitude: location.lat,
+                        longitude: location.lng,
+                        qiblaBearingDegrees: qiblaDirection.value,
+                      ),
+                    ],
+                  );
+                },
+              ),
 
               // Additional information
               // if (!isLoading.value &&

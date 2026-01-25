@@ -209,7 +209,7 @@ class BackgroundPrayerService {
       }
 
       // Get current location (you might need to store this in shared preferences)
-      final location = await _getStoredLocation(container);
+      final location = _getStoredLocation(container);
       if (location == null) {
         print('Background service: No location available');
         return;
@@ -321,8 +321,8 @@ class BackgroundPrayerService {
   }
 
   /// Get stored location from shared preferences
-  static Future<Map<String, String>?> _getStoredLocation(ProviderContainer container) async {
-    return await container.read(locationStorageProvider);
+  static Map<String, String>? _getStoredLocation(ProviderContainer container) {
+    return container.read(locationStorageProvider);
   }
 
   /// Cancel all background tasks
