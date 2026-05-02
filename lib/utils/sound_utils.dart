@@ -99,6 +99,38 @@ enum AdhanAudioLibrary {
   ahmadNuyne(
     url: '${athanMp3Repo}Athan%20Ahmad%20Nuyne3.mp3',
     displayName: 'Ahmad Nuyne',
+  ),
+  ferozAlam(
+    url: '${athanMp3Repo}Azan_FerozAlam.mp3',
+    displayName: 'Feroz Alam',
+  ),
+  misharyRashidAlafasy(
+    url: '${athanMp3Repo}mishary_rashid_alafasy.mp3',
+    displayName: 'Mishary Rashid Alafasy',
+  ),
+  misharyRashidAlafasy2(
+    url: '${athanMp3Repo}mishary_rashid_alafasy_2.mp3',
+    displayName: 'Mishary Rashid Alafasy 2',
+  ),
+  misharyRashidAlafasy3(
+    url: '${athanMp3Repo}mishary_rashid_alafasy_3.mp3',
+    displayName: 'Mishary Rashid Alafasy 3',
+  ),
+  mansourAlZahrani(
+    url: '${athanMp3Repo}mansour-al-zahrani.mp3',
+    displayName: 'Mansour Al-Zahrani',
+  ),
+  hafizMustafaOzcan(
+    url: '${athanMp3Repo}hafiz_mustafa_ozcan.mp3',
+    displayName: 'Hafiz Mustafa Ozcan',
+  ),
+  karlJenkins(
+    url: '${athanMp3Repo}karl_jenkins.mp3',
+    displayName: 'Karl Jenkins',
+  ),
+  ahmadAlNafees(
+    url: '${athanMp3Repo}ahmad_al_nafees.mp3',
+    displayName: 'Ahmad Al Nafees',
   );
 
   const AdhanAudioLibrary({
