@@ -6,8 +6,11 @@ part of 'background_service_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(BackgroundServiceNotifier)
-const backgroundServiceNotifierProvider = BackgroundServiceNotifierProvider._();
+const backgroundServiceProvider = BackgroundServiceNotifierProvider._();
 
 final class BackgroundServiceNotifierProvider
     extends $AsyncNotifierProvider<BackgroundServiceNotifier, void> {
@@ -16,7 +19,7 @@ final class BackgroundServiceNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'backgroundServiceNotifierProvider',
+        name: r'backgroundServiceProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -31,7 +34,7 @@ final class BackgroundServiceNotifierProvider
 }
 
 String _$backgroundServiceNotifierHash() =>
-    r'238c696dfeb1f7bb5a20b64fb5e7c4e6b4fa3fa4';
+    r'99d995637ac12f1342c93345adca02eab9119500';
 
 abstract class _$BackgroundServiceNotifier extends $AsyncNotifier<void> {
   FutureOr<void> build();
@@ -51,6 +54,3 @@ abstract class _$BackgroundServiceNotifier extends $AsyncNotifier<void> {
     element.handleValue(ref, null);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -1,57 +1,147 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../screens/prayer_times_screen.dart';
+
+import '../l10n/gen/app_localizations.dart';
+import '../navigation/routes.dart';
+import '../screens/advanced_screen.dart';
+import '../screens/appearance_screen.dart';
+import '../screens/home_screen.dart';
+import '../screens/location_screen.dart';
+import '../screens/more_screen.dart';
+import '../screens/notifications_screen.dart';
+import '../screens/onboarding/onboarding_screen.dart';
 import '../screens/qibla_compass_screen.dart';
-import '../screens/settings_screen.dart';
+import '../services/location_storage_service.dart';
+import '../theme/tokens.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
+  final prefs = ref.read(sharedPrefProvider);
   return GoRouter(
-    initialLocation: '/prayer-times',
-
+    initialLocation: AppRoutes.home,
+    redirect: (context, state) {
+      final done = prefs.getBool(onboardingDoneKey) ?? false;
+      final goingToOnboarding = state.matchedLocation == AppRoutes.onboarding;
+      if (!done && !goingToOnboarding) return AppRoutes.onboarding;
+      if (done && goingToOnboarding) return AppRoutes.home;
+      return null;
+    },
     routes: [
+      GoRoute(
+        path: AppRoutes.onboarding,
+        pageBuilder: (context, state) =>
+            _slideUpPage(const OnboardingScreen(), state),
+      ),
       ShellRoute(
-        builder: (context, state, child) {
-          return ScaffoldWithBottomNavigation(child: child);
-        },
+        builder: (context, state, child) =>
+            ScaffoldWithBottomNavigation(child: child),
         routes: [
           GoRoute(
+            path: AppRoutes.home,
             pageBuilder: (context, state) =>
-                pageTransition(const PrayerTimesScreen(), state),
-            path: '/prayer-times',
+                _sharedAxisPage(const HomeScreen(), state),
           ),
           GoRoute(
+            path: AppRoutes.qibla,
             pageBuilder: (context, state) =>
-                pageTransition(const QiblaCompassScreen(), state),
-            path: '/qibla-compass',
+                _sharedAxisPage(const QiblaCompassScreen(), state),
           ),
           GoRoute(
+            path: AppRoutes.more,
             pageBuilder: (context, state) =>
-                pageTransition(const SettingsScreen(), state),
-            path: '/settings',
+                _sharedAxisPage(const MoreScreen(), state),
           ),
         ],
+      ),
+      // Pushed routes (outside the shell) — full-screen with back button.
+      GoRoute(
+        path: AppRoutes.notifications,
+        pageBuilder: (context, state) =>
+            _slideUpPage(const NotificationsScreen(), state),
+      ),
+      GoRoute(
+        path: AppRoutes.location,
+        pageBuilder: (context, state) =>
+            _slideUpPage(const LocationScreen(), state),
+      ),
+      GoRoute(
+        path: AppRoutes.appearance,
+        pageBuilder: (context, state) =>
+            _slideUpPage(const AppearanceScreen(), state),
+      ),
+      GoRoute(
+        path: AppRoutes.advanced,
+        pageBuilder: (context, state) =>
+            _slideUpPage(const AdvancedScreen(), state),
       ),
     ],
   );
 });
 
-CustomTransitionPage<dynamic> pageTransition(
+/// Tab transition: fade-through (M3 shared-axis-Z feel without extra deps).
+CustomTransitionPage<dynamic> _sharedAxisPage(
   Widget child,
   GoRouterState state,
 ) {
   return CustomTransitionPage(
     key: state.pageKey,
     child: child,
-    transitionDuration: const Duration(milliseconds: 300),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-        FadeTransition(opacity: animation, child: child),
+    transitionDuration: AppMotion.medium2,
+    reverseTransitionDuration: AppMotion.medium1,
+    transitionsBuilder: (context, animation, secondary, child) {
+      final fadeIn = CurvedAnimation(
+        parent: animation,
+        curve: const Interval(0.3, 1.0, curve: AppMotion.standardDecelerate),
+      );
+      final scaleIn = Tween<double>(begin: 0.94, end: 1.0).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: AppMotion.emphasizedDecelerate,
+        ),
+      );
+      final fadeOut = CurvedAnimation(
+        parent: secondary,
+        curve: const Interval(0.0, 0.3, curve: AppMotion.standardAccelerate),
+      );
+      return FadeTransition(
+        opacity: ReverseAnimation(fadeOut),
+        child: FadeTransition(
+          opacity: fadeIn,
+          child: ScaleTransition(scale: scaleIn, child: child),
+        ),
+      );
+    },
+  );
+}
+
+/// Pushed-screen transition: slide up + fade.
+CustomTransitionPage<dynamic> _slideUpPage(Widget child, GoRouterState state) {
+  return CustomTransitionPage(
+    key: state.pageKey,
+    child: child,
+    transitionDuration: AppMotion.medium3,
+    reverseTransitionDuration: AppMotion.medium2,
+    transitionsBuilder: (context, animation, secondary, child) {
+      final slide = Tween<Offset>(
+        begin: const Offset(0, 0.06),
+        end: Offset.zero,
+      ).animate(
+        CurvedAnimation(
+          parent: animation,
+          curve: AppMotion.emphasizedDecelerate,
+        ),
+      );
+      return FadeTransition(
+        opacity: animation,
+        child: SlideTransition(position: slide, child: child),
+      );
+    },
   );
 }
 
 class ScaffoldWithBottomNavigation extends ConsumerStatefulWidget {
   const ScaffoldWithBottomNavigation({super.key, required this.child});
-
   final Widget child;
 
   @override
@@ -61,70 +151,52 @@ class ScaffoldWithBottomNavigation extends ConsumerStatefulWidget {
 
 class _ScaffoldWithBottomNavigationState
     extends ConsumerState<ScaffoldWithBottomNavigation> {
-  int _currentIndex = 0;
-
-  int _getCurrentIndex() {
-    final location = GoRouterState.of(context).uri.path;
-    switch (location) {
-      case '/prayer-times':
-        return 0;
-      case '/qibla-compass':
-        return 1;
-      case '/settings':
-        return 2;
-      default:
-        return 0;
-    }
+  int _indexFor(String location) {
+    if (location.startsWith(AppRoutes.qibla)) return 1;
+    if (location.startsWith(AppRoutes.more)) return 2;
+    return 0;
   }
 
   @override
   Widget build(BuildContext context) {
-    _currentIndex = _getCurrentIndex();
+    final l = AppLocalizations.of(context);
+    final location = GoRouterState.of(context).uri.path;
+    final currentIndex = _indexFor(location);
 
     return Scaffold(
       body: widget.child,
-      bottomNavigationBar: BottomNavigationBar(
-        useLegacyColorScheme: false,
-        currentIndex: _currentIndex,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).colorScheme.surfaceContainer,
-        selectedLabelStyle: Theme.of(context).textTheme.labelMedium,
-        unselectedLabelStyle: Theme.of(context).textTheme.labelSmall,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (index) {
+          if (index == currentIndex) return;
+          HapticFeedback.selectionClick();
           switch (index) {
             case 0:
-              context.go('/prayer-times');
+              context.go(AppRoutes.home);
               break;
             case 1:
-              context.go('/qibla-compass');
+              context.go(AppRoutes.qibla);
               break;
             case 2:
-              context.go('/settings');
+              context.go(AppRoutes.more);
               break;
           }
         },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.access_time),
-            activeIcon: Icon(Icons.access_time_filled),
-
-            label: 'Prayer Times',
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home_rounded),
+            label: l.navHome,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.explore_outlined),
-            activeIcon: Icon(Icons.explore),
-            label: 'Qibla Compass',
+          NavigationDestination(
+            icon: const Icon(Icons.explore_outlined),
+            selectedIcon: const Icon(Icons.explore_rounded),
+            label: l.navQibla,
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings_outlined),
-            activeIcon: Icon(Icons.settings),
-            label: 'Settings',
+          NavigationDestination(
+            icon: const Icon(Icons.more_horiz),
+            selectedIcon: const Icon(Icons.more_horiz_rounded),
+            label: l.navMore,
           ),
         ],
       ),

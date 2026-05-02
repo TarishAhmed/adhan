@@ -6,6 +6,9 @@ part of 'battery_optimization_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(batteryOptimizationStatus)
 const batteryOptimizationStatusProvider = BatteryOptimizationStatusProvider._();
 
@@ -47,6 +50,3 @@ final class BatteryOptimizationStatusProvider
 
 String _$batteryOptimizationStatusHash() =>
     r'220480853dc4af3186fb6c899133d20944b73c35';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

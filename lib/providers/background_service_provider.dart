@@ -1,8 +1,11 @@
+import 'package:adhan_app/utils/app_logger.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:adhan_app/services/background_prayer_service.dart';
 import 'package:adhan_app/services/location_storage_service.dart';
 
 part 'background_service_provider.g.dart';
+
+const _logName = 'adhan.backgroundService';
 
 @riverpod
 class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
@@ -16,9 +19,14 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   Future<void> startBackgroundService() async {
     try {
       await BackgroundPrayerService.scheduleBackgroundTasks();
-      print('Background service started successfully');
-    } catch (e) {
-      print('Error starting background service: $e');
+      AppLogger.i('Background service started successfully', name: _logName);
+    } catch (e, st) {
+      AppLogger.e(
+        'Error starting background service',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -26,9 +34,14 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   Future<void> stopBackgroundService() async {
     try {
       await BackgroundPrayerService.cancelAllTasks();
-      print('Background service stopped successfully');
-    } catch (e) {
-      print('Error stopping background service: $e');
+      AppLogger.i('Background service stopped successfully', name: _logName);
+    } catch (e, st) {
+      AppLogger.e(
+        'Error stopping background service',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -43,9 +56,14 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
   Future<void> manuallyFetchPrayerTimings(ProviderContainer container) async {
     try {
       await BackgroundPrayerService.checkAndFetchPrayerTimings(container);
-      print('Manual prayer timing fetch completed');
-    } catch (e) {
-      print('Error in manual prayer timing fetch: $e');
+      AppLogger.i('Manual prayer timing fetch completed', name: _logName);
+    } catch (e, st) {
+      AppLogger.e(
+        'Error in manual prayer timing fetch',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -60,8 +78,13 @@ class BackgroundServiceNotifier extends _$BackgroundServiceNotifier {
         'location': location,
         'service_running': await isBackgroundServiceRunning(),
       };
-    } catch (e) {
-      print('Error getting background service status: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'Error getting background service status',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       return {};
     }
   }

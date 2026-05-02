@@ -6,8 +6,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:android_intent_plus/android_intent.dart';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:adhan_app/utils/app_logger.dart';
 
 part 'battery_optimization_service.g.dart';
+
+const _logName = 'adhan.batteryOpt';
 
 const MethodChannel systemUtilsChannel = MethodChannel('app_system_utils');
 class BatteryOptimizationService {
@@ -21,7 +24,7 @@ class BatteryOptimizationService {
       }
       return false; // iOS doesn't have the same battery optimization concept
     } catch (e) {
-      print('Error checking battery optimization: $e');
+      AppLogger.e('Error checking battery optimization', name: _logName, error: e);
       return false;
     }
   }
@@ -35,7 +38,7 @@ class BatteryOptimizationService {
       }
       return true; // iOS doesn't need this
     } catch (e) {
-      print('Error requesting battery optimization disable: $e');
+      AppLogger.e('Error requesting battery optimization disable', name: _logName, error: e);
       return false;
     }
   }
@@ -105,7 +108,7 @@ class BatteryOptimizationService {
     try {
       await showBatteryOptimizationDialog(context, ref);
     } catch (e) {
-      print('Error checking battery optimization: $e');
+      AppLogger.e('Error checking battery optimization', name: _logName, error: e);
     }
   }
 
@@ -115,7 +118,7 @@ class BatteryOptimizationService {
       final bool isIgnoringOptimization = await isIgnoringBatteryOptimizations();
       return {'is_ignoring_optimization': isIgnoringOptimization};
     } catch (e) {
-      print('Error getting battery optimization status: $e');
+      AppLogger.e('Error getting battery optimization status', name: _logName, error: e);
       return {'is_ignoring_optimization': false};
     }
   }
@@ -127,7 +130,7 @@ class BatteryOptimizationService {
         await systemUtilsChannel.invokeMethod('openBatteryOptimizationSettings');
       }
     } catch (e) {
-      print('Error opening battery optimization settings: $e');
+      AppLogger.e('Error opening battery optimization settings', name: _logName, error: e);
     }
   }
 
@@ -138,7 +141,7 @@ class BatteryOptimizationService {
         await systemUtilsChannel.invokeMethod('getNotificationChannels');
       }
     } catch (e) {
-      print('Error getting notification channels: $e');
+      AppLogger.e('Error getting notification channels', name: _logName, error: e);
     }
   }
 }
@@ -160,8 +163,9 @@ class _OemHelpListState extends State<_OemHelpList> {
   Future<void> _detectBrand() async {
     if (!Platform.isAndroid) return;
     final info = await DeviceInfoPlugin().androidInfo;
+    if (!mounted) return;
     setState(() {
-      _brand = info.brand?.toLowerCase();
+      _brand = info.brand.toLowerCase();
     });
   }
 

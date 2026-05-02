@@ -4,12 +4,13 @@ import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:adhan_app/services/prayer_database_service.dart';
 import 'package:adhan_app/services/home_widget_service.dart';
 import 'package:adhan_app/api/api_helper.dart';
+import 'package:adhan_app/utils/app_logger.dart';
 import 'package:riverpod/src/framework.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PrayerDataManager {
-  // Removed unused cache validity constant; API-driven cache is proactive
+  static const _logName = 'adhan.prayerData';
 
   /// Get prayer timing data for a specific month, with caching
   static Future<PrayerTimingMonthResponseModel> getPrayerTimingsForMonth({
@@ -20,7 +21,6 @@ class PrayerDataManager {
     required String timezone,
   }) async {
     try {
-      // First, try to get data from local database
       final cachedData = await PrayerDatabaseService.getPrayerTimingsForMonth(
         year,
         month,
@@ -28,17 +28,20 @@ class PrayerDataManager {
         lng,
       );
 
-      // Check if cached data is still valid
       if (cachedData != null && _isDataValid(cachedData)) {
-        print('Using cached prayer timing data for $year-$month');
+        AppLogger.i(
+          'Using cached prayer timing data for $year-$month',
+          name: _logName,
+        );
         return cachedData;
       }
 
-      // If no valid cached data, fetch from API
-      print('Fetching prayer timing data from API for $year-$month');
+      AppLogger.i(
+        'Fetching prayer timing data from API for $year-$month',
+        name: _logName,
+      );
       final apiData = await _fetchFromAPI(year, month, lat, lng);
 
-      // Store the fetched data in the database
       await PrayerDatabaseService.storePrayerTimings(
         apiData,
         lat,
@@ -48,8 +51,12 @@ class PrayerDataManager {
 
       return apiData;
     } catch (e, st) {
-      print('Error getting prayer timings: $e');
-      print('stack trace: $st');
+      AppLogger.e(
+        'Error getting prayer timings',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }
@@ -61,7 +68,6 @@ class PrayerDataManager {
     required String lng,
   }) async {
     try {
-      // Try to get data from local database first
       final cachedData = await PrayerDatabaseService.getPrayerTimingForDate(
         date,
         lat,
@@ -69,13 +75,13 @@ class PrayerDataManager {
       );
 
       if (cachedData != null) {
-        print(
+        AppLogger.i(
           'Using cached prayer timing data for ${date.year}-${date.month}-${date.day}',
+          name: _logName,
         );
         return cachedData;
       }
 
-      // If no cached data, fetch the entire month
       final monthData = await getPrayerTimingsForMonth(
         year: date.year,
         month: date.month,
@@ -84,7 +90,6 @@ class PrayerDataManager {
         timezone: await _getTimezone(),
       );
 
-      // Find the specific day in the month data
       if (monthData.multiDayTimings != null) {
         for (final dayTiming in monthData.multiDayTimings!) {
           if (dayTiming.date != null &&
@@ -97,8 +102,13 @@ class PrayerDataManager {
       }
 
       return null;
-    } catch (e) {
-      print('Error getting prayer timing for date: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'Error getting prayer timing for date',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }
@@ -131,11 +141,19 @@ class PrayerDataManager {
             lng,
             timezone,
           );
-          print('Proactive cache stored for $year-$month');
+          AppLogger.i(
+            'Proactive cache stored for $year-$month',
+            name: _logName,
+          );
         }
       }
-    } catch (e) {
-      print('Error ensuring proactive cache: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'Error ensuring proactive cache',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -155,8 +173,13 @@ class PrayerDataManager {
   }) async {
     try {
       return await PrayerDatabaseService.hasDataForDate(date, lat, lng);
-    } catch (e) {
-      print('Error checking data existence: $e');
+    } catch (e, st) {
+      AppLogger.w(
+        'Error checking data existence',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       return false;
     }
   }
@@ -170,8 +193,13 @@ class PrayerDataManager {
   }) async {
     try {
       return await PrayerDatabaseService.hasDataForMonth(year, month, lat, lng);
-    } catch (e) {
-      print('Error checking month data existence: $e');
+    } catch (e, st) {
+      AppLogger.w(
+        'Error checking month data existence',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       return false;
     }
   }
@@ -204,7 +232,6 @@ class PrayerDataManager {
       return false;
     }
 
-    // Check if the data contains current or future dates
     final now = DateTime.now();
     for (final dayTiming in data.multiDayTimings!) {
       if (dayTiming.date != null && dayTiming.date!.isAfter(now)) {
@@ -217,7 +244,6 @@ class PrayerDataManager {
 
   /// Get timezone (placeholder - should be replaced with actual timezone provider)
   static Future<String> _getTimezone() async {
-    // This should be replaced with actual timezone provider
     return 'UTC';
   }
 
@@ -225,9 +251,17 @@ class PrayerDataManager {
   static Future<void> clearOldData(ProviderContainer container) async {
     try {
       await PrayerDatabaseService.clearOldData();
-      print('Old prayer timing data cleared successfully');
-    } catch (e) {
-      print('Error clearing old data: $e');
+      AppLogger.i(
+        'Old prayer timing data cleared successfully',
+        name: _logName,
+      );
+    } catch (e, st) {
+      AppLogger.e(
+        'Error clearing old data',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -235,9 +269,17 @@ class PrayerDataManager {
   static Future<void> clearAllData() async {
     try {
       await PrayerDatabaseService.clearAllData();
-      print('All prayer timing data cleared successfully');
-    } catch (e) {
-      print('Error clearing all data: $e');
+      AppLogger.i(
+        'All prayer timing data cleared successfully',
+        name: _logName,
+      );
+    } catch (e, st) {
+      AppLogger.e(
+        'Error clearing all data',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -266,8 +308,13 @@ class PrayerDataManager {
         'database_size': await _getDatabaseSize(),
         'generated_at': DateTime.now().toIso8601String(),
       };
-    } catch (e) {
-      print('Error getting database stats: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'Error getting database stats',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       return {};
     }
   }
@@ -282,12 +329,19 @@ class PrayerDataManager {
   ) async {
     try {
       await PrayerDatabaseService.storePrayerTimings(data, lat, lng, timezone);
-      print('PrayerDataManager: Successfully stored prayer timings');
+      AppLogger.i(
+        'PrayerDataManager: Successfully stored prayer timings',
+        name: _logName,
+      );
 
-      // Update home widget after storing new prayer data
       await HomeWidgetService.updateNextPrayerWidget(container);
-    } catch (e) {
-      print('PrayerDataManager: Error storing prayer timings: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'PrayerDataManager: Error storing prayer timings',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }
@@ -309,13 +363,20 @@ class PrayerDataManager {
   }
 
   /// Collect and persist metrics for diagnostics.
-  static Future<void> collectAndPersistMetrics(ProviderContainer container) async {
+  static Future<void> collectAndPersistMetrics(
+    ProviderContainer container,
+  ) async {
     try {
       final stats = await getDatabaseStats();
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('db_metrics', stats.toString());
-    } catch (e) {
-      print('Error persisting DB metrics: $e');
+    } catch (e, st) {
+      AppLogger.w(
+        'Error persisting DB metrics',
+        name: _logName,
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 }

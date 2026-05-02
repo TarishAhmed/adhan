@@ -1,7 +1,9 @@
-import 'package:adhan_app/screens/prayer_times_screen.dart';
-import 'package:flutter/material.dart';
 import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+
 import '../services/qibla_service.dart';
+import 'loader_message.dart';
 
 class QiblaCompassWidget extends StatelessWidget {
   final double compassAngle;
@@ -77,7 +79,7 @@ class QiblaCompassWidget extends StatelessWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 10,
                   spreadRadius: 2,
                 ),
@@ -196,7 +198,7 @@ class QiblaCompassWidget extends StatelessWidget {
                         end: Alignment.bottomCenter,
                         colors: [
                           _getNeedleColor(),
-                          _getNeedleColor().withOpacity(0.7),
+                          _getNeedleColor().withValues(alpha: 0.7),
                         ],
                       ),
                       borderRadius: BorderRadius.circular(2),
@@ -284,11 +286,11 @@ class QiblaCompassWidget extends StatelessWidget {
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -307,7 +309,7 @@ class QiblaCompassWidget extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: Theme.of(
                       context,
-                    ).colorScheme.onSurface.withOpacity(0.7),
+                    ).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
                 Text(

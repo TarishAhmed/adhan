@@ -183,7 +183,7 @@ PrayerTimeWithOffset? getCurrentRelevantPrayerWithOffset(
 
 @riverpod
 Stream<PrayerTimeWithOffset?> currentRelevantPrayer(Ref ref) async* {
-  final prayerTimes = await ref.watch(prayerTimeMonthNotifierProvider().future);
+  final prayerTimes = await ref.watch(prayerTimeMonthProvider().future);
 
   final now = DateTime.now();
 
@@ -302,7 +302,7 @@ class ProgressSegment {
 
 @riverpod
 Stream<PrayerWindow?> prayerTimeline(Ref ref) async* {
-  final prayerTimes = await ref.watch(prayerTimeMonthNotifierProvider().future);
+  final prayerTimes = await ref.watch(prayerTimeMonthProvider().future);
 
   final now = DateTime.now();
 

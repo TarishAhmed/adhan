@@ -6,10 +6,14 @@ part of 'prayer_timing_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(PrayerTimeMonthNotifier)
 @JsonPersist()
-const prayerTimeMonthNotifierProvider = PrayerTimeMonthNotifierFamily._();
+const prayerTimeMonthProvider = PrayerTimeMonthNotifierFamily._();
 
+@JsonPersist()
 final class PrayerTimeMonthNotifierProvider
     extends
         $AsyncNotifierProvider<
@@ -22,7 +26,7 @@ final class PrayerTimeMonthNotifierProvider
     super.argument,
   }) : super(
          retry: null,
-         name: r'prayerTimeMonthNotifierProvider',
+         name: r'prayerTimeMonthProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
@@ -33,7 +37,7 @@ final class PrayerTimeMonthNotifierProvider
 
   @override
   String toString() {
-    return r'prayerTimeMonthNotifierProvider'
+    return r'prayerTimeMonthProvider'
         ''
         '$argument';
   }
@@ -55,8 +59,9 @@ final class PrayerTimeMonthNotifierProvider
 }
 
 String _$prayerTimeMonthNotifierHash() =>
-    r'aeeb9dac635336e3213eded6a7926338135c26b1';
+    r'edd482fda36df8200c5b2da62d3863c45c6b5d69';
 
+@JsonPersist()
 final class PrayerTimeMonthNotifierFamily extends $Family
     with
         $ClassFamilyOverride<
@@ -69,12 +74,13 @@ final class PrayerTimeMonthNotifierFamily extends $Family
   const PrayerTimeMonthNotifierFamily._()
     : super(
         retry: null,
-        name: r'prayerTimeMonthNotifierProvider',
+        name: r'prayerTimeMonthProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
+  @JsonPersist()
   PrayerTimeMonthNotifierProvider call({
     int method = 1,
     int school = 0,
@@ -89,9 +95,10 @@ final class PrayerTimeMonthNotifierFamily extends $Family
   );
 
   @override
-  String toString() => r'prayerTimeMonthNotifierProvider';
+  String toString() => r'prayerTimeMonthProvider';
 }
 
+@JsonPersist()
 abstract class _$PrayerTimeMonthNotifierBase
     extends $AsyncNotifier<PrayerTimingMonthResponseModel> {
   late final _$args =
@@ -355,7 +362,7 @@ final class CurrentRelevantPrayerProvider
 }
 
 String _$currentRelevantPrayerHash() =>
-    r'20fc89a23573cf926531bee821044086a1fd9a09';
+    r'5dc31b399de5a220d781d40417d7efa4f9b741b3';
 
 @ProviderFor(prayerTimeline)
 const prayerTimelineProvider = PrayerTimelineProvider._();
@@ -394,15 +401,13 @@ final class PrayerTimelineProvider
   }
 }
 
-String _$prayerTimelineHash() => r'213048dce8921500833dded758a548a5517bdac6';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+String _$prayerTimelineHash() => r'dcd5381833b5db8d3d471e53a8607d6037a44d3a';
 
 // **************************************************************************
 // JsonGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 abstract class _$PrayerTimeMonthNotifier extends _$PrayerTimeMonthNotifierBase {
   /// The default key used by [persist].
   String get key {

@@ -136,8 +136,10 @@ class AppSettings {
   }
 }
 
-// Settings notifier
+// Settings notifier — persists auto-location preference in SharedPreferences.
 class SettingsNotifier extends Notifier<AppSettings> {
+  static const _autoLocationKey = 'settings_auto_location';
+
   void toggleNotifications() {
     state = state.copyWith(notificationsEnabled: !state.notificationsEnabled);
   }
@@ -148,21 +150,26 @@ class SettingsNotifier extends Notifier<AppSettings> {
 
   void setCalculationMethod(String method) {
     state = state.copyWith(calculationMethod: method);
-    // Mark for reschedule when calculation method changes
-    // Avoid direct service coupling by using RescheduleService
     RescheduleService.markNeedsReschedule();
     RescheduleService.enqueueImmediateReschedule();
   }
 
-  void toggleAutoLocation() {
-    state = state.copyWith(autoLocation: !state.autoLocation);
+  void setAutoLocation(bool value) {
+    state = state.copyWith(autoLocation: value);
+    final prefs = ref.read(sharedPrefProvider);
+    prefs.setBool(_autoLocationKey, value);
     RescheduleService.markNeedsReschedule();
     RescheduleService.enqueueImmediateReschedule();
   }
+
+  void toggleAutoLocation() => setAutoLocation(!state.autoLocation);
 
   @override
   AppSettings build() {
-    return AppSettings();
+    final prefs = ref.read(sharedPrefProvider);
+    return AppSettings(
+      autoLocation: prefs.getBool(_autoLocationKey) ?? true,
+    );
   }
 }
 

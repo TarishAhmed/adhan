@@ -11,6 +11,9 @@ import 'package:adhan_app/model/prayer_timing_month_response_model.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:adhan_app/services/reschedule_service.dart';
 import 'package:adhan_app/services/home_widget_service.dart';
+import 'package:adhan_app/utils/app_logger.dart';
+
+const _logName = 'adhan.backgroundService';
 
 class BackgroundPrayerService {
   static const String _fetchNextMonthTask = 'fetchNextMonthPrayerTimings';
@@ -156,16 +159,6 @@ class BackgroundPrayerService {
 
   /// Schedule periodic home widget updates (every 15 minutes)
   static Future<void> _scheduleWidgetUpdates() async {
-    final now = DateTime.now();
-    final nextUpdateTime = DateTime(
-      now.year,
-      now.month,
-      now.day,
-      now.hour,
-      now.minute + 15,
-    );
-    final initialDelay = nextUpdateTime.difference(now);
-
     await Workmanager().registerPeriodicTask(
       _updateWidgetTask,
       _updateWidgetTask,
@@ -194,7 +187,7 @@ class BackgroundPrayerService {
       // Clear reschedule flag if set
       await RescheduleService.clearNeedsReschedule();
     } catch (e) {
-      print('Background service: reschedule after boot/app start failed: $e');
+      AppLogger.e('Background service: reschedule after boot/app start failed', name: _logName, error: e);
     }
   }
 
@@ -203,7 +196,7 @@ class BackgroundPrayerService {
     try {
       // Self-heal: if any component flagged reschedule, perform it and clear flag
       if (await RescheduleService.getNeedsReschedule()) {
-        print('Background service: Self-heal reschedule in daily check');
+        AppLogger.i('Background service: Self-heal reschedule in daily check', name: _logName);
         await BackgroundPrayerService.rescheduleAfterBootOrAppStart(container);
         await RescheduleService.clearNeedsReschedule();
       }
@@ -211,7 +204,7 @@ class BackgroundPrayerService {
       // Get current location (you might need to store this in shared preferences)
       final location = _getStoredLocation(container);
       if (location == null) {
-        print('Background service: No location available');
+        AppLogger.i('Background service: No location available', name: _logName);
         return;
       }
 
@@ -240,13 +233,13 @@ class BackgroundPrayerService {
 
       // Fetch current month if missing
       if (!hasCurrentMonthData) {
-        print('Background service: Fetching current month data');
+        AppLogger.i('Background service: Fetching current month data', name: _logName);
         await _fetchAndStorePrayerTimings(currentYear, currentMonth, location, container);
       }
 
       // Fetch next month if missing
       if (!hasNextMonthData) {
-        print('Background service: Fetching next month data');
+        AppLogger.i('Background service: Fetching next month data', name: _logName);
         await _fetchAndStorePrayerTimings(nextYear, nextMonth, location, container);
       }
 
@@ -269,7 +262,7 @@ class BackgroundPrayerService {
       // Update home widget after fetching prayer times
       await HomeWidgetService.updateNextPrayerWidget(container);
     } catch (e) {
-      print('Background service error: $e');
+      AppLogger.e('Background service error', name: _logName, error: e);
     }
   }
 
@@ -305,18 +298,12 @@ class BackgroundPrayerService {
           container,
         );
 
-        print(
-          'Background service: Successfully stored prayer timings for $year-$month',
-        );
+        AppLogger.i('Background service: Successfully stored prayer timings for $year-$month', name: _logName);
       } else {
-        print(
-          'Background service: Failed to fetch prayer timings for $year-$month',
-        );
+        AppLogger.e('Background service: Failed to fetch prayer timings for $year-$month', name: _logName);
       }
     } catch (e) {
-      print(
-        'Background service: Error fetching prayer timings for $year-$month: $e',
-      );
+      AppLogger.e('Background service: Error fetching prayer timings for $year-$month', name: _logName, error: e);
     }
   }
 
@@ -342,7 +329,7 @@ void callbackDispatcher() {
       ],
     );
     tzdata.initializeTimeZones();
-    print('Background task: $task');
+    AppLogger.i('Background task: $task', name: _logName);
     try {
       switch (task) {
         case 'fetchNextMonthPrayerTimings':
@@ -375,7 +362,7 @@ void callbackDispatcher() {
           await DailyNotificationScheduler.testNotifications(container);
           break;
         default:
-          print('Unknown background task: $task');
+          AppLogger.i('Unknown background task: $task', name: _logName);
       }
       return true;
     } catch (e, st) {

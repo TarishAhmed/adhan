@@ -1,15 +1,17 @@
+import 'dart:async';
+
 import 'package:adhan_app/providers/app_providers.dart';
+import 'package:adhan_app/utils/app_logger.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:riverpod/src/framework.dart';
 
-import 'location_storage_service.dart';
-import 'prayer_data_manager.dart';
 import '../model/prayer_timing_month_response_model.dart';
+import 'prayer_data_manager.dart';
+
+const _logName = 'adhan.homeWidget';
 
 class HomeWidgetService {
   static const String _groupId = 'adhan_home_widget';
@@ -76,12 +78,12 @@ class HomeWidgetService {
   /// Debug method to test home widget updates
   static Future<void> debugUpdate(WidgetRef ref) async {
     try {
-      print('HomeWidgetService: Starting debug update');
+      AppLogger.i('HomeWidgetService: Starting debug update', name: _logName);
       final location = await ref.read(locationProvider.future);
-      print('HomeWidgetService: Location: $location');
+      AppLogger.i('HomeWidgetService: Location: $location', name: _logName);
 
       final now = DateTime.now();
-      print('HomeWidgetService: Current time: $now');
+      AppLogger.i('HomeWidgetService: Current time: $now', name: _logName);
 
       final today = await PrayerDataManager.getPrayerTimingForDate(
         date: now,
@@ -89,12 +91,12 @@ class HomeWidgetService {
         lng: location.lng.toString(),
       );
 
-      print('HomeWidgetService: Today\'s prayers: ${today?.prayers?.length}');
+      AppLogger.i('HomeWidgetService: Today\'s prayers: ${today?.prayers?.length}', name: _logName);
 
       await updateNextPrayerWidget(ref.container);
-      print('HomeWidgetService: Debug update completed');
+      AppLogger.i('HomeWidgetService: Debug update completed', name: _logName);
     } catch (e) {
-      print('HomeWidgetService: Debug update error: $e');
+      AppLogger.e('HomeWidgetService: Debug update error', name: _logName, error: e);
     }
   }
 

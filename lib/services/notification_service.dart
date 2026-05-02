@@ -1,17 +1,16 @@
+import 'dart:io';
+
 import 'package:adhan_app/api/api_helper.dart';
-import 'package:adhan_app/providers/prayer_timing_provider.dart';
-import 'package:adhan_app/services/battery_optimization_service.dart';
-import 'package:adhan_app/utils/sound_utils.dart';
+import 'package:adhan_app/utils/app_logger.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tzdata;
-import 'dart:io';
-import 'package:flutter/material.dart';
 
 class NotificationService {
+  static const _logName = 'adhan.notifications';
   static final FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   // Prayer time channels
@@ -41,7 +40,10 @@ class NotificationService {
   /// Create individual notification channels for each prayer time
   static Future<void> _createPrayerChannels() async {
     if (Platform.isAndroid) {
-      print('Skipping initial channel creation - channels will be created with proper settings during scheduling');
+      AppLogger.i(
+        'Skipping initial channel creation - channels will be created with proper settings during scheduling',
+        name: _logName,
+      );
       // Don't create channels during initialization to avoid conflicts
       // Channels will be created with proper sound settings when notifications are scheduled
     }
@@ -94,7 +96,10 @@ class NotificationService {
     // Use prayer-based channel ID (one channel per prayer)
     final channelId = getChannelId(prayerName);
     final channelGroupId = getChannelGroupId(prayerName);
-    print('Scheduling notification for $prayerName with channel: $channelId');
+    AppLogger.i(
+      'Scheduling notification for $prayerName with channel: $channelId',
+      name: _logName,
+    );
 
     final soundAndroid = await _getAndroidNotificationSound(prayerName);
 
@@ -126,7 +131,10 @@ class NotificationService {
         ),
       );
 
-      print('Channel created for $prayerName with sound: $soundAndroid');
+      AppLogger.i(
+        'Channel created for $prayerName with sound: $soundAndroid',
+        name: _logName,
+      );
     }
 
     final notificationDetails = NotificationDetails(
@@ -149,7 +157,10 @@ class NotificationService {
       ),
     );
 
-    print('Notification details created with sound: ${notificationDetails.android?.sound}');
+    AppLogger.v(
+      'Notification details created with sound: ${notificationDetails.android?.sound}',
+      name: _logName,
+    );
 
     await _notificationsPlugin.zonedSchedule(
       id,
@@ -161,7 +172,10 @@ class NotificationService {
       matchDateTimeComponents: null,
     );
 
-    print('Notification scheduled successfully for $prayerName at ${notificationTime.toString()}');
+    AppLogger.i(
+      'Notification scheduled successfully for $prayerName at ${notificationTime.toString()}',
+      name: _logName,
+    );
   }
 
   static Future<AndroidNotificationSound?> _getAndroidNotificationSound(String prayerName) async {
@@ -171,7 +185,7 @@ class NotificationService {
     //? content uri made by using file provider in android manifest and file provider xml
     // content://org.tarish.adhan.fileprovider/adhan/fajr.mp3
     final contentPath = 'content://org.tarish.adhan.fileprovider/adhan/${prayerName.toLowerCase()}.mp3';
-    print('alarm uri $contentPath');
+    AppLogger.v('alarm uri $contentPath', name: _logName);
 
     return UriAndroidNotificationSound(contentPath);
   }
@@ -275,7 +289,7 @@ class NotificationService {
   /// Debug method to check channel settings
   static Future<void> debugChannelSettings(String channelId) async {
     if (Platform.isAndroid) {
-      print('Debugging channel: $channelId');
+      AppLogger.v('Debugging channel: $channelId', name: _logName);
       // Note: getNotificationChannel is not available in this version
       // We'll rely on the logging in schedulePrayerNotification instead
     }
@@ -288,11 +302,14 @@ class NotificationService {
           .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
       final enabled = await androidPlugin?.areNotificationsEnabled();
-      print('Notifications enabled: $enabled');
+      AppLogger.i('Notifications enabled: $enabled', name: _logName);
 
       // Check if we can request permissions
       final granted = await androidPlugin?.requestNotificationsPermission();
-      print('Notification permission granted: $granted');
+      AppLogger.i(
+        'Notification permission granted: $granted',
+        name: _logName,
+      );
     }
   }
 }

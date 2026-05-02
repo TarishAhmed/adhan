@@ -27,13 +27,13 @@ class _UpdateManagerState extends ConsumerState<UpdateManager> {
   }
 
   Future<void> _checkForUpdates() async {
-    final updateNotifier = ref.read(updateNotifierProvider.notifier);
+    final updateNotifier = ref.read(updateProvider.notifier);
     await updateNotifier.checkForUpdates();
   }
 
   @override
   Widget build(BuildContext context) {
-    final updateAsync = ref.watch(updateNotifierProvider);
+    final updateAsync = ref.watch(updateProvider);
 
     return updateAsync.when(
       data: (updateInfo) {

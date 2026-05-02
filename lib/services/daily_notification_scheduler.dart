@@ -9,6 +9,9 @@ import 'package:riverpod/src/framework.dart';
 // import 'package:workmanager/workmanager.dart';
 import 'package:timezone/data/latest_all.dart' as tzdata;
 import 'package:adhan_app/services/home_widget_service.dart';
+import 'package:adhan_app/utils/app_logger.dart';
+
+const _logName = 'adhan.dailyScheduler';
 
 class DailyNotificationScheduler {
   // static const String _dailyNotificationTask = 'scheduleDailyNotifications';
@@ -24,14 +27,12 @@ class DailyNotificationScheduler {
   /// Schedule notifications for the entire day
   static Future<void> scheduleDailyNotifications(ProviderContainer container) async {
     try {
-      print(
-        'Daily notification scheduler: Starting daily notification scheduling',
-      );
+      AppLogger.i('Daily notification scheduler: Starting daily notification scheduling', name: _logName);
 
       // Get user's location
       final location = container.read(locationStorageProvider);
       if (location == null) {
-        print('Daily notification scheduler: No location available');
+        AppLogger.i('Daily notification scheduler: No location available', name: _logName);
         return;
       }
 
@@ -46,9 +47,7 @@ class DailyNotificationScheduler {
       );
 
       if (prayerTimings == null || prayerTimings.prayers == null) {
-        print(
-          'Daily notification scheduler: No prayer timings available for today',
-        );
+        AppLogger.i('Daily notification scheduler: No prayer timings available for today', name: _logName);
         return;
       }
 
@@ -74,9 +73,7 @@ class DailyNotificationScheduler {
         final isEnabled =
             notificationPreferences[prayerName.toLowerCase()] ?? false;
         if (!isEnabled) {
-          print(
-            'Daily notification scheduler: Skipping $prayerName (disabled)',
-          );
+          AppLogger.i('Daily notification scheduler: Skipping $prayerName (disabled)', name: _logName);
           continue;
         }
 
@@ -98,35 +95,29 @@ class DailyNotificationScheduler {
             prayerName: prayerName,
           );
 
-          print(
-            'Daily notification scheduler: Scheduled $prayerName notification for ${notificationTime.toString()}',
-          );
+          AppLogger.i('Daily notification scheduler: Scheduled $prayerName notification for ${notificationTime.toString()}', name: _logName);
         } else {
-          print(
-            'Daily notification scheduler: Skipping $prayerName (time has passed)',
-          );
+          AppLogger.i('Daily notification scheduler: Skipping $prayerName (time has passed)', name: _logName);
         }
       }
 
-      print(
-        'Daily notification scheduler: Completed daily notification scheduling',
-      );
+      AppLogger.i('Daily notification scheduler: Completed daily notification scheduling', name: _logName);
 
       // Update home widget after scheduling notifications
       await HomeWidgetService.updateNextPrayerWidget(container);
     } catch (e) {
-      print('Daily notification scheduler error: $e');
+      AppLogger.e('Daily notification scheduler error', name: _logName, error: e);
     }
   }
 
   /// Schedule notifications for the entire day
   static Future<void> testNotifications(ProviderContainer container) async {
-    print('Test notification scheduler: Starting test notifications');
+    AppLogger.i('Test notification scheduler: Starting test notifications', name: _logName);
 
     // Get user's location
     final location = container.read(locationStorageProvider);
     if (location == null) {
-      print('Test notification scheduler: No location available');
+      AppLogger.i('Test notification scheduler: No location available', name: _logName);
       return;
     }
 
@@ -152,7 +143,7 @@ class DailyNotificationScheduler {
       prayerName: 'fajr',
     );
 
-    print('Test notification scheduler: Completed test notifications');
+    AppLogger.i('Test notification scheduler: Completed test notifications', name: _logName);
   }
 
   /// Cancel existing notifications for today
@@ -166,9 +157,9 @@ class DailyNotificationScheduler {
         await NotificationService.cancelPrayerNotification(notificationId);
       }
 
-      print('Daily notification scheduler: Cancelled existing notifications');
+      AppLogger.i('Daily notification scheduler: Cancelled existing notifications', name: _logName);
     } catch (e) {
-      print('Daily notification scheduler: Error cancelling notifications: $e');
+      AppLogger.e('Daily notification scheduler: Error cancelling notifications', name: _logName, error: e);
     }
   }
 
@@ -214,11 +205,9 @@ class DailyNotificationScheduler {
         await NotificationService.cancelPrayerNotification(notificationId);
       }
 
-      print('Daily notification scheduler: Cancelled all notifications');
+      AppLogger.i('Daily notification scheduler: Cancelled all notifications', name: _logName);
     } catch (e) {
-      print(
-        'Daily notification scheduler: Error cancelling all notifications: $e',
-      );
+      AppLogger.e('Daily notification scheduler: Error cancelling all notifications', name: _logName, error: e);
     }
   }
 
@@ -253,9 +242,7 @@ class DailyNotificationScheduler {
 
       return status;
     } catch (e) {
-      print(
-        'Daily notification scheduler: Error getting notification status: $e',
-      );
+      AppLogger.e('Daily notification scheduler: Error getting notification status', name: _logName, error: e);
       return {};
     }
   }

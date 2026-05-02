@@ -19,10 +19,8 @@ import 'services/notification_service.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 import 'services/home_widget_service.dart';
 import 'firebase_options.dart';
+import 'l10n/gen/app_localizations.dart';
 import 'widgets/update_manager.dart';
-
-const Color kPrimaryGreen = Color(0xFF2E6B57);
-const Color kBackground = Color(0xFFF7FBF7);
 
 void main() async {
   if (kIsWeb) usePathUrlStrategy();
@@ -52,8 +50,9 @@ void main() async {
     // Ensure all work and today's notifications are (re)scheduled after boot/app start
     await BackgroundPrayerService.rescheduleAfterBootOrAppStart(container);
 
-    // Request notification permission on app launch
-    await NotificationService.requestPermission();
+    // Note: notification + location permissions are requested contextually
+    // during onboarding (see OnboardingScreen). On returning users they were
+    // already granted; no need to re-prompt here.
 
     // Initial home widget update
     await HomeWidgetService.updateNextPrayerWidget(container);
@@ -104,6 +103,8 @@ class MyApp extends ConsumerWidget {
       darkTheme: MaterialTheme().dark(),
       themeMode: themeMode,
       routerConfig: router,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       builder: (context, child) =>
           UpdateManager(child: BatteryOptimizationWrapper(child: child!)),
     );
@@ -145,17 +146,21 @@ class _BatteryOptimizationWrapperState
     HomeWidgetService.handleAppLifecycleChange(state, ref.container);
   }
 
+  static const _batteryPromptedKey = 'battery_opt_prompted_v1';
+
   Future<void> _checkBatteryOptimization() async {
-    // Wait a bit for the app to fully load
+    // Only prompt once per install. Users can re-trigger from More → Advanced.
+    final prefs = await SharedPreferences.getInstance();
+    if (prefs.getBool(_batteryPromptedKey) == true) return;
+
+    // Wait a bit for the app to fully load before showing the dialog.
     await Future.delayed(const Duration(seconds: 2));
 
-    if (mounted && !_hasCheckedBatteryOptimization) {
-      setState(() {
-        _hasCheckedBatteryOptimization = true;
-      });
+    if (!mounted || _hasCheckedBatteryOptimization) return;
+    setState(() => _hasCheckedBatteryOptimization = true);
 
-      await BatteryOptimizationService.checkBatteryOptimization(context, ref);
-    }
+    await BatteryOptimizationService.checkBatteryOptimization(context, ref);
+    await prefs.setBool(_batteryPromptedKey, true);
   }
 
   @override

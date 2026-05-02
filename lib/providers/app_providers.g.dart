@@ -6,6 +6,9 @@ part of 'app_providers.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(getTimezone)
 const getTimezoneProvider = GetTimezoneProvider._();
 
@@ -38,6 +41,3 @@ final class GetTimezoneProvider
 }
 
 String _$getTimezoneHash() => r'6ca9348c1de85799bc2f5c1a7d0c49de9d7897ed';
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -6,8 +6,11 @@ part of 'update_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
 @ProviderFor(UpdateNotifier)
-const updateNotifierProvider = UpdateNotifierProvider._();
+const updateProvider = UpdateNotifierProvider._();
 
 final class UpdateNotifierProvider
     extends $AsyncNotifierProvider<UpdateNotifier, UpdateInfo?> {
@@ -16,7 +19,7 @@ final class UpdateNotifierProvider
         from: null,
         argument: null,
         retry: null,
-        name: r'updateNotifierProvider',
+        name: r'updateProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
@@ -50,6 +53,3 @@ abstract class _$UpdateNotifier extends $AsyncNotifier<UpdateInfo?> {
     element.handleValue(ref, created);
   }
 }
-
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

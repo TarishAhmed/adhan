@@ -578,7 +578,6 @@ as String?,
 
 }
 
-
 /// @nodoc
 mixin _$MultiDayTiming {
 
@@ -589,8 +588,6 @@ mixin _$MultiDayTiming {
 @pragma('vm:prefer-inline')
 $MultiDayTimingCopyWith<MultiDayTiming> get copyWith => _$MultiDayTimingCopyWithImpl<MultiDayTiming>(this as MultiDayTiming, _$identity);
 
-  /// Serializes this MultiDayTiming to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -598,7 +595,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is MultiDayTiming&&const DeepCollectionEquality().equals(other.prayers, prayers)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.date, date) || other.date == date));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(prayers),coordinates,date);
 
@@ -787,11 +784,11 @@ return $default(_that.prayers,_that.coordinates,_that.date);case _:
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _MultiDayTiming implements MultiDayTiming {
   const _MultiDayTiming({final  List<Prayer>? prayers, this.coordinates, @JsonKey(fromJson: DateTime.fromMillisecondsSinceEpoch, toJson: dateToMillisecondsSinceEpoch) this.date}): _prayers = prayers;
-  factory _MultiDayTiming.fromJson(Map<String, dynamic> json) => _$MultiDayTimingFromJson(json);
+  
 
  final  List<Prayer>? _prayers;
 @override List<Prayer>? get prayers {
@@ -811,17 +808,14 @@ class _MultiDayTiming implements MultiDayTiming {
 @pragma('vm:prefer-inline')
 _$MultiDayTimingCopyWith<_MultiDayTiming> get copyWith => __$MultiDayTimingCopyWithImpl<_MultiDayTiming>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$MultiDayTimingToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _MultiDayTiming&&const DeepCollectionEquality().equals(other._prayers, _prayers)&&(identical(other.coordinates, coordinates) || other.coordinates == coordinates)&&(identical(other.date, date) || other.date == date));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_prayers),coordinates,date);
 

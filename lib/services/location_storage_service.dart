@@ -1,3 +1,4 @@
+import 'package:adhan_app/utils/app_logger.dart';
 import 'package:adhan_app/utils/location_format_utils.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,9 +64,13 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
         };
       }
       return null;
-    } catch (e,st) {
-      print('LocationStorageService: Error getting stored location: $e');
-      print('LocationStorageService: Stack trace: $st');
+    } catch (e, st) {
+      AppLogger.e(
+        'LocationStorageService: Error getting stored location',
+        name: 'adhan.locationStorage',
+        error: e,
+        stackTrace: st,
+      );
       return null;
     }
   }
@@ -84,8 +89,13 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
       await pref.remove(_timezoneKey);
       await pref.remove(_cityKey);
       state = null;
-    } catch (e) {
-      print('LocationStorageService: Error clearing stored location: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'LocationStorageService: Error clearing stored location',
+        name: 'adhan.locationStorage',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 
@@ -123,8 +133,13 @@ class LocationStorageService extends Notifier<Map<String, String>?> {
       }
 
       return false;
-    } catch (e) {
-      print('LocationStorageService: Error updating location: $e');
+    } catch (e, st) {
+      AppLogger.e(
+        'LocationStorageService: Error updating location',
+        name: 'adhan.locationStorage',
+        error: e,
+        stackTrace: st,
+      );
       return false;
     }
   }

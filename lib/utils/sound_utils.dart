@@ -38,9 +38,8 @@ Future<File?> findFileWithExtension(String directoryPath, String baseName) async
   return null; // Not found
 }
 
-const String aladhanAudioRepo = 'https://cdn.aladhan.com/audio/adhans/';
-
-const String alislamRepo = 'https://alislam.org/adhan/';
+const String athanMp3Repo =
+    'https://raw.githubusercontent.com/TarishAhmed/Athan-MP3/master/Sounds/';
 
 enum AdhanAudioLibrary {
   defaultNotification(
@@ -48,31 +47,58 @@ enum AdhanAudioLibrary {
     displayName: 'Default Notification Sound',
     internal: true,
   ),
-  ferozAlam(url: '${alislamRepo}Azan_FerozAlam.mp3', displayName: 'Feroz Alam'),
-  misharyRashidAlafasy(
-    url: '${aladhanAudioRepo}a4.mp3',
-    displayName: 'Mishary Rashid Alafasy',
+  makkah(url: '${athanMp3Repo}Athan%20Makkah.mp3', displayName: 'Makkah'),
+  misharyAlafasi(
+    url: '${athanMp3Repo}Athan%20Mishary%20Alafasi.mp3',
+    displayName: 'Mishary Alafasi',
   ),
-  misharyRashidAlafasy2(
-    url: '${aladhanAudioRepo}a7.mp3',
-    displayName: 'Mishary Rashid Alafasy 2',
+  mansoorAzZahrani(
+    url: '${athanMp3Repo}Athan%20Mansoor%20Az-Zahrani.mp3',
+    displayName: 'Mansoor Az-Zahrani',
   ),
-  misharyRashidAlafasy3(
-    url: '${aladhanAudioRepo}a9.mp3',
-    displayName: 'Mishary Rashid Alafasy 3',
+  hamdanAlmalki(
+    url: '${athanMp3Repo}Athan%20Hamdan%20Almalki.mp3',
+    displayName: 'Hamdan Almalki',
   ),
-  mansourAlZahrani(
-    url: '${aladhanAudioRepo}a11-mansour-al-zahrani.mp3',
-    displayName: 'Mansour Al Zahrani',
+  hamadDeghreri(
+    url: '${athanMp3Repo}Athan%20Hamad%20Deghreri.mp3',
+    displayName: 'Hamad Deghreri',
   ),
-  hafizMustafaOzcan(
-    url: '${aladhanAudioRepo}a2.mp3',
-    displayName: 'Hafiz Mustafa Ozcan',
+  ibrahimAlArkani(
+    url: '${athanMp3Repo}Athan%20Ibrahim%20Al-Arkani.mp3',
+    displayName: 'Ibrahim Al-Arkani',
   ),
-  karlJenkins(url: '${aladhanAudioRepo}a3.mp3', displayName: 'Karl Jenkins'),
-  ahmadAlNafees(
-    url: '${aladhanAudioRepo}a1.mp3',
-    displayName: 'Ahmad Al Nafees',
+  majedAlHamathani(
+    url: '${athanMp3Repo}Athan%20Majed%20Al-hamathani.mp3',
+    displayName: 'Majed Al-Hamathani',
+  ),
+  malekChebaeFajr(
+    url: '${athanMp3Repo}Athan%20Al-fajer%20-%20Malek%20chebae.mp3',
+    displayName: 'Malek Chebae (Fajr)',
+  ),
+  mohammadAlmenshawy(
+    url: '${athanMp3Repo}Athan%20Mohammad%20Almenshawy.mp3',
+    displayName: 'Mohammad Almenshawy',
+  ),
+  mohammadRefat(
+    url: '${athanMp3Repo}Athan%20Mohammad%20Ref3at.mp3',
+    displayName: "Mohammad Ref'at",
+  ),
+  nasserAlqatami(
+    url: '${athanMp3Repo}Athan%20Nasser%20Alqatami.mp3',
+    displayName: 'Nasser Alqatami',
+  ),
+  suhaibKhatba(
+    url: '${athanMp3Repo}Athan%20Suhaib%20Khatba.mp3',
+    displayName: 'Suhaib Khatba',
+  ),
+  abedAlbase(
+    url: '${athanMp3Repo}Athan%20Abed%20Albase6.mp3',
+    displayName: 'Abed Albase',
+  ),
+  ahmadNuyne(
+    url: '${athanMp3Repo}Athan%20Ahmad%20Nuyne3.mp3',
+    displayName: 'Ahmad Nuyne',
   );
 
   const AdhanAudioLibrary({
@@ -87,5 +113,5 @@ enum AdhanAudioLibrary {
 
   final bool internal;
 
-  static AdhanAudioLibrary defaultAdhan = ferozAlam;
+  static AdhanAudioLibrary defaultAdhan = makkah;
 }
